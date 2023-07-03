@@ -1,0 +1,79 @@
+.skills {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.25rem;
+  padding-top: 6rem;
+}
+
+.title {
+  display: flex;
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.chevron {
+  color: var(--blue-300);
+}
+
+.container {
+  display: grid;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+.container fieldset {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--gray);
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+  gap: 1rem;
+  padding: 1.25rem;
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.container legend {
+  font-size: 2rem;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.content {
+  font-size: small;
+  display: flex;
+  background-color: var(--blue-dark);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition-timing-function: ease-in-out;
+  transition-duration: 200ms;
+}
+
+.content:hover {
+  background-color: var(--white-transparent);
+}
+
+.container img {
+  width: 2.5rem;
+  height: 5rem;
+}
+
+.description {
+  color: var(--white);
+  font-size: 0.875rem;
+}

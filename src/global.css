@@ -1,0 +1,23 @@
+:root {
+  --white: #fff;
+  --white-transparent: #ffffff55;
+  --gray: #2d3748;
+  --black: #000;
+  
+  --blue-300: #4fa4fa;
+  --blue-900: #111827;
+  --blue-dark: #2d3748;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Poppins, system-ui, sans-serif;
+}
+
+body {
+  background: var(--blue-900);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+}

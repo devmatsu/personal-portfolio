@@ -1,0 +1,53 @@
+.header {
+  background: var(--blue-900);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+}
+
+.header img {
+  justify-content: left;
+  align-items: center;
+  height: 2rem;
+  padding-left: 25rem;
+  cursor: pointer;
+}
+
+.header button {
+  color: var(--white);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition-property: all;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header button img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.header button:hover {
+  color: var(--blue-300);
+}
+
+.icon {
+  display: flex;
+  gap: 2.5rem;
+  padding-right: 25rem; 
+}
+
+@media (max-width: 1200px) {
+  .header img {
+    padding-left: 5rem;
+  }
+
+  .icon {
+    padding-right: 5rem;
+  }
+}
