@@ -38,7 +38,8 @@ export function TechnichalSkills() {
             </div>
           ))}
         </fieldset>
-        
+      </div>
+      <div className={styles.containerSolo}>
         <fieldset className={styles.database}>
           <legend>Databases</legend>
           {databases.map((database) => (
@@ -51,6 +52,7 @@ export function TechnichalSkills() {
           ))}
         </fieldset>
       </div>
+
     </div>
   )
 }
