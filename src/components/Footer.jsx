@@ -50,7 +50,7 @@ export function Footer() {
 
         <hr className={styles.separator} />
         <span className={styles.copyright}>
-          © 2023 devmatsu. All Rights Reserved.
+          © 2024 devmatsu. All Rights Reserved.
         </span>
       </div>
     </footer>
