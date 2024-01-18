@@ -4,6 +4,8 @@ import logo from '../assets/devmatsu-logo.svg'
 
 export function Footer() {
 
+  const currentYear = new Date().getFullYear();
+
   const handleLinkClick = (url) => {
     window.open(url, "_blank");
   };
@@ -50,7 +52,7 @@ export function Footer() {
 
         <hr className={styles.separator} />
         <span className={styles.copyright}>
-          © 2024 devmatsu. All Rights Reserved.
+          © {currentYear} devmatsu. All Rights Reserved.
         </span>
       </div>
     </footer>
