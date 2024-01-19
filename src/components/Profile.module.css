@@ -67,3 +67,29 @@
     padding-right: 6rem;
   }
 }
+
+@media (max-width: 480px) {
+  .profile {
+    height: unset;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .info {
+    padding-left: unset;
+    font-size: 1rem;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+
+  .picture {
+    padding-right: unset;
+  }
+
+  .picture img {
+    width: 120px;
+    height: 120px;
+  }
+}

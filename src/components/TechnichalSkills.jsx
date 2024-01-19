@@ -8,7 +8,7 @@ export function TechnichalSkills() {
   return(
     <div className={styles.skills}>
 
-      <header className={styles.title}>
+      <header className="title">
         <p className={styles.chevron}>&lt;</p>
         TechnicalSkills
         <p className={styles.chevron}>&#47;&gt;</p>

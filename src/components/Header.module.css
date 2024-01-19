@@ -39,7 +39,7 @@
 .icon {
   display: flex;
   gap: 2.5rem;
-  padding-right: 25rem; 
+  padding-right: 25rem;
 }
 
 @media (max-width: 1200px) {
@@ -49,5 +49,24 @@
 
   .icon {
     padding-right: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 2rem;
+  }
+
+  .header img {
+    padding-left: unset !important;
+  }
+
+  .header button {
+    display: flex;
+  }
+
+  .icon {
+    padding: unset !important;
+    gap: 1rem;
   }
 }
