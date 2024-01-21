@@ -1,11 +1,11 @@
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import profilePicture from '../assets/devmatsu-pp.jpeg'
 import styles from './Profile.module.css'
+import resume from '../documents/CV_RODRIGO_MATAGAWA.pdf'
 
 export function Profile() {
   function downloadResume() {
-    const resumeLink = ``;
-    window.open(resumeLink);
+    window.open(resume);
   }
 
   return (
