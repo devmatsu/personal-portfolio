@@ -91,4 +91,8 @@
   .skills {
     padding-top: 12rem;
   }
+
+  .content:hover {
+    background-color: unset;
+  }
 }
