@@ -84,4 +84,9 @@ ul > li > a:hover {
     font-size: 0.8rem;
     line-height: 0.5rem;
   }
+
+  .separator {
+    margin-top: 0rem;
+    margin-bottom: 0.75rem;
+  }
 }
