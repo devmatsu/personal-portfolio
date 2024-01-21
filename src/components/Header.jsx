@@ -1,6 +1,7 @@
 import { FaLinkedinIn, FaGithub, FaEnvelope } from "react-icons/fa";
 import styles from './Header.module.css'
 
+import { URLs } from '../assets/constants';
 import logo from '../assets/devmatsu-logo.svg'
 
 export function Header() {
@@ -11,12 +12,6 @@ export function Header() {
   const handleLogoClick = () => {
     window.location.reload();
   };
-
-  const URLs = {
-    LinkedIn: 'https://www.linkedin.com/in/rodrigo-matagawa/',
-    GitHub: 'https://github.com/devmatsu',
-    Email: 'rodrigo.matagawa@gmail.com'
-  }
 
   return (
     <header className={styles.header}>

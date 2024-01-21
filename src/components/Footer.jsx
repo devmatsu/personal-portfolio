@@ -1,5 +1,6 @@
 import styles from './Footer.module.css'
 
+import { URLs } from '../assets/constants';
 import logo from '../assets/devmatsu-logo.svg'
 
 export function Footer() {
@@ -9,12 +10,6 @@ export function Footer() {
   const handleLinkClick = (url) => {
     window.open(url, "_blank");
   };
-
-  const URLs = {
-    LinkedIn: 'https://www.linkedin.com/in/rodrigo-matagawa/',
-    GitHub: 'https://github.com/devmatsu',
-    Email: 'rodrigo.matagawa@gmail.com'
-  }
 
   const scrollToTop = () => {
     window.scrollTo({
