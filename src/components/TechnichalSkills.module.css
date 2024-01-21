@@ -93,6 +93,6 @@
   }
 
   .content:hover {
-    background-color: unset;
+    background-color: var(--gray);
   }
 }
