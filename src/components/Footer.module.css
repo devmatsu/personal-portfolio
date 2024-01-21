@@ -32,9 +32,8 @@ ul {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  font-size: 0.875rem;
+  font-size: 1.25rem;
   font-weight: 500;
-  color: #6b7280;
   gap: 0.625rem;
   margin-bottom: 0;
   list-style-type: none;
