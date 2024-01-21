@@ -25,13 +25,13 @@ export function Header() {
       </div>
       <div className={styles.icon}>
         <button onClick={() => handleLinkClick(URLs.LinkedIn)}>
-          <FaLinkedinIn size={24} />
+          <FaLinkedinIn size={32} />
         </button>
         <button onClick={() => handleLinkClick(URLs.GitHub)}>
-          <FaGithub size={24} />
+          <FaGithub size={32} />
         </button>
         <button>
-          <FaEnvelope size={24}/>
+          <FaEnvelope size={32}/>
         </button>
       </div>
     </header>

@@ -68,3 +68,20 @@ ul > li > a {
 ul > li > a:hover {
   color: var(--blue-300);
 }
+
+@media (max-width: 480px) {
+  .logo > img {
+    height: 1rem;
+  }
+
+  ul {
+    font-size: 0.7rem;
+    font-weight: 700;
+    gap: 0.625rem;
+  }
+
+  .copyright {
+    font-size: 0.8rem;
+    line-height: 0.5rem;
+  }
+}

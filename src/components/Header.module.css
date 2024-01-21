@@ -59,6 +59,8 @@
 
   .header img {
     padding-left: unset !important;
+    width: 110px;
+    height: auto;
   }
 
   .header button {
@@ -68,5 +70,10 @@
   .icon {
     padding: unset !important;
     gap: 1rem;
+  }
+
+  .icon button svg {
+    width: 20px;
+    height: 20px;
   }
 }
