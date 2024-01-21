@@ -13,6 +13,10 @@ export function Header() {
     window.location.reload();
   };
 
+  const handleEmailClick = (email) => {
+    window.open(`mailto:${email}?subject=A good opportunity for you!&body=Hello Matsu! (:`)
+  }
+
   return (
     <header className={styles.header}>
       <div>
@@ -25,8 +29,8 @@ export function Header() {
         <button onClick={() => handleLinkClick(URLs.GitHub)}>
           <FaGithub size={32} />
         </button>
-        <button>
-          <FaEnvelope size={32}/>
+        <button onClick={() => handleEmailClick(URLs.Email)}>
+          <FaEnvelope size={32} />
         </button>
       </div>
     </header>

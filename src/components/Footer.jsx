@@ -18,6 +18,10 @@ export function Footer() {
     });
   }
 
+  const handleEmailClick = (email) => {
+    window.open(`mailto:${email}?subject=A good opportunity for you!&body=Hello Matsu! (:`)
+  }
+
   return (
     <footer>
       <div className={styles.container}>
@@ -38,7 +42,7 @@ export function Footer() {
               </a>
             </li>
             <li>
-            <a onClick={() => handleLinkClick(URLs.Email)}>
+            <a onClick={() => handleEmailClick(URLs.Email)}>
                 Email
               </a>
             </li>
