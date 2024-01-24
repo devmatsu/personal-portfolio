@@ -151,3 +151,14 @@
   font-size: 14px;
   margin-top: 5px;
 }
+
+@media (max-width: 480px) {
+  .container {
+    padding-top: 0rem;
+  }
+
+  .pomodoro {
+    width: 320px;
+    margin-top: 0rem;
+  }
+}
