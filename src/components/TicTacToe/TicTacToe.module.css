@@ -1,13 +1,14 @@
 .tictactoe {
-  min-height: 75vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 1.25rem;
-  padding-top: 6rem;
 }
 
 strong {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 2rem;
+  margin: 22rem; 
 }

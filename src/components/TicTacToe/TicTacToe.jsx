@@ -8,11 +8,8 @@ export function TicTacToe() {
   return (
     <div>
       <Header />
-      <div className={styles.tictactoe}>
-        <Title text="TicTacToe" />
-        
-        <strong> 🚧 ... In construction ... 🚧 </strong>
-      </div>
+      <Title text="TicTacToe" className={styles.tictactoe} />
+      <strong> 🚧 ... In construction ... 🚧 </strong>
       <Footer />
     </div>
   );
