@@ -1,7 +1,7 @@
 import styles from './Footer.module.css'
 
-import { URLs } from '../assets/constants';
-import logo from '../assets/devmatsu-logo.svg'
+import { URLs } from '../../assets/constants';
+import logo from '../../assets/devmatsu-logo.svg'
 
 export function Footer() {
 

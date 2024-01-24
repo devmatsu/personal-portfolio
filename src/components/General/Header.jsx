@@ -1,16 +1,15 @@
-import { FaLinkedinIn, FaGithub, FaEnvelope } from "react-icons/fa";
+import { Link } from 'react-router-dom'
+
+import { FaLinkedinIn, FaGithub, FaEnvelope } from 'react-icons/fa';
 import styles from './Header.module.css'
 
-import { URLs } from '../assets/constants';
-import logo from '../assets/devmatsu-logo.svg'
+import { URLs } from '../../assets/constants';
+import logo from '../../assets/devmatsu-logo.svg'
 
 export function Header() {
+
   const handleLinkClick = (url) => {
     window.open(url, "_blank");
-  };
-
-  const handleLogoClick = () => {
-    window.location.reload();
   };
 
   const handleEmailClick = (email) => {
@@ -19,9 +18,9 @@ export function Header() {
 
   return (
     <header className={styles.header}>
-      <div>
-        <img src={logo} onClick={handleLogoClick} draggable={false}/>
-      </div>
+      <Link to="/">
+        <img src={logo} draggable={false} alt="Logo" />
+      </Link>
       <div className={styles.icon}>
         <button onClick={() => handleLinkClick(URLs.LinkedIn)}>
           <FaLinkedinIn size={32} />
