@@ -33,7 +33,7 @@ export function PomodoroApp() {
 
   const handleResetClick = () => {
     setIsPlaying(false);
-    setTimer(focusTime * TIMES.MINUTES_IN_SECONDS);
+    setTimer(isFocusMode ? focusTime * TIMES.MINUTES_IN_SECONDS : breakTime * TIMES.MINUTES_IN_SECONDS);
   };
 
   const handleConfigClick = () => {
