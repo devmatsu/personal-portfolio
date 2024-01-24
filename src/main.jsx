@@ -8,6 +8,7 @@ import {
 
 import { Home } from './components/Home/Home';
 import { Pomodoro } from './components/Pomodoro/Pomodoro';
+import { TicTacToe } from './components/TicTacToe/TicTacToe';
 import { NotFound } from './components/NotFound/NotFound';
 import './global.css';
 
@@ -21,7 +22,12 @@ const router = createBrowserRouter([
     path: '/pomodoro',
     element: <Pomodoro/>,
     errorElement: <NotFound />
-  },  
+  },
+  {
+    path: '/tictactoe',
+    element: <TicTacToe/>,
+    errorElement: <NotFound />
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
