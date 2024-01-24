@@ -1,5 +1,4 @@
 import styles from './Footer.module.css'
-
 import { URLs } from '../../assets/constants';
 import logo from '../../assets/devmatsu-logo.svg'
 

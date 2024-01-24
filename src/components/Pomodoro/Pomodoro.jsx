@@ -1,4 +1,4 @@
-import { PomodoroApp } from './PomodoroApp.jsx';
+import { PomodoroApp } from './PomodoroApp';
 import { Header } from '../General/Header';
 import { Footer } from '../General/Footer';
 

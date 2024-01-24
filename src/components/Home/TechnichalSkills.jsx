@@ -2,7 +2,6 @@ import styles from './TechnichalSkills.module.css'
 
 import { skills, cloudServices, databases } from '../../assets/skills-logos'
 
-
 export function TechnichalSkills() {
 
   return(
@@ -39,6 +38,7 @@ export function TechnichalSkills() {
           ))}
         </fieldset>
       </div>
+
       <div className={styles.containerSolo}>
         <fieldset className={styles.database}>
           <legend>Databases</legend>

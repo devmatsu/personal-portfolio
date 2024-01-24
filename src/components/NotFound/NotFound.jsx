@@ -1,6 +1,5 @@
 import { Header } from '../General/Header';
 import { Footer } from '../General/Footer';
-
 import styles from './NotFound.module.css'
 
 export function NotFound() {

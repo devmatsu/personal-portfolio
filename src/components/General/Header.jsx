@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
-
 import { FaLinkedinIn, FaGithub, FaEnvelope } from 'react-icons/fa';
-import styles from './Header.module.css'
 
+import styles from './Header.module.css'
 import { URLs } from '../../assets/constants';
 import logo from '../../assets/devmatsu-logo.svg'
 
