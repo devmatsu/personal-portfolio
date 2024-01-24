@@ -1,6 +1,7 @@
 footer {
   width: 100vw;
   max-width: 100%;
+  margin-top: auto;
   border-top-left-radius: large;
   border-top-right-radius: large;
 }
