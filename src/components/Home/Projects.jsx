@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 
+import { Title } from '../General/Title';
 import styles from './Projects.module.css';
 
 const projectsData = [
@@ -36,11 +37,7 @@ const projectsData = [
 export function Projects() {
   return (
     <div className={styles.projects}>
-      <header className="title">
-        <p className={styles.chevron}>&lt;</p>
-        Projects
-        <p className={styles.chevron}>&#47;&gt;</p>
-      </header>
+      <Title text="Projects" />
 
       <div className={styles.projectList}>
         {projectsData.map((project, index) => (

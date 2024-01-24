@@ -1,17 +1,12 @@
+import { Title } from '../General/Title';
 import styles from './TechnichalSkills.module.css'
-
 import { skills, cloudServices, databases } from '../../assets/skills-logos'
 
 export function TechnichalSkills() {
 
   return(
     <div className={styles.skills}>
-
-      <header className="title">
-        <p className={styles.chevron}>&lt;</p>
-        TechnicalSkills
-        <p className={styles.chevron}>&#47;&gt;</p>
-      </header>
+      <Title text="TechnicalSkills" />
 
       <div className={styles.container}>
         <fieldset className={styles.stack}>

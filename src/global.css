@@ -31,8 +31,9 @@ body {
   font-size: 3rem;
   font-weight: bold;
   text-align: center;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 0.75rem;
-  margin-bottom: 2rem;
 }
 
 @media (max-width: 480px) {

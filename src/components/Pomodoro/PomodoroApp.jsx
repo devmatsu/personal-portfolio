@@ -127,12 +127,6 @@ export function PomodoroApp() {
 
   return (
     <div className={styles.container}>
-      <header className={`title ${styles}`}>
-        <p className={`chevron ${styles}`}>&lt;</p>
-        Pomodoro
-        <p className={`chevron ${styles}`}>&#47;&gt;</p>
-      </header>
-
       <div className={styles.pomodoro}>
         <div className={`${styles.sessionLabel} ${isFocusMode ? styles.focusSession : styles.breakSession}`}>
           {sessionLabel}
