@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { FaLinkedinIn, FaGithub, FaEnvelope } from 'react-icons/fa';
+import { FaLinkedinIn, FaGithub, FaEnvelope, FaBlogger } from 'react-icons/fa';
 
 import styles from './Header.module.css'
 import { URLs } from '../../assets/constants';
@@ -21,15 +21,18 @@ export function Header() {
         <img src={logo} draggable={false} alt="Logo" />
       </Link>
       <div className={styles.icon}>
-        <button onClick={() => handleLinkClick(URLs.LinkedIn)}>
+        <Link to="/blog" className={styles.headerLink}>
+          <FaBlogger size={32} />
+        </Link>
+        <Link to="#" className={styles.headerLink} onClick={() => handleLinkClick(URLs.LinkedIn)}>
           <FaLinkedinIn size={32} />
-        </button>
-        <button onClick={() => handleLinkClick(URLs.GitHub)}>
+        </Link>
+        <Link to="#" className={styles.headerLink} onClick={() => handleLinkClick(URLs.GitHub)}>
           <FaGithub size={32} />
-        </button>
-        <button onClick={() => handleEmailClick(URLs.Email)}>
+        </Link>
+        <Link to="#" className={styles.headerLink} onClick={() => handleEmailClick(URLs.Email)}>
           <FaEnvelope size={32} />
-        </button>
+        </Link>
       </div>
     </header>
   )
