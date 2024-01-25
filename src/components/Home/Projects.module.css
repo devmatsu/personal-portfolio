@@ -16,7 +16,7 @@
   gap: 30px;
   margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjust the minimum and maximum width as needed */
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .projectCard {
@@ -95,10 +95,12 @@
   .projectCard {
     max-width: 300px;
     height: 650px;
-
   }
-
-
+  
+  .projectList {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
   .projectCard { 
     p {
       font-size: 14px;
