@@ -10,13 +10,10 @@
   margin-bottom: 5rem;
 }
 
-.chevron {
-  color: var(--blue-300);
-}
 .projectList {
   display: flex;
   justify-content: space-around;
-  gap: 20px;
+  gap: 30px;
   margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -24,16 +21,18 @@
 
 .projectCard {
   width: 500px;
-  height: 550px;
+  height: 575px;
   border: 1px solid #e1e1e1;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease-in-out;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
   }
 
   h3 {
@@ -43,10 +42,9 @@
     margin: 0;
   }
 
-  .description {
-    padding: 16px;
-    margin: 0;
+  p {
     text-align: justify;
+    margin: 20px;
   }
 
   .buttonContainer {
@@ -56,7 +54,7 @@
     right: 0;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 20px;
   }
 
   .tryButton,
@@ -92,3 +90,4 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
+

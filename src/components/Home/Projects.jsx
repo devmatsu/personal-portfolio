@@ -14,8 +14,8 @@ const projectsData = [
   {
     title: 'Blog',
     description: 'Explore my personal blog, where I share insights, experiences, and thoughts on various topics. Dive into a collection of articles covering technology, life, and everything in between.',
-    tryLink: 'https://dev.to/devmatsu',
-    repoLink: 'https://github.com/devmatsu/personal-portfolio/tree/blog',
+    tryLink: '/blog',
+    repoLink: 'https://github.com/devmatsu/personal-portfolio',
     imageSrc: '/images/blog_preview.png',
   },
   {
