@@ -58,4 +58,14 @@
   .post {
     width: calc(100% - 20px);
   }
+
+  .post p {
+    margin-bottom: 25px;
+    font-size: 15px;
+  }
+
+  .postLink {
+    margin-right: 11rem;
+    font-size: 14px;
+  }
 }
