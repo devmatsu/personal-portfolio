@@ -5,7 +5,7 @@ import { Header } from '../General/Header';
 import { Footer } from '../General/Footer';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Import the dark theme
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from './BlogPage.module.css';
 
 export function BlogPage() {
