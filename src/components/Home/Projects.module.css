@@ -37,7 +37,7 @@
 
   h3 {
     background-color: #3498db;
-    color: #fff;
+    color: var(--white);
     padding: 10px;
     margin: 0;
   }

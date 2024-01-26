@@ -30,7 +30,7 @@ const projectsData = [
     description: 'The Tic Tac Toe Game project is a simple yet classic implementation of the popular Tic Tac Toe game using React. The project provides a visually appealing user interface where players can engage in a friendly match of Tic Tac Toe.',
     tryLink: '/tictactoe',
     repoLink: 'https://github.com/devmatsu/personal-portfolio',
-    imageSrc: '/images/tictactoe_preview.jpg',
+    imageSrc: '/images/tictactoe_preview.png',
   },
 ];
 
