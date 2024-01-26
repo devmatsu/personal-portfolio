@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .board {
@@ -34,11 +34,11 @@
   color: white;
   background-color: var(--blue-900);
   border: 2px solid #ffffff;
-  font-size: 128px;
+  font-size: 110px;
   font-weight: bold;
   line-height: 1;
-  width: 200px;
-  height: 200px;
+  width: 140px;
+  height: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,11 +52,12 @@
 }
 
 .status {
+  min-width: 400px;
   position: absolute;
-  top: 25%;
+  top: 30%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 64px;
+  font-size: 48px;
   font-weight: bold;
   color: var(--white);
   text-align: center;
@@ -67,11 +68,11 @@
 
 .playAgainButton {
   position: absolute;
-  top: 165%;
+  top: 185%;
   left: 50%; 
   transform: translateX(-50%);
-  padding: 30px 50px;
-  font-size: 32px;
+  padding: 10px 50px;
+  font-size: 18px;
   background-color: var(--blue-300);
   color: var(--black);
   border: none;
@@ -87,24 +88,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 450px;
+  width: 350px;
 }
 
 .scores {
   position: relative;
   left: 50%;
   transform: translate(-50%, 0%);
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   border: 2px solid #ffffff;
   background-color: var(--blue-dark);
-  padding: 10px; 
+  padding: 0px 10px; 
   display: inline-block;
   text-align: center;
 }
 
 .scores div {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 @media (max-width: 480px) {
