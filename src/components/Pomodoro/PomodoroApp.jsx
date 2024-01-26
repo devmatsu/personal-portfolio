@@ -1,7 +1,7 @@
 import { FaPlay, FaPause, FaRedo, FaCog } from "react-icons/fa";
 import { useState, useEffect, useCallback } from 'react';
 
-import styles from './Pomodoro.module.css';
+import styles from './PomodoroApp.module.css';
 
 const TIMES = {
   MINUTES_IN_SECONDS: 60
