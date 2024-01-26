@@ -34,10 +34,10 @@ export function Blog() {
             <h2>{post.title}</h2>
             <p>{post.description}</p>
             <div className={styles.postFooter}>
+              <span className={styles.postDate}>{post.readable_publish_date}</span>
               <Link to={`/blog/post/${post.id}`} className={styles.postLink}>
                 Read more
               </Link>
-              <span className={styles.postDate}>{post.readable_publish_date}</span>
             </div>
           </div>
         ))}
