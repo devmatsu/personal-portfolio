@@ -9,19 +9,41 @@ import styles from './Blog.module.css';
 
 export function Blog() {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
+  const perPage = 10;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get('https://dev.to/api/articles?username=devmatsu');
-        setPosts(response.data);
+        const response = await axios.get(`https://dev.to/api/articles?username=devmatsu&page=${page}&per_page=${perPage}`);
+        const fetchedPosts = response.data;
+        setPosts(fetchedPosts);
+
+        if (fetchedPosts.length < perPage) {
+          setHasMorePosts(false);
+        } else {
+          setHasMorePosts(true);
+        }
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [page]);
+
+  const handleNextPage = () => {
+    if (posts.length === perPage) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
 
   return (
     <div>
@@ -42,6 +64,12 @@ export function Blog() {
           </div>
         ))}
       </div>
+
+      <div className={styles.pagination}>
+        <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
+        <button onClick={handleNextPage} disabled={!hasMorePosts}>Next</button>
+      </div>
+
       <Footer />
     </div>
   );

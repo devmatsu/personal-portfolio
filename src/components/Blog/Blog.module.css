@@ -25,7 +25,8 @@
 }
 
 .post p {
-  margin-bottom: 15px;
+  font-size: 14px;
+  margin-bottom: 25px;
 }
 
 .post a {
@@ -52,6 +53,31 @@
   margin-left: 10px;
   font-size: 16px;
   color: #3498db;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
