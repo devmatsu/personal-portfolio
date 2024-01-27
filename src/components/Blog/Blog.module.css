@@ -1,3 +1,7 @@
+.blogSession {
+  min-height: 620px;
+}
+
 .blogContainer {
   display: flex;
   flex-wrap: wrap;

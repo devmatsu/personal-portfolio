@@ -19,6 +19,9 @@
 }
 
 body {
+  min-height: 100vh;
+  max-width: 100%;
+  position: relative;
   background: var(--blue-900);
   color: var(--white);
   -webkit-font-smoothing: antialiased;

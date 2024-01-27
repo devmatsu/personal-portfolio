@@ -50,24 +50,26 @@ export function Blog() {
       <Header />
       <Title text="Blog" className={styles.title} />
 
-      <div className={styles.blogContainer}>
-        {posts.map((post) => (
-          <div key={post.id} className={styles.post}>
-            <h2>{post.title}</h2>
-            <p>{post.description}</p>
-            <div className={styles.postFooter}>
-              <span className={styles.postDate}>{post.readable_publish_date}</span>
-              <Link to={`/blog/post/${post.id}`} className={styles.postLink}>
-                Read more
-              </Link>
+      <div className={styles.blogSession}>
+        <div className={styles.blogContainer}>
+          {posts.map((post) => (
+            <div key={post.id} className={styles.post}>
+              <h2>{post.title}</h2>
+              <p>{post.description}</p>
+              <div className={styles.postFooter}>
+                <span className={styles.postDate}>{post.readable_publish_date}</span>
+                <Link to={`/blog/post/${post.id}`} className={styles.postLink}>
+                  Read more
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <div className={styles.pagination}>
-        <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
-        <button onClick={handleNextPage} disabled={!hasMorePosts}>Next</button>
+        <div className={styles.pagination}>
+          <button onClick={handlePrevPage} disabled={page === 1}>Previous</button>
+          <button onClick={handleNextPage} disabled={!hasMorePosts}>Next</button>
+        </div>
       </div>
 
       <Footer />
