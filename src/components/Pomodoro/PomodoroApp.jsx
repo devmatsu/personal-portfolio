@@ -20,6 +20,7 @@ export function PomodoroApp() {
   const [isFocusMode, setIsFocusMode] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timer, setTimer] = useState(defaultFocusTime * TIMES.MINUTES_IN_SECONDS);
+  const [elapsedTime, setElapsedTime] = useState(0); // New state for elapsed time
   const [isConfigMenuOpen, setIsConfigMenuOpen] = useState(false);
   const [focusTime, setFocusTime] = useState(defaultFocusTime);
   const [breakTime, setBreakTime] = useState(defaultBreakTime);
@@ -33,6 +34,7 @@ export function PomodoroApp() {
 
   const handleResetClick = () => {
     setIsPlaying(false);
+    setElapsedTime(0); // Reset elapsed time
     setTimer(isFocusMode ? focusTime * TIMES.MINUTES_IN_SECONDS : breakTime * TIMES.MINUTES_IN_SECONDS);
   };
 
@@ -88,36 +90,37 @@ export function PomodoroApp() {
   }, [focusTime, breakTime, isFocusMode]);
 
   useEffect(() => {
-    let interval;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => {
-          if (prevTimer > 0) {
-            return prevTimer - 1;
-          } else {
-            clearInterval(interval);
-            toggleMode();
-            audio.play();
+    let intervalId;
 
-            if (!isFocusMode) {
-              setIsPlaying(true);
-              audio.play();
-            } else {
-              setIsFocusMode(!isFocusMode);
-            }
+    const tick = () => {
+      setElapsedTime((prevElapsedTime) => {
+        if (prevElapsedTime < timer) {
+          return prevElapsedTime + 1;
+        } else {
+          clearInterval(intervalId);
+          toggleMode();
+          audio.play();
   
-            return isFocusMode ? focusTime * TIMES.MINUTES_IN_SECONDS : breakTime * TIMES.MINUTES_IN_SECONDS;
+          if (!isFocusMode) {
+            setIsPlaying(true);
+            audio.play();
+          } else {
+            setIsFocusMode(!isFocusMode);
           }
-        });
-      }, 1000);
-    } else {
-      clearInterval(interval);
+  
+          return 0;
+        }
+      });
+    };
+  
+    if (isPlaying) {
+      intervalId = setInterval(tick, 1000);
     }
   
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalId);
     };
-  }, [isPlaying, focusTime, breakTime, isFocusMode, toggleMode, audio]);
+  }, [isPlaying, timer, isFocusMode, toggleMode, audio]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -132,7 +135,7 @@ export function PomodoroApp() {
           {sessionLabel}
         </div>
         <div className={styles.time}>
-          {formatTime(timer)}
+          {formatTime(timer - elapsedTime)}
         </div>
         <div className={styles.controller}>
           <div className={styles.circle}>
