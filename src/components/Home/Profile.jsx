@@ -15,7 +15,7 @@ export function Profile() {
         <p>  Hello world! </p>
         <div className={styles.name}>
           <p className={styles.firstName}> I&apos;m Rodrigo </p>
-          <p> Matagawa </p>
+          <p> Mɑtɑgɑwɑ </p>
         </div>
         <p className={styles.role}> Software Engineer </p>
         <button className={styles.resume} onClick={downloadResume}>
