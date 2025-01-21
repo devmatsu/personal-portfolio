@@ -11,6 +11,7 @@ import { Pomodoro } from './components/Pomodoro/Pomodoro';
 import { TicTacToe } from './components/TicTacToe/TicTacToe';
 import { Blog } from './components/Blog/Blog';
 import { BlogPage } from './components/Blog/BlogPage';
+import { GitHubGraph } from './components/GitHubGraph/GitHubGraph';
 import { NotFound } from './components/NotFound/NotFound';
 import './global.css';
 
@@ -38,6 +39,11 @@ const router = createBrowserRouter([
   {
     path: '/blog/post/:id',
     element: <BlogPage/>,
+    errorElement: <NotFound />
+  },
+  {
+    path: '/gitHubGraph',
+    element: <GitHubGraph/>,
     errorElement: <NotFound />
   },
 ]);

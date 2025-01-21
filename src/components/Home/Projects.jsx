@@ -32,6 +32,13 @@ const projectsData = [
     repoLink: 'https://github.com/devmatsu/personal-portfolio',
     imageSrc: '/images/tictactoe_preview.png',
   },
+  {
+    title: 'GitHub Contribution Graph',
+    description: 'A creative platform where you can design your GitHub contribution graph by drawing patterns. Generate the necessary JSON data to commit and push to your repository, giving you full control and customization over your GitHub activity chart.',
+    tryLink: '/gitHubGraph',
+    repoLink: 'https://github.com/devmatsu/personal-portfolio',
+    imageSrc: '/images/contribution_graph_preview.png',
+  },  
 ];
 
 export function Projects() {
