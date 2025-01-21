@@ -9,6 +9,25 @@
   --blue-dark: #2d3748;
 
   --dracula--background: #282a36;
+
+  --square-size: 15px;
+  --square-gap: 5px;
+  --week-width: calc(var(--square-size) + var(--square-gap));
+
+  --bg-color: #0d1117;
+  --text-color: #c9d1d9;
+  --subtle-text-color: #8b949e;
+  --highlight-color: #ffffff;
+  --border-color: #30363d;
+  --hover-bg-color: #21262d;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --tooltip-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  --level0: #161b22;
+  --level1: #0e4429;
+  --level2: #006d32;
+  --level3: #26a641;
+  --level4: #39d353;
 }
 
 * {
