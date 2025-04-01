@@ -1,8 +1,8 @@
-import { Header } from '../../layout/Header';
+import { Header } from 'components/Header';
 import { Profile } from './sections/Profile';
 import { TechnichalSkills } from './sections/TechnichalSkills';
 import { Projects } from './sections/Projects';
-import { Footer } from '../../layout/Footer';
+import { Footer } from 'components/Footer';
 
 export function Home() {
   return (

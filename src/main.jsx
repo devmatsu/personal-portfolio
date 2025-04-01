@@ -6,13 +6,13 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { Home } from './components/pages/Home';
-import { Pomodoro } from './components/pages/Widget/Pomodoro';
-import { TicTacToe } from './components/pages/Widget/TicTacToe';
-import { Blog } from './components/pages/Widget/Blog';
-import { BlogPage } from './components/pages/Widget/Blog/BlogPage';
-import { GitHubGraph } from './components/pages/Widget/GitHubGraph';
-import { NotFound } from './components/pages/NotFound';
+import { Home } from 'pages/Home';
+import { Pomodoro } from 'pages/Widgets/Pomodoro';
+import { TicTacToe } from 'pages/Widgets/TicTacToe';
+import { Blog } from 'pages/Widgets/Blog';
+import { BlogPage } from 'pages/Widgets/Blog/BlogPage';
+import { GitHubGraph } from 'pages/Widgets/GitHubGraph';
+import { NotFound } from 'pages/NotFound';
 import './global.css';
 
 const router = createBrowserRouter([

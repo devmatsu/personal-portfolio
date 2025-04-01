@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import { FaLinkedinIn, FaGithub, FaEnvelope, FaBlogger } from 'react-icons/fa';
 
 import styles from './Header.module.css'
-import { URLs } from '../../assets/constants';
-import logo from '../../assets/devmatsu-logo.svg'
+import { URLs } from 'assets/constants';
+import logo from 'assets/devmatsu-logo.svg'
 
 export function Header() {
 

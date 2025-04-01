@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Header } from '../../../layout/Header';
-import { Footer } from '../../../layout/Footer';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import axios from 'axios';
+
+import { Header } from 'components/Header';
+import { Footer } from 'components/Footer';
+
 import styles from './BlogPage.module.css';
 
 export function BlogPage() {

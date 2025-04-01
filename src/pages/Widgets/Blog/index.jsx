@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import { Header } from '../../../layout/Header';
-import { Title } from '../../../layout/Title';
-import { Footer } from '../../../layout/Footer';
+import { Header } from 'components/Header';
+import { Title } from 'components/Title';
+import { Footer } from 'components/Footer';
 import styles from './Blog.module.css';
 
 export function Blog() {

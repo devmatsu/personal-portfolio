@@ -1,8 +1,8 @@
 import { FaCloudDownloadAlt } from "react-icons/fa";
 
-import profilePicture from '../../../../assets/devmatsu-pp.png'
+import profilePicture from 'assets/devmatsu-pp.png'
 import styles from './Profile.module.css'
-import resume from '../../../../assets/documents/RESUME_RODRIGO_MATAGAWA.pdf'
+import resume from 'assets/documents/RESUME_RODRIGO_MATAGAWA.pdf'
 
 export function Profile() {
   function downloadResume() {

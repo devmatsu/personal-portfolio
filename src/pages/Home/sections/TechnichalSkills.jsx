@@ -1,6 +1,6 @@
-import { Title } from '../../../layout/Title';
+import { Title } from 'components/Title';
 import styles from './TechnichalSkills.module.css'
-import { skills, cloudServices, databases } from '../../../../assets/skills-logos'
+import { skills, cloudServices, databases } from 'assets/skills-logos'
 
 export function TechnichalSkills() {
 

@@ -1,16 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
-import { Header } from '../../../layout/Header';
-import { Title } from '../../../layout/Title';
-import { Toast } from "../../../utils/Toast";
-import styles from "./GitHubGraph.module.css";
+import { Header } from 'components/Header';
+import { Title } from 'components/Title';
+import { Toast } from 'components/Toast';
+
+import styles from './GitHubGraph.module.css';
 
 export function GitHubGraph() {
   const [years, setYears] = useState([]);
   const [grid, setGrid] = useState([]);
   const [selectedYear, setSelectedYear] = useState(2019);
   const [selectedLevel, setSelectedLevel] = useState(4);
-  const [jsonValue, setJsonValue] = useState("");
+  const [jsonValue, setJsonValue] = useState('');
   const [toasts, setToasts] = useState([]);
   const [isMouseDown, setIsMouseDown] = useState(false);
 

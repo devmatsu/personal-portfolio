@@ -1,7 +1,7 @@
-import { Header } from '../../../layout/Header';
-import { Title } from '../../../layout/Title';
+import { Header } from 'components/Header';
+import { Title } from 'components/Title';
 import { TicTacToeApp } from './TicTacToeApp';
-import { Footer } from '../../../layout/Footer';
+import { Footer } from 'components/Footer';
 
 export function TicTacToe() {
   return (

@@ -1,6 +1,6 @@
-import { Header } from '../../layout/Header';
-import { Title } from '../../layout/Title';
-import { Footer } from '../../layout/Footer';
+import { Header } from 'components/Header';
+import { Title } from 'components/Title';
+import { Footer } from 'components/Footer';
 import styles from './NotFound.module.css'
 
 export function NotFound() {
