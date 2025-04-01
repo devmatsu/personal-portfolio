@@ -1,7 +1,7 @@
-import { Header } from '../General/Header';
-import { Title } from '../General/Title';
+import { Header } from '../../../layout/Header';
+import { Title } from '../../../layout/Title';
 import { PomodoroApp } from './PomodoroApp';
-import { Footer } from '../General/Footer';
+import { Footer } from '../../../layout/Footer';
 
 export function Pomodoro() {
  

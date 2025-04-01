@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 
-import { Header } from '../General/Header';
-import { Title } from '../General/Title';
-import { Toast } from "../General/Toast";
+import { Header } from '../../../layout/Header';
+import { Title } from '../../../layout/Title';
+import { Toast } from "../../../utils/Toast";
 import styles from "./GitHubGraph.module.css";
 
 export function GitHubGraph() {

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { Title } from '../General/Title';
+import { Title } from '../../../layout/Title';
 import styles from './Projects.module.css';
 
 const projectsData = [
