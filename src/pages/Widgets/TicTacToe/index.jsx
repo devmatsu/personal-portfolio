@@ -1,15 +1,29 @@
-import { Header } from 'components/Header';
-import { Title } from 'components/Title';
+import Header from 'components/Header';
+import Breadcrumb from 'components/Breadcrumb';
+import PageTransition from 'components/PageTransition';
+import TitleGroup from 'components/TitleGroup';
 import { TicTacToeApp } from './TicTacToeApp';
-import { Footer } from 'components/Footer';
+import styles from './TicTacToeApp.module.css'
 
 export function TicTacToe() {
   return (
-    <div>
+    <div className={styles.page}>
       <Header />
-      <Title text="TicTacToe" />
-      <TicTacToeApp />
-      <Footer />
+      
+      <div className="breadcrumbWrapper">
+        <Breadcrumb paths={[{ label: 'Home', path: '/' }, { label: 'Widgets', path: '/Widgets' }, { label: 'Pomodoro' }]} />
+      </div>
+
+      <PageTransition>
+        <div className={styles.titleWrapper}>
+          <TitleGroup
+            title=""
+            highlight="Tic Tac Toe"
+            subtitle=""
+          />
+        </div>
+        <TicTacToeApp />
+      </PageTransition>
     </div>
   );
 }

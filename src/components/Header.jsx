@@ -1,39 +1,86 @@
-import { Link } from 'react-router-dom'
-import { FaLinkedinIn, FaGithub, FaEnvelope, FaBlogger } from 'react-icons/fa';
+import { useState } from 'react';
+import { Link as ScrollLink } from 'react-scroll';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
+import styles from './Header.module.css';
+import { useActiveSection } from '../hooks/useActiveSection';
 
-import styles from './Header.module.css'
-import { URLs } from 'assets/constants';
-import logo from 'assets/devmatsu-logo.svg'
+const navItems = [
+  { label: 'About', to: 'about' },
+  { label: 'Skills', to: 'skills' },
+  { label: 'Projects', to: 'projects' },
+  { label: 'Experience', to: 'experience' },
+  { label: 'Contact', to: 'contact' },
+];
 
-export function Header() {
+export default function Header() {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleLinkClick = (url) => {
-    window.open(url, "_blank");
-  };
-
-  const handleEmailClick = (email) => {
-    window.open(`mailto:${email}?subject=A good opportunity for you!&body=Hello Matsu! (:`)
-  }
+  const activeSection = useActiveSection(navItems.map(item => item.to));
 
   return (
     <header className={styles.header}>
-      <Link to="/">
-        <img src={logo} draggable={false} alt="Logo" />
-      </Link>
-      <div className={styles.icon}>
-        <Link to="/blog" className={styles.headerLink}>
-          <FaBlogger size={32} />
-        </Link>
-        <Link to="#" className={styles.headerLink} onClick={() => handleLinkClick(URLs.LinkedIn)}>
-          <FaLinkedinIn size={32} />
-        </Link>
-        <Link to="#" className={styles.headerLink} onClick={() => handleLinkClick(URLs.GitHub)}>
-          <FaGithub size={32} />
-        </Link>
-        <Link to="#" className={styles.headerLink} onClick={() => handleEmailClick(URLs.Email)}>
-          <FaEnvelope size={32} />
-        </Link>
+      <div className={styles.container}>
+        {isHome ? (
+          <ScrollLink
+            to="home"
+            smooth={true}
+            duration={500}
+            className={styles.logo}
+          >
+            devmatsu
+          </ScrollLink>
+        ) : (
+          <RouterLink to="/" className={styles.logo}>
+            devmatsu
+          </RouterLink>
+        )}
+
+        {isHome && (
+          <nav className={styles.navDesktop}>
+            {navItems.map(({ label, to }) => (
+              <ScrollLink
+                key={to}
+                to={to}
+                smooth={true}
+                duration={500}
+                className={`${styles.navItem} ${
+                  activeSection === to ? styles.active : ''
+                }`}
+              >
+                {label}
+              </ScrollLink>
+            ))}
+          </nav>
+        )}
+
+        <button
+          className={styles.mobileToggle}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          ☰
+        </button>
       </div>
+
+      {isHome && isOpen && (
+        <div className={styles.mobileMenu}>
+          {navItems.map(({ label, to }) => (
+            <ScrollLink
+              key={to}
+              to={to}
+              smooth={true}
+              duration={500}
+              className={`${styles.mobileNavItem} ${
+                activeSection === to ? styles.active : ''
+              }`}
+              onClick={() => setIsOpen(false)}
+            >
+              {label}
+            </ScrollLink>
+          ))}
+        </div>
+      )}
     </header>
-  )
+  );
 }

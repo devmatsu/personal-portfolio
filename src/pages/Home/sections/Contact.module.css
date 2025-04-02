@@ -1,0 +1,127 @@
+.contact {
+  padding: 6rem 2rem;
+}
+
+.subtitle {
+  color: var(--subtle-text-color);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.box {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 10rem;
+  transition: border-color 0.3s ease
+}
+
+.box:hover {
+  border-color: var(--main-blue);
+}
+
+.callout {
+  color: var(--white);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.contactActions {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.iconTextButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  color: var(--white);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.iconTextButton:hover {
+  background-color: rgba(59, 174, 255, 0.05);
+  border-color: var(--main-blue);
+  color: var(--main-blue);
+  box-shadow: 0 0 8px rgba(59, 174, 255, 0.08);
+}
+
+.iconTextButton::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -1.8rem;
+  background: #0a0a0a;
+  color: var(--subtle-text-color);
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.iconTextButton:hover::after {
+  opacity: 1;
+}
+
+.iconTextButton.copied {
+  animation: pulseCopied 1s ease-in-out;
+}
+
+@keyframes pulseCopied {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 174, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(59, 174, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 174, 255, 0);
+  }
+}
+
+.icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem;
+  border-radius: 6px;
+  color: var(--main-blue);
+  transition: 0.3s ease;
+}
+
+.icons a:hover {
+  background: rgba(59, 174, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.toastContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+}

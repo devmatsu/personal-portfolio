@@ -1,0 +1,20 @@
+.titleGroup {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.2rem;
+}
+
+.title span {
+  color: var(--main-blue);
+}
+
+.subtitle {
+  color: var(--subtle-text-color);
+  font-size: 0.9rem;
+}

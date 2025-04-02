@@ -1,0 +1,43 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #888;
+  gap: 0.5rem;
+  margin: 6rem 0rem 0;
+}
+
+.breadcrumb span:last-child {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.link {
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.separator {
+  margin: 0 0.5rem;
+  color: #666;
+}
+
+.current {
+  color: #fff;
+  font-weight: 500;
+}

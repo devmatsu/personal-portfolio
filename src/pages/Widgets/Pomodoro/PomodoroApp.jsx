@@ -20,7 +20,7 @@ export function PomodoroApp() {
   const [isFocusMode, setIsFocusMode] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timer, setTimer] = useState(defaultFocusTime * TIMES.MINUTES_IN_SECONDS);
-  const [elapsedTime, setElapsedTime] = useState(0); // New state for elapsed time
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [isConfigMenuOpen, setIsConfigMenuOpen] = useState(false);
   const [focusTime, setFocusTime] = useState(defaultFocusTime);
   const [breakTime, setBreakTime] = useState(defaultBreakTime);
@@ -34,7 +34,7 @@ export function PomodoroApp() {
 
   const handleResetClick = () => {
     setIsPlaying(false);
-    setElapsedTime(0); // Reset elapsed time
+    setElapsedTime(0);
     setTimer(isFocusMode ? focusTime * TIMES.MINUTES_IN_SECONDS : breakTime * TIMES.MINUTES_IN_SECONDS);
   };
 

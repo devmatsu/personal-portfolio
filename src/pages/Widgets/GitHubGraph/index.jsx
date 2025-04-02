@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { Header } from 'components/Header';
-import { Title } from 'components/Title';
+import Header from 'components/Header';
+import Breadcrumb from 'components/Breadcrumb';
+import PageTransition from 'components/PageTransition';
+import TitleGroup from 'components/TitleGroup';
 import { Toast } from 'components/Toast';
 
 import styles from './GitHubGraph.module.css';
@@ -265,7 +267,7 @@ export function GitHubGraph() {
   ];
 
   return (
-    <div>
+    <div className={styles.page}>
       <div className={styles.toastContainer}>
         {toasts.map((toast, index) => (
           <Toast
@@ -279,104 +281,115 @@ export function GitHubGraph() {
       </div>
       
       <Header />
-      <Title text="GitHubGraph" className={styles.title} />
-
-      <div className={styles.container}>
-        <div className={styles.graphContainer}>
-          <div className={styles.graph}>
-            <ul className={styles.months}>
-              {months.map((month, index) => (
-                <li key={index}>{month}</li>
-              ))}
-            </ul>
-
-            <div className={styles.weekdaysAndSquares}>
-              <ul className={styles.days}>
-                {weekdays.map((day, index) => (
-                  <li key={index}>{day}</li>
-                ))}
-              </ul>
-
-              <ul className={styles.squares}>
-                {grid.map((square, index) => (
-                  <li
-                    key={index}
-                    className={square.type === "empty" ? styles.empty : styles.square}
-                    title={square.title || ""}
-                    data-level={square.type === "day" ? square.level : undefined}
-                    onMouseDown={() => handleMouseDown(index)}
-                    onMouseOver={() => handleMouseOver(index)}
-                  ></li>
-                ))}
-              </ul>
-            </div>
-            <div className={styles.controlsScale}>
-              <div className={styles.controls}>
-                <select
-                  id="year"
-                  value={selectedYear}
-                  onChange={handleYearChange}
-                  className={styles.yearSelect}
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className={styles.scale}>
-                <span>Less</span>
-                {levels.map((level) => (
-                  <div
-                    key={level}
-                    className={`${styles.box} ${styles[`level${level}`]} ${
-                      level === selectedLevel ? styles.selected : ""
-                    }`}
-                    onClick={() => handleLevelSelect(level)}
-                  ></div>
-                ))}
-                <span>More</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.jsonGenerator}>
-          <textarea
-            id="json-input"
-            className={styles.jsonValue}
-            placeholder="Paste your JSON here..."
-            rows="10"
-            value={jsonValue}
-            onChange={handleJsonValueChange}
-          />
-          <div className={styles.jsonButtons}>
-            <button onClick={handleApplyJson}>Apply JSON</button>
-            <button
-              id="generate-json"
-              className={styles.jsonButton}
-              onClick={handleGenerateJSON}
-            >
-              Generate JSON
-            </button>
-            <button
-              id="copy-json"
-              className={styles.jsonButton}
-              onClick={handleCopyJSON}
-            >
-              Copy JSON
-            </button>
-            <button
-              id="download-json"
-              className={styles.jsonButton}
-              onClick={handleDownloadJSON}
-            >
-              Download JSON
-            </button>
-          </div>
-        </div>
+      <div className="breadcrumbWrapper">
+        <Breadcrumb paths={[{ label: 'Home', path: '/' }, { label: 'Widgets', path: '/Widgets' }, { label: 'GitHub Graph' }]} />
       </div>
+
+      <PageTransition>
+        <div className={styles.titleWrapper}>
+          <TitleGroup
+            title=""
+            highlight="GitHub Contribution Graph"
+            subtitle=""
+          />
+        </div>
+        <div className={styles.container}>
+          <div className={styles.graphContainer}>
+            <div className={styles.graph}>
+              <ul className={styles.months}>
+                {months.map((month, index) => (
+                  <li key={index}>{month}</li>
+                ))}
+              </ul>
+
+              <div className={styles.weekdaysAndSquares}>
+                <ul className={styles.days}>
+                  {weekdays.map((day, index) => (
+                    <li key={index}>{day}</li>
+                  ))}
+                </ul>
+
+                <ul className={styles.squares}>
+                  {grid.map((square, index) => (
+                    <li
+                      key={index}
+                      className={square.type === "empty" ? styles.empty : styles.square}
+                      title={square.title || ""}
+                      data-level={square.type === "day" ? square.level : undefined}
+                      onMouseDown={() => handleMouseDown(index)}
+                      onMouseOver={() => handleMouseOver(index)}
+                    ></li>
+                  ))}
+                </ul>
+              </div>
+              <div className={styles.controlsScale}>
+                <div className={styles.controls}>
+                  <select
+                    id="year"
+                    value={selectedYear}
+                    onChange={handleYearChange}
+                    className={styles.yearSelect}
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className={styles.scale}>
+                  <span>Less</span>
+                  {levels.map((level) => (
+                    <div
+                      key={level}
+                      className={`${styles.box} ${styles[`level${level}`]} ${
+                        level === selectedLevel ? styles.selected : ""
+                      }`}
+                      onClick={() => handleLevelSelect(level)}
+                    ></div>
+                  ))}
+                  <span>More</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.jsonGenerator}>
+            <textarea
+              id="json-input"
+              className={styles.jsonValue}
+              placeholder="Paste your JSON here..."
+              rows="10"
+              value={jsonValue}
+              onChange={handleJsonValueChange}
+            />
+            <div className={styles.jsonButtons}>
+              <button onClick={handleApplyJson}>Apply JSON</button>
+              <button
+                id="generate-json"
+                className={styles.jsonButton}
+                onClick={handleGenerateJSON}
+              >
+                Generate JSON
+              </button>
+              <button
+                id="copy-json"
+                className={styles.jsonButton}
+                onClick={handleCopyJSON}
+              >
+                Copy JSON
+              </button>
+              <button
+                id="download-json"
+                className={styles.jsonButton}
+                onClick={handleDownloadJSON}
+              >
+                Download JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      </PageTransition>
     </div>
   );
 }

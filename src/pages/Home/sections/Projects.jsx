@@ -1,74 +1,43 @@
-import { Link } from 'react-router-dom';
-
-import { Title } from 'components/Title';
 import styles from './Projects.module.css';
+import ProjectCard from './ProjectCard';
+import HeadingBadge from 'components/HeadingBadge';
+import TitleGroup from 'components/TitleGroup';
+import { TerminalSquare } from 'lucide-react';
 
-const projectsData = [
+const projects = [
   {
-    title: 'Pomodoro App',
-    description: 'My personal take on the Pomodoro app, born out of a quest to learn React and a genuine love for efficient study sessions. Experience a sleek design, personalized Pomodoro cycles, and the perfect blend of productivity and learning. ',
-    tryLink: '/pomodoro',
-    repoLink: 'https://github.com/devmatsu/personal-portfolio',
-    imageSrc: '/images/pomodoro_preview.png',
+    title: 'Widgets',
+    description: 'A collection of interactive mini-apps built with React to boost productivity and explore creative ideas.',
+    image: '/images/widgets_preview.png',
+    stack: ['React.js', 'Mini Projects', 'UI/UX'],
+    link: '/widgets', 
   },
   {
     title: 'Blog',
-    description: 'Explore my personal blog, where I share insights, experiences, and thoughts on various topics. Dive into a collection of articles covering technology, life, and everything in between.',
-    tryLink: '/blog',
-    repoLink: 'https://github.com/devmatsu/personal-portfolio',
-    imageSrc: '/images/blog_preview.png',
+    description: 'Articles and technical notes on JavaScript, backend development and the journey of becoming a better engineer.',
+    image: '/images/blog_preview.png',
+    stack: ['Node.js', 'API integration', 'Technical Writing'],
+    link: '/blog', 
   },
-  {
-    title: 'Quote Generator for Instagram',
-    description: 'Unleash the power of artificial intelligence with my Quote Generator for Instagram. Effortlessly create captivating and inspiring quotes. Elevate your content game and leave a lasting impression with unique and thought-provoking quotes.',
-    tryLink: 'https://instagram.com/matsufit',
-    repoLink: 'https://github.com/devmatsu/quote-generator',
-    imageSrc: '/images/matsufit_preview.jpg',
-  },
-  {
-    title: 'Tic Tac Toe',
-    description: 'The Tic Tac Toe Game project is a simple yet classic implementation of the popular Tic Tac Toe game using React. The project provides a visually appealing user interface where players can engage in a friendly match of Tic Tac Toe.',
-    tryLink: '/tictactoe',
-    repoLink: 'https://github.com/devmatsu/personal-portfolio',
-    imageSrc: '/images/tictactoe_preview.png',
-  },
-  {
-    title: 'GitHub Contribution Graph',
-    description: 'A creative platform where you can design your GitHub contribution graph by drawing patterns. Generate the necessary JSON data to commit and push to your repository, giving you full control and customization over your GitHub activity chart.',
-    tryLink: '/gitHubGraph',
-    repoLink: 'https://github.com/devmatsu/personal-portfolio',
-    imageSrc: '/images/contribution_graph_preview.png',
-  },  
 ];
 
-export function Projects() {
+export default function Projects() {
   return (
-    <div className={styles.projects}>
-      <Title text="Projects" />
+    <section id="projects" className={styles.projects}>
+      <div className="container">
+        <HeadingBadge title="Projects" icon={<TerminalSquare size={14} />} />
+        <TitleGroup
+          title="My"
+          highlight="Projects"
+          subtitle="Explore some of my personal projects."
+        />
 
-      <div className={styles.projectList}>
-        {projectsData.map((project, index) => (
-          <div key={index} className={styles.projectCard}>
-            <img src={project.imageSrc} alt={project.title} className={styles.projectImage} />
-            <h3>{project.title}</h3>
-            <p>{project.description}</p>
-            <div className={styles.buttonContainer}>
-              <a href={project.repoLink} className={styles.repoButton} target="_blank" rel="noopener noreferrer">
-                Repository
-              </a>
-              {project.tryLink ? (
-                <Link to={project.tryLink} className={styles.tryButton}>
-                  Check it out
-                </Link>
-              ) : (
-                <a href={project.tryLink} className={styles.tryButton} target="_blank" rel="noopener noreferrer">
-                  Check it out
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
+        <div className={styles.cardsWrapper}>
+          {projects.map((project, i) => (
+            <ProjectCard key={i} {...project} />
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

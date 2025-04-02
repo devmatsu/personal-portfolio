@@ -1,16 +1,22 @@
-import { Header } from 'components/Header';
-import { Profile } from './sections/Profile';
-import { TechnichalSkills } from './sections/TechnichalSkills';
-import { Projects } from './sections/Projects';
-import { Footer } from 'components/Footer';
+import Header from 'components/Header';
+import Introduction from './sections/Introduction';
+import About from './sections/About';
+import Skills from './sections/Skills';
+import Projects from './sections/Projects';
+import Experience from './sections/Experience';
+import Contact from './sections/Contact';
+import Footer from 'components/Footer';
 
 export function Home() {
   return (
     <div>
       <Header />
-      <Profile />
-      <TechnichalSkills />
+      <Introduction />
+      <About />
+      <Skills />
       <Projects />
+      <Experience />
+      <Contact />
       <Footer />
     </div>
   )
