@@ -6,7 +6,7 @@ import { CopyBlock, dracula } from 'react-code-blocks';
 import axios from 'axios';
 
 import Header from 'components/Header';
-import Breadcrumb from 'components/BreadCrumb';
+import Breadcrumb from 'components/Breadcrumb';
 import Footer from 'components/Footer';
 
 import styles from './BlogPage.module.css';

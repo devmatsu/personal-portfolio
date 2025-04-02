@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import PageTransition from 'components/PageTransition';
 import Header from 'components/Header';
-import Breadcrumb from 'components/BreadCrumb';
+import Breadcrumb from 'components/Breadcrumb';
 import TitleGroup from 'components/TitleGroup';
 import styles from './Widgets.module.css';
 
