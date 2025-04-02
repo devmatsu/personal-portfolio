@@ -29,10 +29,10 @@ export function BlogPage() {
   }, [id]);
 
   return (
-    <div>
+    <div className={styles.page}>
       <Header />
-      <div className={styles.wrapper}>
-        <Breadcrumb paths={[{ label: 'Home', path: '/' }, { label: 'Posts', path: '/blog' }, { label: post?.title || 'Loading...' }]} />
+      <div className="breadcrumbWrapper">
+        <Breadcrumb paths={[{ label: 'Home', path: '/' }, { label: 'Blog', path: '/blog' }, { label: post?.title || 'Loading...' }]} />
       </div>
       <div className={styles.container}>
         {post ? (
