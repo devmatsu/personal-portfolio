@@ -91,32 +91,6 @@
   cursor: pointer;
 }
 
-.link {
-  margin: 0 1rem;
-  text-decoration: none;
-  color: #fff;
-  position: relative;
-  transition: color 0.3s;
-}
-
-.link:hover {
-  color: #38bdf8;
-}
-
-.active {
-  color: #38bdf8;
-}
-
-.active::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #38bdf8;
-}
-
 @media (max-width: 768px) {
   .navDesktop {
     display: none;
@@ -126,4 +100,3 @@
     display: block;
   }
 }
-

@@ -41,6 +41,11 @@
   font-family: Poppins, system-ui, sans-serif;
 }
 
+html, body {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 body {
   min-height: 100vh;
   max-width: 100%;
@@ -48,8 +53,6 @@ body {
   background: radial-gradient(circle at center, var(--bg-color) 60%, var(--bg-color-dark));
   color: var(--white);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 .container {
@@ -70,3 +73,8 @@ body {
   justify-content: flex-start;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

@@ -124,4 +124,13 @@
   top: 1rem;
   right: 1rem;
   z-index: 9999;
+  left: auto;
+  max-width: 90vw;
+}
+
+@media (max-width: 768px) {
+  .iconTextButton {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
 }
