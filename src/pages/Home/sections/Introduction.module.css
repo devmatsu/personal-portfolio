@@ -163,6 +163,10 @@
     width: 200px;
     height: 200px;
   }
+
+  .intro {
+    padding-top: 4rem;
+  }
 }
 
 @keyframes fadeInScale {
