@@ -6,30 +6,41 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { Home } from './components/Home/Home';
-import { Pomodoro } from './components/Pomodoro/Pomodoro';
-import { TicTacToe } from './components/TicTacToe/TicTacToe';
-import { Blog } from './components/Blog/Blog';
-import { BlogPage } from './components/Blog/BlogPage';
-import { GitHubGraph } from './components/GitHubGraph/GitHubGraph';
-import { NotFound } from './components/NotFound/NotFound';
+import { Home } from 'pages/Home';
+import Widgets from 'pages/Widgets';
+import { Pomodoro } from 'pages/Widgets/Pomodoro';
+import { TicTacToe } from 'pages/Widgets/TicTacToe';
+import { Blog } from 'pages/Blog';
+import { BlogPage } from 'pages/Blog/BlogPage';
+import { GitHubGraph } from 'pages/Widgets/GitHubGraph';
+import { NotFound } from 'pages/NotFound';
 import './global.css';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Home/>,
-    errorElement: <NotFound />
+    errorElement: <Home />
   },
   {
-    path: '/pomodoro',
+    path: '/widgets',
+    element: <Widgets/>,
+    errorElement: <Home />
+  },
+  {
+    path: '/widgets/pomodoro',
     element: <Pomodoro/>,
-    errorElement: <NotFound />
+    errorElement: <Widgets />
   },
   {
-    path: '/tictactoe',
+    path: '/widgets/tictactoe',
     element: <TicTacToe/>,
-    errorElement: <NotFound />
+    errorElement: <Widgets />
+  },
+  {
+    path: '/widgets/gitHubGraph',
+    element: <GitHubGraph/>,
+    errorElement: <Widgets />
   },
   {
     path: '/blog',
@@ -39,11 +50,6 @@ const router = createBrowserRouter([
   {
     path: '/blog/post/:id',
     element: <BlogPage/>,
-    errorElement: <NotFound />
-  },
-  {
-    path: '/gitHubGraph',
-    element: <GitHubGraph/>,
     errorElement: <NotFound />
   },
 ]);

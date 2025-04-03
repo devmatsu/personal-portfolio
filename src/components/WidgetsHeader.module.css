@@ -1,0 +1,44 @@
+.header {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.breadcrumb {
+  font-size: 0.875rem;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.link {
+  cursor: pointer;
+  color: #0ea5e9;
+  transition: color 0.2s;
+}
+
+.link:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.separator {
+  color: #999;
+}
+
+.current {
+  color: #fff;
+  font-weight: 500;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #aaa;
+}

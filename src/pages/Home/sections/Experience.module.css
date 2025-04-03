@@ -1,0 +1,154 @@
+.experience {
+  padding: 6rem 2rem;
+  background: var(--blue-900);
+}
+
+.subtitle {
+  color: var(--subtle-text-color);
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+}
+
+.cardWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card {
+  background-color: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 6px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: rgba(59, 174, 255, 0.3);
+  box-shadow: 0 0 6px rgba(59, 174, 255, 0.1);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardHeader h3 {
+  color: var(--white);
+  font-size: 1.2rem;
+}
+
+.company,
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--subtle-text-color);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chevron {
+  transition: transform 0.4s ease;
+}
+
+.chevronOpen {
+  transform: rotate(90deg);
+}
+
+.cardBodyWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: all 0.4s ease;
+}
+
+.cardBodyOpen {
+  grid-template-rows: 1fr;
+}
+
+.cardBody {
+  overflow: hidden;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.description li {
+  font-size: 0.875rem;
+  color: var(--subtle-text-color);
+  transition: all 0.4s ease;
+}
+
+.fadeIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tagIn,
+.tagOut {
+  font-size: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: #0a0a0a;
+  transition: all 0.4s ease;
+}
+
+.tagIn {
+  color: var(--subtle-text-color);
+  opacity: 1;
+  transform: translateY(0);
+  border-color: rgba(59, 174, 255, 0.3);
+}
+
+.tagOut {
+  opacity: 0;
+  transform: translateY(10px);
+  color: transparent;
+}
+
+.periodPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background-color: rgba(8, 145, 178, 0.1);
+  color: var(--main-blue);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

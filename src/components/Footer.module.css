@@ -1,0 +1,16 @@
+.footer {
+  padding: 2rem;
+  text-align: center;
+  color: var(--subtle-text-color);
+}
+
+.line {
+  width: 75%;
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0 auto 1rem;
+}
+
+.copyright {
+  font-size: 0.875rem;
+}
