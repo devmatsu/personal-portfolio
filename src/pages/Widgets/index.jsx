@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from 'components/PageTransition';
 import Header from 'components/Header';
@@ -31,6 +32,10 @@ const widgets = [
 
 export default function WidgetsPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'Devmatsu | Widgets';
+  }, []);
 
   return (
     <div className={styles.page}>

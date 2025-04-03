@@ -35,6 +35,10 @@ export function Blog() {
     fetchPosts();
   }, [page]);
 
+  useEffect(() => {
+    document.title = 'Devmatsu | Blog';
+  }, []);
+
   const handleNextPage = () => {
     if (posts.length === perPage) {
       setPage(page + 1);
