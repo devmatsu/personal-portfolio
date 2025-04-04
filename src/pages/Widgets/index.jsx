@@ -34,7 +34,7 @@ export default function WidgetsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = 'Devmatsu | Widgets';
+    document.title = 'Matsu | Widgets';
   }, []);
 
   return (

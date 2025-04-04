@@ -36,7 +36,7 @@ export function Blog() {
   }, [page]);
 
   useEffect(() => {
-    document.title = 'Devmatsu | Blog';
+    document.title = 'Matsu | Blog';
   }, []);
 
   const handleNextPage = () => {
