@@ -11,7 +11,7 @@ import Footer from 'components/Footer';
 
 export function Home() {
   useEffect(() => {
-    document.title = 'Devmatsu | Backend Engineer';
+    document.title = 'Devmatsu | Software Engineer';
   }, []);
 
   return (

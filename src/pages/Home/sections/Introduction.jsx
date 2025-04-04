@@ -18,7 +18,7 @@ export default function Introduction() {
               <h1 className={styles.heading}>
                 <span>
                   <Typewriter
-                    words={['Rodrigo Mɑtɑgɑwɑ', 'Matsu']}
+                    words={['Rodrigo Matagawa', 'Matsu']}
                     loop={0}
                     cursor
                     cursorStyle="|"
