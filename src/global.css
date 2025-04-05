@@ -41,18 +41,20 @@
   font-family: Poppins, system-ui, sans-serif;
 }
 
-html, body {
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-
 body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 0.5rem; /* Prevents layout shift between pages with and without vertical scrollbar */
   min-height: 100vh;
   max-width: 100%;
   position: relative;
   background: radial-gradient(circle at center, var(--bg-color) 60%, var(--bg-color-dark));
   color: var(--white);
   -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scrollbar-gutter: stable;
 }
 
 .container {
