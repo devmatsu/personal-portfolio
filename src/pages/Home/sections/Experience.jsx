@@ -1,66 +1,118 @@
 import { useState } from 'react';
 import styles from './Experience.module.css';
-import { Briefcase, Calendar, ChevronRight } from 'lucide-react';
+import { Briefcase, Calendar, ChevronRight, Building } from 'lucide-react';
 import HeadingBadge from 'components/HeadingBadge';
 import TitleGroup from 'components/TitleGroup';
+import TechTags from 'components/TechTags';
 
 const experiences = [
   {
-    role: 'Senior Software Engineer',
     company: 'Code7',
-    period: 'Jul 2024 - Present',
-    description: [
-      'Led the development of scalable backend services using Node.js and AWS.',
-      'Designed and implemented messaging APIs handling over 10M requests/day.',
-      'Worked closely with cross-functional teams to deliver high-impact features with reliability and performance in mind.',
+    tags: [
+      'Node.js', 'JavaScript', 'TypeScript', 'Express.js', 'Serverless',
+      'MongoDB', 'AWS Lambda', 'AWS API Gateway', 'AWS DynamoDB', 'AWS SQS', 
+      'AWS CloudWatch', 'ECS', 'CI/CD', 'DevOps', 'Git', 'Docker', 'SQL Server',
+      'Prettier', 'ESLint', 'SCRUM', 'Microservices'
     ],
-    tags: ['Node.js', 'AWS', 'TypeScript', 'System Design', 'Microservices'],
+    roles: [
+      {
+        role: 'Senior Software Engineer',
+        startDate: '2024-07-01',
+        endDate: 'Present',
+        description: [
+          'Led the development of scalable backend services using Node.js and AWS.',
+          'Designed and implemented messaging APIs handling over 10M requests/day.',
+          'Worked closely with cross-functional teams to deliver high-impact features with reliability and performance in mind.',
+        ],
+      },
+      {
+        role: 'Software Engineer',
+        startDate: '2020-03-01',
+        endDate: '2024-06-30',
+        description: [
+          'Developed features for high-throughput communication systems including SMS, RCS, and email flows.',
+          'Improved logging and observability using Elasticsearch and Kibana.',
+          'Participated in code reviews and architecture discussions to ensure clean, maintainable code.',
+        ],
+      },
+      {
+        role: 'Junior Software Engineer',
+        startDate: '2019-03-01',
+        endDate: '2020-02-29',
+        description: [
+          'Maintained and enhanced legacy systems using Express and PostgreSQL.',
+          'Contributed to early refactoring efforts to migrate services to a serverless architecture.',
+          'Implemented unit and integration tests to improve system reliability.',
+        ],
+      },
+    ],
   },
   {
-    role: 'Software Engineer',
-    company: 'Code7',
-    period: 'Mar 2020 - Jun 2024',
-    description: [
-      'Developed features for high-throughput communication systems including SMS, RCS, and email flows.',
-      'Improved logging and observability using Elasticsearch and Kibana.',
-      'Participated in code reviews and architecture discussions to ensure clean, maintainable code.',
-    ],
-    tags: ['Node.js', 'AWS Lambda', 'Serverless Framework', 'Redis', 'MongoDB'],
-  },
-  {
-    role: 'Junior Software Engineer',
-    company: 'Code7',
-    period: 'Mar 2019 - Feb 2020',
-    description: [
-      'Maintained and enhanced legacy systems using Express and PostgreSQL.',
-      'Contributed to early refactoring efforts to migrate services to a serverless architecture.',
-      'Implemented unit and integration tests to improve system reliability.',
-    ],
-    tags: ['JavaScript', 'Node.js', 'Express.js', 'PM2', 'SQL Server'],
-  },
-  {
-    role: 'Junior Software Engineer',
     company: 'TQS',
-    period: 'Jul 2018 - Feb 2019',
-    description: [
-      'Developed internal tools and automation scripts in C# and VB.NET.',
-      'Supported product teams with system integrations and troubleshooting.',
-      'Participated in the migration of on-prem systems to modern web-based platforms.',
+    tags: [
+      'JavaScript', 'C#', 'VB.NET', 'SQL Server', 'MySQL', 'Linux', 'Automation', 
+      'Mainframe', 'Technical Documentation', 'CRM (Customer Relationship Management)',
+      'Quality Assurance (QA)', 'Microsoft LUIS', 'Engineering Support'
     ],
-    tags: ['C#', 'VB.NET', 'JavaScript', 'SQL Server', 'MySQL', 'Linux'],
-  },
-  {
-    role: 'Intern Software Engineer',
-    company: 'TQS',
-    period: 'Feb 2017 - Jun 2018',
-    description: [
-      'Assisted in the maintenance of structural engineering software solutions.',
-      'Created test routines and documentation to support QA processes.',
-      'Learned foundational software engineering principles in a production environment.',
+    roles: [
+      {
+        role: 'Junior Software Engineer',
+        startDate: '2018-07-01',
+        endDate: '2019-02-28',
+        description: [
+          'Developed internal tools and automation scripts in C# and VB.NET.',
+          'Supported product teams with system integrations and troubleshooting.',
+          'Participated in the migration of on-prem systems to modern web-based platforms.',
+        ],
+      },
+      {
+        role: 'Intern Software Engineer',
+        startDate: '2017-02-01',
+        endDate: '2018-06-30',
+        description: [
+          'Assisted in the maintenance of structural engineering software solutions.',
+          'Created test routines and documentation to support QA processes.',
+          'Learned foundational software engineering principles in a production environment.',
+        ],
+      },
     ],
-    tags: ['C#', 'VB.NET', 'SQL Server', 'MySQL', 'CRM'],
   },
 ];
+
+const calculateDuration = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = endDate === 'Present' ? new Date() : new Date(endDate);
+
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return { years, months };
+};
+
+const formatDate = (date) => {
+  if (date === 'Present') return 'Present';
+  const [year, month] = date.split('-');
+  return `${month}/${year}`;
+};
+
+const getMinMaxDates = (exp) => {
+  const startDates = exp.roles.map((role) => role.startDate);
+  const endDates = exp.roles.map((role) => role.endDate);
+
+  const minStartDate = Math.min(...startDates.map((date) => new Date(date).getTime()));
+  const maxEndDate = Math.max(
+    ...endDates.map(
+      (date) => (date === 'Present' ? new Date().getTime() : new Date(date).getTime())
+    )
+  );
+
+  return { minStartDate: new Date(minStartDate), maxEndDate: new Date(maxEndDate) };
+};
 
 export default function Experience() {
   const [openIndex, setOpenIndex] = useState(null);
@@ -81,65 +133,70 @@ export default function Experience() {
 
         <div className={styles.cardWrapper}>
           {experiences.map((exp, index) => {
-            const isOpen = openIndex === index;
+            const { minStartDate, maxEndDate } = getMinMaxDates(exp);
+            const { years, months } = calculateDuration(minStartDate, maxEndDate);
 
             return (
-              <div
-                key={index}
-                className={`${styles.card} ${isOpen ? styles.active : ''}`}
-                onClick={() => toggle(index)}
-              >
-                <div className={styles.cardHeader}>
-                  <div>
-                    <h3>{exp.role}</h3>
-                    <p className={styles.company}>
-                      <Briefcase size={14} /> {exp.company}
-                    </p>
+              <div key={index} className={styles.companyWrapper}>
+                <div className={styles.companyHeader}>
+                  <div className={styles.companyTitle}>
+                    <Building size={24} /> {exp.company}
                   </div>
-                  <div className={styles.right}>
-                  <span className={styles.periodPill}>
-                    <Calendar size={14} />
-                    {exp.period}
-                  </span>
-                    <ChevronRight
-                      className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
-                      size={16}
-                    />
-                  </div>
+                  <p className={styles.companyDuration}>
+                  {years} {years === 1 ? 'yr' : 'yrs'} {months} {months === 1 ? 'mo' : 'mos'}
+                  </p>
                 </div>
 
-                <div
-                  className={`${styles.cardBodyWrapper} ${
-                    isOpen ? styles.cardBodyOpen : ''
-                  }`}
-                >
-                  <div className={styles.cardBody}>
-                    <ul className={styles.description}>
-                      {exp.description.map((item, i) => (
-                        <li
-                          key={i}
-                          style={{ transitionDelay: `${i * 60}ms` }}
-                          className={isOpen ? styles.fadeIn : styles.fadeOut}
-                        >
-                          • {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className={styles.tags}>
-                      {exp.tags.map((tag, i) => (
-                        <span
-                          key={i}
-                          style={{
-                            transitionDelay: isOpen ? `${i * 80 + 300}ms` : '0ms',
-                          }}
-                          className={isOpen ? styles.tagIn : styles.tagOut}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                <TechTags className={styles.tags} tags={exp.tags} />
+
+                {exp.roles.map((role, i) => {
+                  const isOpen = openIndex === `${index}-${i}`;
+
+                  return (
+                    <div
+                      key={`${index}-${i}`}
+                      className={`${styles.card} ${isOpen ? styles.active : ''}`}
+                      onClick={() => toggle(`${index}-${i}`)}
+                    >
+                      <div className={styles.cardHeader}>
+                        <div>
+                          <h3>{role.role}</h3>
+                        </div>
+                        <div className={styles.right}>
+                          <span className={styles.periodPill}>
+                            <Calendar size={14} />
+                            {formatDate(role.startDate)} - {formatDate(role.endDate)}
+                          </span>
+                          <ChevronRight
+                            className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
+                            size={16}
+                          />
+                        </div>
+                      </div>
+
+                      <div
+                        className={`${styles.cardBodyWrapper} ${
+                          isOpen ? styles.cardBodyOpen : ''
+                        }`}
+                      >
+                        <div className={styles.cardBody}>
+                          <ul className={styles.description}>
+                            {role.description.map((item, i) => (
+                              <li
+                                key={i}
+                                style={{ transitionDelay: `${i * 60}ms` }}
+                                className={isOpen ? styles.fadeIn : styles.fadeOut}
+                              >
+                                • {item}
+                              </li>
+                            ))}
+                          </ul>
+
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             );
           })}
