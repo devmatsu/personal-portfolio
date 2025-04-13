@@ -66,7 +66,7 @@ const experiences = [
         ],
       },
       {
-        role: 'Intern Software Engineer',
+        role: 'Software Engineer Intern',
         startDate: '2017-02-01',
         endDate: '2018-06-30',
         description: [
