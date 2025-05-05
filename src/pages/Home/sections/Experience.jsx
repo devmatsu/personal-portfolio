@@ -20,9 +20,12 @@ const experiences = [
         startDate: '2024-07-01',
         endDate: 'Present',
         description: [
-          'Led the development of scalable backend services using Node.js and AWS.',
-          'Designed and implemented messaging APIs handling over 10M requests/day.',
-          'Worked closely with cross-functional teams to deliver high-impact features with reliability and performance in mind.',
+          'Leading the design and development of scalable backend systems using Node.js, TypeScript and AWS to support core backend applications with high performance and reliability.',
+          'Architecting cloud-native solutions with Serverless Framework, AWS Lambda, DynamoDB and SQS, improving uptime, reducing operational costs and enabling fault-tolerant communication at scale.',
+          'Implemented Dead Letter Queues (DLQ) and structured retry mechanisms to ensure 100% message delivery and seamless recovery from failures.',
+          'Mentoring and supporting junior engineers by promoting clean code, SOLID principles and best practices across the codebase.',
+          'Continuously identifying and eliminating performance bottlenecks through observability, code profiling and system monitoring.',
+          'Collaborating with cross-functional teams to align technical delivery with business goals, streamline deployment workflows and enforce CI/CD pipelines with tools like CodePipeline, Jest, ESLint and Prettier.'
         ],
       },
       {
@@ -30,9 +33,11 @@ const experiences = [
         startDate: '2020-03-01',
         endDate: '2024-06-30',
         description: [
-          'Developed features for high-throughput communication systems including SMS, RCS, and email flows.',
-          'Improved logging and observability using Elasticsearch and Kibana.',
-          'Participated in code reviews and architecture discussions to ensure clean, maintainable code.',
+          'Migrated and modernized legacy backend systems to AWS using Serverless Framework, Lambda, DynamoDB and CloudWatch, improving scalability and increasing service uptime.',
+          'Developed microservices in Node.js and TypeScript, focusing on performance, observability and maintainability across distributed systems.',
+          'Re-architected a legacy monolithic messaging system written in C#, redesigning it as a set of microservices in Node.js to improve performance, scalability and maintainability. Enabled reliable delivery of over 1M+ SMS per day.',
+          'Integrated third-party APIs (e.g., Messaging Brokers for WhatsApp, SMS, and Email), enabling seamless communication and enhanced system functionality.',
+          'Recreated and optimized stored procedures in SQL Server, resulting in improved reporting performance and faster query execution.',
         ],
       },
       {
@@ -40,9 +45,10 @@ const experiences = [
         startDate: '2019-03-01',
         endDate: '2020-02-29',
         description: [
-          'Maintained and enhanced legacy systems using Express and PostgreSQL.',
-          'Contributed to early refactoring efforts to migrate services to a serverless architecture.',
-          'Implemented unit and integration tests to improve system reliability.',
+          'Developed and maintained billing, sales and FAQ chatbots using Node.js and NLP tools, improving customer engagement and reducing manual support needs.', 
+          'Trained and integrated AI models to improve chatbot accuracy in natural language understanding (NLU) and response quality.', 
+          'Implemented structured logging in Node.js services to reduce debugging time and improve system reliability.', 
+          'Enhanced Power BI dashboards by optimizing SQL queries and building actionable data visualizations for clearer insights and improved analytical decision-making.', 
         ],
       },
     ],
@@ -60,9 +66,11 @@ const experiences = [
         startDate: '2018-07-01',
         endDate: '2019-02-28',
         description: [
-          'Developed internal tools and automation scripts in C# and VB.NET.',
-          'Supported product teams with system integrations and troubleshooting.',
-          'Participated in the migration of on-prem systems to modern web-based platforms.',
+          'Automated mainframe scripts and internal tools to streamline daily workflows, reducing manual efforts and improving process reliability.', 
+          'Enhanced CRM system features built with VB.NET, optimizing performance and usability.', 
+          'Collaborated on chatbot development using JavaScript and integrated AI models with Microsoft LUIS to improve natural language understanding.', 
+          'Performed quality assurance testing on CRM and chatbot products to ensure alignment with customer homologation and delivery standards.', 
+          'Analyzed application logs and supported incident resolution, contributing to faster troubleshooting and improved operational stability.', 
         ],
       },
       {
@@ -70,9 +78,10 @@ const experiences = [
         startDate: '2017-02-01',
         endDate: '2018-06-30',
         description: [
-          'Assisted in the maintenance of structural engineering software solutions.',
-          'Created test routines and documentation to support QA processes.',
-          'Learned foundational software engineering principles in a production environment.',
+          'Created internal manuals and handbooks to support onboarding and improve daily operational workflows across the engineering team.', 
+          'Conducted quality testing for CRM systems developed in VB.NET, ensuring successful delivery aligned with customer homologation requirements.', 
+          'Maintained and tested browser-based WhatsApp chatbot extensions written in JavaScript, supporting frontend behavior and QA validations.', 
+          'Assisted in documenting technical processes and operational improvements, contributing to product quality and user satisfaction.', 
         ],
       },
     ],
