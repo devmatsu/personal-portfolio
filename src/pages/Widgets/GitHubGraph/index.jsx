@@ -11,7 +11,7 @@ import styles from './GitHubGraph.module.css';
 export function GitHubGraph() {
   const [years, setYears] = useState([]);
   const [grid, setGrid] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(2019);
+  const [selectedYear, setSelectedYear] = useState(2025);
   const [selectedLevel, setSelectedLevel] = useState(4);
   const [jsonValue, setJsonValue] = useState('');
   const [toasts, setToasts] = useState([]);
