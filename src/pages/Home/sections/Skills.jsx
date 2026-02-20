@@ -12,7 +12,7 @@ import {
   SiAmazondynamodb, SiAwslambda, SiServerless, SiAmazonapigateway, SiAmazons3,
   SiAmazonsqs, SiAmazonecs, SiAmazoncloudwatch
 } from 'react-icons/si';
-import { FaGolang } from "react-icons/fa6";
+import { FaPython } from "react-icons/fa6";
 import { DiMsqlServer } from "react-icons/di";
 
 export default function Skills() {
@@ -30,7 +30,7 @@ export default function Skills() {
           <SkillCategory title="Core Technologies" items={[
             { name: 'JavaScript', icon: <FaNodeJs /> },
             { name: 'TypeScript', icon: <SiTypescript /> },
-            { name: 'Go', icon: <FaGolang />},
+            { name: 'Python', icon: <FaPython />},
             { name: 'HTML', icon: <FaHtml5 /> },
             { name: 'CSS', icon: <FaCss3 /> }
           ]} />
