@@ -8,7 +8,7 @@ import { FaLinkedinIn, FaGithub } from 'react-icons/fa';
 import { BiLogoDevTo } from 'react-icons/bi';
 import { FaCloudDownloadAlt } from 'react-icons/fa';
 import { SiLeetcode } from "react-icons/si";
-import { URLs } from 'assets/constants';
+import { URLS } from 'assets/constants';
 import resume from 'assets/documents/RESUME_RODRIGO_MATAGAWA.pdf';
 
 export default function Contact() {
@@ -16,7 +16,7 @@ export default function Contact() {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = () => {
-    const email = 'rodrigo.matagawa@gmail.com';
+    const email = URLS.EMAIL;
     navigator.clipboard.writeText(email);
     setCopied(true);
 
@@ -62,7 +62,7 @@ export default function Contact() {
               title={copied ? 'Copied!' : 'Click to copy!'}
             >
               {copied ? <Check size={16} /> : <Mail size={16} />}
-              <span>{URLs.Email}</span>
+              <span>{URLS.EMAIL}</span>
             </div>
 
             <button onClick={downloadResume} className={styles.iconTextButton}>
@@ -72,16 +72,16 @@ export default function Contact() {
           </div>
 
           <div className={styles.icons}>
-            <a href={URLs.LinkedIn} target="_blank" rel="noreferrer">
+            <a href={URLS.LINKEDIN} target="_blank" rel="noreferrer">
               <FaLinkedinIn size={32} />
             </a>
-            <a href={URLs.GitHub} target="_blank" rel="noreferrer">
+            <a href={URLS.GITHUB} target="_blank" rel="noreferrer">
               <FaGithub size={32} />
             </a>
-            <a href={URLs.Devto} target="_blank" rel="noreferrer">
+            <a href={URLS.DEVTO} target="_blank" rel="noreferrer">
               <BiLogoDevTo size={32} />
             </a>
-            <a href={URLs.Leetcode} target="_blank" rel="noreferrer">
+            <a href={URLS.LEETCODE} target="_blank" rel="noreferrer">
               <SiLeetcode size={32} />
             </a>
           </div>

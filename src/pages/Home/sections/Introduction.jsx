@@ -6,7 +6,7 @@ import { BiSolidWidget } from 'react-icons/bi';
 import { RiArticleLine } from "react-icons/ri";
 import styles from './Introduction.module.css';
 import profileImg from 'assets/devmatsu-pfp.png';
-import { URLs } from 'assets/constants';
+import { URLS } from 'assets/constants';
 
 export default function Introduction() {
   return (
@@ -46,10 +46,10 @@ export default function Introduction() {
               <img src={profileImg} alt="Matsu" className={styles.image} />
             </div>
             <div className={styles.socialWrapper}>
-              <a className={styles.iconButton} href={URLs.LinkedIn} target="_blank" rel="noreferrer">
+              <a className={styles.iconButton} href={URLS.LINKEDIN} target="_blank" rel="noreferrer">
                 <FaLinkedinIn size={32} />
               </a>
-              <a className={styles.iconButton} href={URLs.GitHub} target="_blank" rel="noreferrer">
+              <a className={styles.iconButton} href={URLS.GITHUB} target="_blank" rel="noreferrer">
                 <FaGithub size={32} />
               </a>
               <Link to="/blog" className={styles.iconButton}>
