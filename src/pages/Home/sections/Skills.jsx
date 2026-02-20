@@ -14,8 +14,32 @@ import {
 } from 'react-icons/si';
 import { FaPython } from "react-icons/fa6";
 import { DiMsqlServer } from "react-icons/di";
+import { experiences } from 'assets/experienceData';
+
+const getYearsOfExperience = (experienceList) => {
+  const startTimes = experienceList.flatMap((experience) =>
+    experience.roles.map((role) => new Date(role.startDate).getTime())
+  );
+
+  const earliestStart = new Date(Math.min(...startTimes));
+  const now = new Date();
+
+  let years = now.getFullYear() - earliestStart.getFullYear();
+
+  const hasNotReachedAnniversary =
+    now.getMonth() < earliestStart.getMonth() ||
+    (now.getMonth() === earliestStart.getMonth() && now.getDate() < earliestStart.getDate());
+
+  if (hasNotReachedAnniversary) {
+    years -= 1;
+  }
+
+  return years;
+};
 
 export default function Skills() {
+  const yearsOfExperience = `${getYearsOfExperience(experiences)}+`;
+
   return (
     <section id="skills" className={styles.skills}>
       <div className="container">
@@ -73,7 +97,7 @@ export default function Skills() {
         </div>
 
         <div className={styles.metricsWrapper}>
-          <Metric label="Years of Experience" value="8+" />
+          <Metric label="Years of Experience" value={yearsOfExperience} />
           <Metric label="API requests handled daily" value="10M+" />
           <Metric label="Logs analyzed" value="∞" />
           <Metric label="Bugs left behind" value="NaN" />
