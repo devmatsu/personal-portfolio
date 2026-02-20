@@ -7,6 +7,28 @@ import TechTags from 'components/TechTags';
 
 const experiences = [
   {
+    company: '1Global',
+    tags: [
+      'Node.js', 'TypeScript', 'Python', 'NestJS', 'Kubernetes',
+      'AWS RDS', 'ECS', 'CI/CD', 'DevOps', 'Git', 'Gitlab', 'Docker',
+      'Kafka', 'PostgreSQL', 'Jest', 'Prisma ORM', 'Grafana',
+      'Prettier', 'ESLint', 'JIRA'
+    ],
+    roles: [
+      {
+        role: 'Senior Software Engineer',
+        startDate: '2025-08-11',
+        endDate: 'Present',
+        description: [
+          'Designing and implementing scalable microservices using NestJS (Node.js & TypeScript) as part of the modernization of a legacy Python-based IoT platform managing millions of active SIM/M2M devices.',
+          'Rebuilding backend services responsible for processing high-volume telecom data (e.g., CDRs), ensuring accurate real-time updates of device state and billing information.',
+          'Exercising full ownership over service design and implementation, applying clean architecture principles and appropriate design patterns to ensure maintainability and long-term scalability.',
+          'Reviewing merge requests and promoting backend engineering best practices within a worldwide distributed team.',
+        ],
+      },
+    ],
+  },
+  {
     company: 'Code7',
     tags: [
       'Node.js', 'JavaScript', 'TypeScript', 'Express.js', 'Serverless',
@@ -18,7 +40,7 @@ const experiences = [
       {
         role: 'Senior Software Engineer',
         startDate: '2024-07-01',
-        endDate: 'Present',
+        endDate: '2025-08-08',
         description: [
           'Leading the design and development of scalable backend systems using Node.js, TypeScript and AWS to support core backend applications with high performance and reliability.',
           'Architecting cloud-native solutions with Serverless Framework, AWS Lambda, DynamoDB and SQS, improving uptime, reducing operational costs and enabling fault-tolerant communication at scale.',
@@ -123,6 +145,18 @@ const getMinMaxDates = (exp) => {
   return { minStartDate: new Date(minStartDate), maxEndDate: new Date(maxEndDate) };
 };
 
+const formatDuration = (years, months) => {
+  if (years === 0) {
+    return `${months} ${months === 1 ? 'mo' : 'mos'}`;
+  }
+
+  if (months === 0) {
+    return `${years} ${years === 1 ? 'yr' : 'yrs'}`;
+  }
+
+  return `${years} ${years === 1 ? 'yr' : 'yrs'} ${months} ${months === 1 ? 'mo' : 'mos'}`;
+};
+
 export default function Experience() {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -152,7 +186,7 @@ export default function Experience() {
                     <Building size={24} /> {exp.company}
                   </div>
                   <p className={styles.companyDuration}>
-                  {years} {years === 1 ? 'yr' : 'yrs'} {months} {months === 1 ? 'mo' : 'mos'}
+                    {formatDuration(years, months)}
                   </p>
                 </div>
 
