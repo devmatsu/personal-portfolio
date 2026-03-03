@@ -41,6 +41,11 @@
   font-family: Poppins, system-ui, sans-serif;
 }
 
+html {
+  scrollbar-gutter: stable;
+  background-color: var(--bg-color-dark);
+}
+
 body {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -49,11 +54,6 @@ body {
   position: relative;
   background: radial-gradient(circle at center, var(--bg-color) 60%, var(--bg-color-dark));
   color: var(--white);
-  -webkit-font-smoothing: antialiased;
-}
-
-html {
-  scrollbar-gutter: stable;
 }
 
 .container {
