@@ -1,9 +1,39 @@
-# My Portfolio
+# devmatsu.com — v3
 
 ![Portfolio Preview](https://raw.githubusercontent.com/devmatsu/personal-portfolio/main/public/images/page_preview.png)
 
-Welcome to my portfolio! This is a collection of my work and projects. You can access it online at [devmatsu.com](https://devmatsu.com).
+Personal site of Rodrigo "Matsu" Matagawa, backend engineer. Live at [devmatsu.com](https://devmatsu.com).
 
-## Description
+## Stack
 
-This portfolio showcases my skills and projects in web development, design, and more. Feel free to explore and get in touch with me if you have any questions or would like to collaborate on a project.
+- [Astro](https://astro.build) 7, static output, TypeScript strict
+- React 19 islands only for the interactive widgets
+- Geist / Geist Mono (self-hosted via Fontsource)
+- Blog posts pulled from the [dev.to API](https://developers.forem.com/api) at build time
+
+## Scripts
+
+Node ≥ 22.12.
+
+| Command           | What it does                                      |
+| ----------------- | ------------------------------------------------- |
+| `npm run dev`     | Dev server at http://localhost:4321               |
+| `npm run build`   | `astro check` (types) + static build into `dist/` |
+| `npm run preview` | Serve the built `dist/`                           |
+| `npm run check`   | Type-check only                                   |
+
+The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy.
+
+## Structure
+
+```
+design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
+src/data/                Site constants, experience timeline, widget registry
+src/layouts/Base.astro   <head>, nav, footer, ⌘K command palette
+src/components/home/     Home sections (hero, agent terminal, now grid, experience, how it's built, contact)
+src/lib/devto.ts         dev.to client (paginated, retries on 429)
+src/pages/               /, /blog, /blog/post/[id], /widgets/{rubik,roulette,pomodoro}, 404
+src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pomodoro
+```
+
+Widgets keep their state in `localStorage` (`v3.*` keys).

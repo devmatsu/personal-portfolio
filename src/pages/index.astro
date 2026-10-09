@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import AgentTerminal from '../components/home/AgentTerminal.astro';
+import NowGrid from '../components/home/NowGrid.astro';
+import Experience from '../components/home/Experience.astro';
+import HowItsBuilt from '../components/home/HowItsBuilt.astro';
+import Contact from '../components/home/Contact.astro';
+---
+<Base>
+  <div class="first-screen">
+    <Hero><AgentTerminal /></Hero>
+  </div>
+  <NowGrid />
+  <Experience />
+  <HowItsBuilt />
+  <Contact />
+</Base>
+<style>
+.first-screen{min-height:100svh;display:flex;flex-direction:column}
+</style>

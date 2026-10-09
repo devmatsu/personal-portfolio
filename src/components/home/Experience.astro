@@ -1,0 +1,20 @@
+---
+import { EXPERIENCE } from '../../data/experience';
+const month = (date: string) => new Date(`${date}T00:00:00`).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
+const dateLabel = (date: string) => `${month(date)} ${date.slice(0, 4)}`;
+---
+<section id="experience" class="container experience">
+  <h2>Experience<span>.</span></h2>
+  <div class="timeline">
+    {EXPERIENCE.map((entry, index) => <article class="entry">
+      <span class:list={['dot', { current: index === 0 }]} aria-hidden="true"></span>
+      <div class="label">{dateLabel(entry.start)} — {entry.end ? dateLabel(entry.end) : 'PRESENT'}</div>
+      <div class="heading">{entry.company} <span>· {entry.title}</span></div>
+      <p>{entry.summary}</p>
+      {entry.tags.length > 0 && <div class="tags mono">{entry.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+    </article>)}
+  </div>
+</section>
+<style>
+.experience{padding-top:128px}h2{margin:0;font-size:clamp(36px,4vw,48px);line-height:1.1;letter-spacing:-.03em;font-weight:600}h2 span{color:var(--accent)}.timeline{margin-top:48px;display:flex;flex-direction:column;border-left:1px solid rgba(var(--text-rgb),.1);padding-left:32px;margin-left:6px}.entry{position:relative;padding-bottom:48px}.entry:last-child{padding-bottom:0}.dot{position:absolute;left:-38px;top:9px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid rgba(var(--text-rgb),.35)}.dot.current{left:-39px;top:8px;width:13px;height:13px;border:0;background:var(--accent);box-shadow:0 0 0 5px rgba(var(--accent-rgb),.15)}.entry>.label{font-size:12px}.heading{margin-top:6px;font-size:26px;font-weight:600;letter-spacing:-.02em}.heading span{color:var(--dim);font-weight:400}.entry p{margin:8px 0 0;max-width:720px;color:var(--muted)}.tags{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted)}
+</style>

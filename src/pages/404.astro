@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+---
+<Base title="Nothing here" description="The page you’re looking for couldn’t be found.">
+  <PageHeader eyebrow="404" title="Nothing here" description="The page you’re looking for couldn’t be found." />
+  <div class="container actions">
+    <a class="btn btn-primary" href="/">Back home</a>
+    <button class="btn btn-ghost" type="button" onclick="window.dispatchEvent(new CustomEvent('palette:open'))">Open search</button>
+  </div>
+</Base>
+<style>
+  .actions { display:flex; flex-wrap:wrap; gap:12px; padding-bottom:96px; }
+</style>

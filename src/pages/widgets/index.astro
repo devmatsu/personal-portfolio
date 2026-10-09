@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { WIDGETS } from '../../data/widgets';
+---
+
+<Base title="Widgets" description="Small tools I actually use.">
+  <div class="container page">
+    <PageHeader eyebrow="Widgets" title="Widgets" description="Small tools I actually use." />
+    <div class="grid">
+      {WIDGETS.map((widget) => <a class="widget card" href={`/widgets/${widget.slug}`}>
+        <div class="visual" aria-hidden="true">
+          {widget.slug === 'rubik' && <span class="digits mono">0:42.18</span>}
+          {widget.slug === 'roulette' && <span class="wheel" />}
+          {widget.slug === 'pomodoro' && <span class="ring"><span>25:00</span></span>}
+        </div>
+        <div class="copy"><span class="label">Widget</span><h2>{widget.name}<span>.</span></h2><p>{widget.description}</p><span class="open">Open tool ↗</span></div>
+      </a>)}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page { padding-block: 64px 100px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; margin-top: 48px; }
+  .widget { display: flex; flex-direction: column; gap: 24px; transition: border-color .2s, transform .2s; }
+  .widget:hover { border-color: rgba(var(--accent-rgb), .35); transform: translateY(-2px); }
+  .visual { min-height: 160px; display: grid; place-items: center; border-radius: 14px; background: radial-gradient(ellipse at center, rgba(var(--accent-rgb), .1), transparent 70%), var(--term); }
+  .digits { font-size: 36px; color: var(--text); }
+  .wheel { width: 108px; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(var(--accent) 0 25%, rgba(var(--accent-rgb), .3) 25% 50%, var(--accent) 50% 75%, rgba(var(--accent-rgb), .3) 75%); border: 5px solid rgba(var(--text-rgb), .12); }
+  .ring { width: 92px; aspect-ratio: 1; border-radius: 50%; border: 5px solid rgba(var(--text-rgb), .12); border-top-color: var(--accent); display: grid; place-items: center; font: 14px var(--font-mono); }
+  .copy h2 { margin: 6px 0; font-size: 24px; letter-spacing: -.03em; }
+  .copy h2 span { color: var(--accent); }
+  .copy p { margin: 0; color: var(--muted); }
+  .open { display: inline-block; margin-top: 18px; color: var(--accent); font: 12px var(--font-mono); }
+</style>

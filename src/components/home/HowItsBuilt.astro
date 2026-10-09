@@ -1,0 +1,15 @@
+<section id="agents" class="container section">
+  <div class="panel">
+    <div class="eyebrow mono">How this site is built</div>
+    <h2>I don’t hand-write this site anymore. I direct the agents that do.</h2>
+    <div class="steps">
+      <article><div class="step mono">01 · Me</div><h3>Write the issue</h3><p>Goal, constraints and definition of done.</p></article>
+      <article class="highlight"><div class="step mono">02 · Agent</div><h3>Plan, code, document</h3><p>Follows CLAUDE.md, writes an ADR, opens a PR.</p></article>
+      <article><div class="step mono">03 · CI</div><h3>Prove it</h3><p>Lint, types, tests, Lighthouse, preview deploy.</p></article>
+      <article><div class="step mono">04 · Me</div><h3>Review &amp; merge</h3><p>Nothing ships without a human approval.</p></article>
+    </div>
+  </div>
+</section>
+<style>
+.section{padding-top:128px}.panel{border-radius:28px;padding:clamp(28px,5vw,56px);background:radial-gradient(100% 120% at 100% 0%,rgba(var(--accent-rgb),.10),transparent 55%),var(--surface);border:1px solid rgba(var(--text-rgb),.08)}.eyebrow{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}.panel h2{margin:14px 0 0;max-width:820px;font-size:clamp(32px,3.6vw,44px);line-height:1.15;letter-spacing:-.03em;font-weight:600}.steps{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.steps article{padding:22px;border-radius:16px;border:1px solid rgba(var(--text-rgb),.08);background:rgba(var(--bg-rgb),.6)}.steps article.highlight{border-color:rgba(var(--accent-rgb),.3)}.step{font-size:12px;color:var(--dim)}.highlight .step{color:var(--accent)}.steps h3{margin:8px 0 0;font-size:19px;font-weight:600}.steps p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+</style>

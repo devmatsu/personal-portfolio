@@ -1,0 +1,26 @@
+---
+import { EXPERIENCE } from '../../data/experience';
+import { getArticles } from '../../lib/devto';
+const [latest] = await getArticles();
+const earliest = EXPERIENCE.reduce((oldest, entry) => Date.parse(entry.start) < Date.parse(oldest) ? entry.start : oldest, EXPERIENCE[0].start);
+const years = Math.floor((Date.now() - Date.parse(earliest)) / (365.25 * 24 * 60 * 60 * 1000));
+---
+<section id="now" class="container now">
+  <div class="grid">
+    <article class="card wide current"><div class="label">Now</div><div><div class="statement">Designing agents and reusable skills that plug into real engineering teams, <span>from code review to releases</span>.</div><div class="tools mono">Claude Code · MCP · Agent skills</div></div></article>
+    <article class="card years"><div class="label">Experience</div><div><div class="number">{years}<span>+</span></div><div class="muted">years</div></div></article>
+    {latest && <a class="card writing" href={`/blog/post/${latest.id}`}><div class="label">Latest writing</div><div><div class="title">{latest.title}</div><div class="read mono">{latest.reading_time_minutes} min read →</div></div></a>}
+    <a href="/widgets" class="card wide widgets">
+      <div class="widget-copy"><div class="label">Widgets</div><div class="widget-title">A Rubik’s cube timer, a roulette picker and a Pomodoro — tools I actually use.</div></div>
+      <div class="visuals"><div class="timer"><div class="digits mono">0:12.84</div><div class="scramble mono">R U R’ U’ F2 …</div></div><div class="wheel" aria-hidden="true"><i></i><b></b></div></div>
+    </a>
+  </div>
+  <div class="stack mono" aria-label="Stack"><span>Node.js</span><i>/</i><span>TypeScript</span><i>/</i><span>AWS</span><i>/</i><span>Docker</span><i>/</i><span>Serverless</span><i>/</i><span>AI Agents</span></div>
+</section>
+<style>
+.now{min-height:100svh;padding-block:64px;display:flex;flex-direction:column;justify-content:center;gap:32px}.grid{display:grid;gap:16px}.card{min-height:200px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}.current{min-height:220px}.statement{font-size:28px;line-height:1.25;letter-spacing:-.02em;font-weight:500}.statement span{color:var(--accent)}.tools{margin-top:16px;font-size:12px;color:var(--dim)}.number{font-size:64px;line-height:1;font-weight:600;letter-spacing:-.04em}.number span{color:var(--accent)}.muted{color:var(--muted)}.writing .title{font-size:20px;line-height:1.3;font-weight:500}.read{margin-top:6px;font-size:12px;color:var(--dim)}.widgets{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between}.widget-copy{flex:1 1 200px}.widget-title{margin-top:10px;font-size:22px;font-weight:500;line-height:1.3}.visuals{display:flex;gap:14px;align-items:center}.timer{padding:14px 18px;border-radius:14px;border:1px solid rgba(var(--text-rgb),.08);background:rgba(var(--bg-rgb),.6);text-align:center}.digits{font-size:26px;font-weight:500;letter-spacing:-.02em}.scramble{font-size:10px;color:var(--dim);letter-spacing:.08em}.wheel{position:relative;width:84px;height:84px;flex:0 0 84px;border-radius:50%;background:conic-gradient(rgba(var(--accent-rgb),.85) 0 60deg,rgba(var(--text-rgb),.10) 60deg 120deg,rgba(var(--accent-rgb),.45) 120deg 180deg,rgba(var(--text-rgb),.18) 180deg 240deg,rgba(var(--accent-rgb),.25) 240deg 300deg,rgba(var(--text-rgb),.06) 300deg);border:1px solid rgba(var(--text-rgb),.1)}.wheel i{position:absolute;inset:32px;border-radius:50%;background:var(--surface)}.wheel b{position:absolute;top:-6px;left:36px;width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:10px solid var(--text)}.stack{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:center;font-size:14px;color:var(--dim);padding:20px 0;border-block:1px solid rgba(var(--text-rgb),.07)}.stack i{color:var(--accent);font-style:normal}
+.grid{grid-template-columns:1fr}
+@media(min-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid .current{grid-column:span 2}.grid .widgets{grid-column:1/-1}}
+@media(min-width:1100px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.visuals{width:100%;justify-content:space-between}}
+</style>
