@@ -32,6 +32,11 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <script is:inline>
+      // Lets CSS assume JavaScript from the first paint (e.g. the narrow-screen nav starts collapsed behind Menu)
+      // instead of waiting for the deferred module scripts, which would collapse it after paint and shift the page.
+      document.documentElement.setAttribute('data-js', '');
+    </script>
+    <script is:inline>
       // Page transition direction (styled in global.css): going deeper (index → widget/post) is "forward",
       // coming back up is "backward"; between top-level pages no type is set, which gives the fade-through.
       // Must run before first render, hence inline in <head>. Needs the Navigation API; without it, everything fades through.

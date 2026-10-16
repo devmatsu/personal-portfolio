@@ -16,7 +16,7 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
 <header class="site-header" data-site-header>
   <div class="nav-shell">
     <a href="/" class="logo mono" aria-label="Matsu home" aria-current={path === '/' ? 'page' : undefined}>~/matsu<span>_</span></a>
-    <button class="menu mono" type="button" aria-expanded="false" aria-controls="site-nav" hidden data-menu-toggle>Menu</button>
+    <button class="menu mono" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>Menu</button>
     <nav id="site-nav" aria-label="Primary">
       <ul class="primary">
         {PRIMARY_NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
@@ -54,12 +54,14 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
   .search:hover, .menu:hover, .menu[aria-expanded="true"] { color:var(--text); }
   kbd { padding:1px 6px; border:1px solid rgba(var(--text-rgb),.15); border-radius:5px; font:inherit; }
   @media (hover: none) { kbd { display: none; } }
-  /* Narrow screens: links collapse behind an explicit Menu button once the script has enabled it; without JS they stay visible in the bar.
+  /* Narrow screens: links collapse behind an explicit Menu button when JavaScript runs (:root[data-js], set inline in
+     <head> before first paint, so the bar never paints expanded and then collapses); without JS they stay visible in the bar.
      The open menu floats over the page as a dropdown, so opening it never pushes the content (or the current section) down. */
   @media (max-width: 899px) {
     .nav-shell { position:relative; }
-    [data-menu-ready] nav { display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; padding:8px; border:1px solid rgba(var(--text-rgb),.08); border-radius:16px; background:var(--bg); box-shadow:0 24px 48px -24px rgba(0,0,0,.8); }
-    [data-menu-ready][data-menu-open] nav { display:flex; }
+    :root:not([data-js]) .menu { display:none; }
+    :root[data-js] nav { display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; padding:8px; border:1px solid rgba(var(--text-rgb),.08); border-radius:16px; background:var(--bg); box-shadow:0 24px 48px -24px rgba(0,0,0,.8); }
+    :root[data-js] [data-menu-open] nav { display:flex; }
     kbd { display:none; }
     .search { order:1; margin-left:auto; }
     .menu { order:2; margin-left:-8px; }
@@ -80,8 +82,6 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
       toggle.setAttribute('aria-expanded', String(open));
       header.toggleAttribute('data-menu-open', open);
     };
-    toggle.hidden = false;
-    header.setAttribute('data-menu-ready', '');
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
     header.querySelector('nav')?.addEventListener('click', (event) => { if ((event.target as Element).closest('a')) setOpen(false); });
     document.addEventListener('click', (event) => { if (!header.contains(event.target as Node)) setOpen(false); });

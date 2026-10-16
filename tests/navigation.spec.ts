@@ -235,6 +235,36 @@ test.describe('mobile menu', () => {
     await expect(page).toHaveURL(/\/widgets\/?$/);
     await expect(page.getByRole('button', { name: 'Menu' })).toHaveAttribute('aria-expanded', 'false');
   });
+
+  test('starts collapsed even when the scripts are slow, so the page never jumps up after first paint', async ({ page }) => {
+    let release!: () => void;
+    const scriptsHeld = new Promise<void>((resolve) => { release = resolve; });
+    await page.route('**/_astro/*.js', async (route) => { await scriptsHeld; await route.continue(); });
+    await page.addInitScript(() => {
+      (window as Window & { shift?: number }).shift = 0;
+      new PerformanceObserver((list) => { for (const entry of list.getEntries()) (window as Window & { shift?: number }).shift! += (entry as PerformanceEntry & { value: number }).value; }).observe({ type: 'layout-shift', buffered: true });
+    });
+    // DOMContentLoaded waits for module scripts, so only wait for the response and let the assertions wait for the page.
+    await page.goto('/widgets', { waitUntil: 'commit' });
+    // Before any bundled script has run, the bar already shows Menu and keeps the links folded away.
+    await expect(page.getByRole('button', { name: 'Menu' })).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeHidden();
+    release();
+    await page.waitForLoadState('load');
+    await page.getByRole('button', { name: 'Menu' }).click();
+    await expect(page.getByRole('navigation', { name: 'Primary' })).toBeVisible();
+    expect(await page.evaluate(() => (window as Window & { shift?: number }).shift)).toBeLessThan(0.01);
+  });
+});
+
+test.describe('mobile navigation without JavaScript', () => {
+  test.use({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+
+  test('shows the links in the bar and no Menu button that could not work', async ({ page }) => {
+    await page.goto('/widgets');
+    await expect(page.getByRole('navigation', { name: 'Primary' }).getByRole('link', { name: 'Writing' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
+  });
 });
 
 test('opening the mobile menu does not move the page or change the highlighted section', async ({ page }) => {
