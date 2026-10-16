@@ -1,0 +1,28 @@
+---
+const steps = [
+  { n: '01', who: 'Me', title: 'Define', text: 'Frame the problem, the constraints and what done means. Architecture and trade-offs get decided here.', owned: true },
+  { n: '02', who: 'Agents', title: 'Explore & plan', text: 'Agents read the code, surface options and draft a plan. I choose the direction.', owned: false },
+  { n: '03', who: 'Agents', title: 'Delegate', text: 'Implementation goes to agents, scoped to the plan and the codebase’s conventions.', owned: false },
+  { n: '04', who: 'Me', title: 'Review & validate', text: 'I read the diff, run the checks and test the behavior. Nothing ships without my sign-off.', owned: true },
+];
+---
+<section id="workflow" class="container home-section">
+  <div class="panel">
+    <div class="eyebrow mono">Workflow</div>
+    <h2>I delegate execution, not engineering judgment.</h2>
+    <p class="intro">I use AI agents to explore, plan and implement software. The problem definition, architecture, technical decisions and whether the result actually works stay with me. This is how a change usually moves; small fixes skip straight to implementation, bigger work gets more exploration up front.</p>
+    <ol class="steps">
+      {steps.map((step) => <li class:list={{ owned: step.owned }}><div class="step mono">{step.n} · {step.who}</div><h3>{step.title}</h3><p>{step.text}</p></li>)}
+    </ol>
+    <div class="notes">
+      <p><span class="note-label mono">Example · this site</span>Every change starts as an issue. Agents follow CLAUDE.md, write an ADR when a decision matters and open a PR, which I review before it merges.</p>
+      <p><span class="note-label mono">Exploring</span>Multi-agent orchestration with Herdr and OMP. Early days, and still shaping how I split work between agents.</p>
+    </div>
+  </div>
+</section>
+<style>
+.panel{border-radius:28px;padding:clamp(28px,5vw,56px);background:radial-gradient(100% 120% at 100% 0%,rgba(var(--accent-rgb),.10),transparent 55%),var(--surface);border:1px solid rgba(var(--text-rgb),.08)}.eyebrow{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}.panel h2{margin:14px 0 0;max-width:820px;font-size:clamp(32px,3.6vw,44px);line-height:1.15;letter-spacing:-.03em;font-weight:600;text-wrap:balance}.intro{margin:18px 0 0;max-width:64ch;font-size:17px;line-height:1.6;color:var(--muted)}.steps{margin:44px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.steps li{padding:22px;border-radius:16px;border:1px solid rgba(var(--text-rgb),.08);background:rgba(var(--bg-rgb),.6)}.steps li.owned{border-color:rgba(var(--accent-rgb),.3)}.step{font-size:12px;color:var(--dim)}.owned .step{color:var(--accent)}.steps h3{margin:8px 0 0;font-size:19px;font-weight:600}.steps p{margin:6px 0 0;font-size:14px;line-height:1.55;color:var(--muted)}.notes{margin-top:32px;padding-top:24px;border-top:1px solid rgba(var(--text-rgb),.08);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px 40px}.notes p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}.note-label{display:block;margin-bottom:6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.steps{grid-template-columns:1fr}.notes{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
+@media(min-width:600px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1100px){.steps{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
