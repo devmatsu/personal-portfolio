@@ -185,7 +185,8 @@ test.describe('PageDown / PageUp', () => {
 test('resizing the window keeps what you are reading in place', async ({ page }) => {
   // Homepage screens are sized from the window height, so a taller or shorter window changes every screen above you.
   // Like any page, the content in view should stay put and the window should just show more or less below it.
-  const positionOf = (selector: string) => page.evaluate((target) => Math.round(document.querySelector(target)!.getBoundingClientRect().top), selector);
+  // Unrounded: layout positions are fractional but the page scrolls in whole pixels, so "in place" means within 1px.
+  const positionOf = (selector: string) => page.evaluate((target) => document.querySelector(target)!.getBoundingClientRect().top, selector);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
 
@@ -197,7 +198,7 @@ test('resizing the window keeps what you are reading in place', async ({ page })
       await page.setViewportSize({ width, height });
       // Long enough for any follow-up movement (such as the gap glide) to have started and moved the page.
       await page.waitForTimeout(700);
-      expect(await positionOf(selector), `${label}: still in place at ${width}×${height}`).toBe(before);
+      expect(Math.abs(await positionOf(selector) - before), `${label}: still in place at ${width}×${height}`).toBeLessThan(1);
     }
   }
 });
