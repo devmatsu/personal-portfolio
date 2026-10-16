@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- The ~/matsu_ logo, shortened: a lowercase m and the amber cursor on the site's surface colour. -->
-  <rect width="32" height="32" rx="8" fill="#13110F"/>
-  <rect x=".5" y=".5" width="31" height="31" rx="7.5" fill="none" stroke="#F4EFE8" stroke-opacity=".14"/>
-  <path d="M6.5 22.5v-8a3.25 3.25 0 0 1 6.5 0v8m0-8a3.25 3.25 0 0 1 6.5 0v8" fill="none" stroke="#F4EFE8" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="21.5" y="20" width="5" height="3" rx="1.5" fill="#F5A524"/>
+  <!-- A terminal prompt (>_) in the site's dark accent-text colour on an amber tile. -->
+  <rect width="32" height="32" rx="8" fill="#F5A524"/>
+  <g id="mark">
+    <path d="M8.5 9.5 15 16l-6.5 6.5" fill="none" stroke="#1A1206" stroke-width="3.25" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="16.5" y="20" width="8" height="3.25" rx="1.6" fill="#1A1206"/>
+  </g>
 </svg>
