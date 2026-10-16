@@ -47,6 +47,22 @@ test.describe('Pomodoro keyboard shortcuts', () => {
   });
 });
 
+test('widgets keep working when storage is blocked', async ({ page }) => {
+  await page.addInitScript(() => { Storage.prototype.setItem = () => { throw new DOMException('Storage is blocked', 'QuotaExceededError'); }; });
+
+  await page.goto('/widgets/pomodoro');
+  await page.getByRole('button', { name: 'Start' }).click();
+  await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
+
+  await page.goto('/widgets/rubik');
+  await page.locator('main h1').click();
+  await page.keyboard.down('Space');
+  await page.waitForTimeout(400);
+  await page.keyboard.up('Space');
+  await page.keyboard.press('a');
+  await expect(page.getByText('1 solves')).toBeVisible();
+});
+
 test('a running Pomodoro survives a reload and switching widgets', async ({ page }) => {
   await page.goto('/widgets/pomodoro');
   await page.getByRole('button', { name: 'Start' }).click();

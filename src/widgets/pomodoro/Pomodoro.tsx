@@ -56,11 +56,11 @@ export default function Pomodoro() {
   const label = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
 
   useEffect(() => {
-    localStorage.setItem(KEY, JSON.stringify(stored));
+    try { localStorage.setItem(KEY, JSON.stringify(stored)); } catch { /* Storage is optional. */ }
   }, [stored]);
 
   useEffect(() => {
-    localStorage.setItem(TIMER_KEY, JSON.stringify(timer));
+    try { localStorage.setItem(TIMER_KEY, JSON.stringify(timer)); } catch { /* Storage is optional. */ }
   }, [timer]);
 
   useEffect(() => {

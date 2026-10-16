@@ -37,8 +37,8 @@ export default function Timer() {
   phaseRef.current = phase;
 
   useEffect(() => { setSolves(loadSolves()); setSettings(loadSettings()); setHydrated(true); }, []);
-  useEffect(() => { if (hydrated) localStorage.setItem(SOLVES_KEY, JSON.stringify(solves)); }, [solves, hydrated]);
-  useEffect(() => { if (hydrated) localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }, [settings, hydrated]);
+  useEffect(() => { if (hydrated) try { localStorage.setItem(SOLVES_KEY, JSON.stringify(solves)); } catch { /* Storage is optional. */ } }, [solves, hydrated]);
+  useEffect(() => { if (hydrated) try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* Storage is optional. */ } }, [settings, hydrated]);
   useEffect(() => {
     if (phase !== 'running') return;
     const timer = window.setInterval(() => setDisplay(formatTime(Date.now() - startTime.current)), 10);
