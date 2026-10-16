@@ -129,7 +129,7 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
   }
 
   // On the homepage, mark the section under the middle of the viewport as the current location.
-  // Hero and Now sit above Experience, so nothing is marked there; at the very bottom the last section wins
+  // The hero sits above Overview, so nothing is marked there; at the very bottom the last section wins
   // (Contact is too short to reach the middle line on tall screens).
   if (location.pathname === '/') {
     const sections = [...document.querySelectorAll<HTMLAnchorElement>('#site-nav a[href^="/#"]')]
