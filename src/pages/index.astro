@@ -22,10 +22,13 @@ import Contact from '../components/home/Contact.astro';
 <script>
   // Sections are at least one screen tall (so header jumps show one section at a time), which leaves blank space below
   // short sections on tall screens. Don't let a scroll come to rest there: when at least 30% of the visible area is that
-  // gap, glide on to the next section in the direction you were scrolling. Scrolling anywhere else is untouched.
-  // Skipped with reduced motion.
+  // gap, glide on to the next section in the direction you were scrolling. Only once you've actually headed that way,
+  // though: on tall screens a short section's gap can fill a third of the view from its start, so a nudge off the start
+  // already "lands in the gap". You must have travelled at least a quarter of the view from the section you left.
+  // Scrolling anywhere else is untouched. Skipped with reduced motion.
   const HEADER_OFFSET = 96;
   const BLANK_SHARE = 0.3;
+  const MIN_TRAVEL_SHARE = 0.25;
   const sections = [...document.querySelectorAll<HTMLElement>('#overview, #experience, #workflow, #contact')];
   // The homepage screens: the hero, then each section. stepTop is the scroll position that shows a screen from its start.
   const steps = [document.querySelector<HTMLElement>('.first-screen'), ...sections].filter((step): step is HTMLElement => step !== null);
@@ -61,6 +64,9 @@ import Contact from '../components/home/Contact.astro';
       const gapEnd = next.getBoundingClientRect().top + parseFloat(getComputedStyle(next).paddingTop) + window.scrollY;
       const blank = Math.min(viewBottom, gapEnd) - Math.max(viewTop, gapStart);
       if (blank / (viewBottom - viewTop) < BLANK_SHARE) continue;
+      // How far you've come from the section you left: down from this one's start, or up from the next one's.
+      const travelled = direction < 0 ? stepTop(next) - window.scrollY : window.scrollY - stepTop(sections[index]);
+      if (travelled < MIN_TRAVEL_SHARE * (viewBottom - viewTop)) return;
       const target = direction < 0 ? sections[index] : sections[index + 1];
       const targetY = Math.round(target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET);
       if (Math.abs(targetY - window.scrollY) < 2) return;

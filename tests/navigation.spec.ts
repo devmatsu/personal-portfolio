@@ -62,7 +62,7 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 
   });
 }
 
-test('a scroll that stops in the blank space below a short section glides to a section; elsewhere it stays put', async ({ page }) => {
+test('a scroll that stops in the blank space below a short section glides to a section; small nudges and stops over content stay put', async ({ page }) => {
   const sectionTop = (id: string) => page.evaluate((target) => Math.round(document.getElementById(target)!.getBoundingClientRect().top + window.scrollY - 96), id);
   const wheelFrom = async (from: number, delta: number) => {
     await page.evaluate((y) => window.scrollTo({ top: y, behavior: 'instant' }), from);
@@ -83,6 +83,12 @@ test('a scroll that stops in the blank space below a short section glides to a s
   await page.goto('/');
   const overview = await sectionTop('overview');
   const experience = await sectionTop('experience');
+
+  // Overview's blank space already fills about a third of this screen at its start, so a gentle scroll off the start
+  // lands "in the gap" straight away. That's a nudge, not a move to the next section: it stays where it was left.
+  await wheelFrom(overview, 100);
+  await page.waitForTimeout(1000);
+  expect(await page.evaluate(() => Math.round(window.scrollY)), 'a small scroll off Overview stays put').toBe(overview + 100);
 
   await wheelFrom(overview, Math.round((experience - overview) * 0.6));
   await expect.poll(() => page.evaluate(() => Math.round(window.scrollY)), { message: 'scrolling down into the gap continues to Experience' }).toBe(experience);
