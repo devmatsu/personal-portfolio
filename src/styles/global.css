@@ -28,7 +28,9 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
+/* Always reserve the scrollbar's space, so pages that fit on one screen (no scrollbar) don't sit wider than pages that
+   scroll and the layout doesn't jump sideways when moving between them. No effect with overlay scrollbars. */
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 /* Keep anchor targets and keyboard-focused content clear of the sticky header. Scoped to main (not html scroll-padding)
    so focusing a control inside the sticky header itself never scrolls the page. */
 main :where(*) { scroll-margin-top: 96px; }
