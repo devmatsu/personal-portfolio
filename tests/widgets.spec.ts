@@ -186,6 +186,29 @@ test.describe('Rubik timer keyboard shortcuts', () => {
     await expect(page.getByText('Hold Space or tap to start')).toBeVisible();
     await expect(plusTwo).toBeFocused();
   });
+
+  for (const target of ['box', 'label text'] as const) {
+    test(`holding Space after clicking the inspection ${target} starts a solve without toggling it`, async ({ page }) => {
+      const inspection = page.getByLabel('15 s inspection');
+      await (target === 'box' ? inspection : page.getByText('15 s inspection')).click();
+      await expect(inspection).toBeChecked();
+
+      await page.keyboard.down('Space');
+      await page.waitForTimeout(400);
+      await page.keyboard.up('Space');
+      await expect(page.getByText(/^Inspection · /)).toBeVisible();
+      await expect(inspection).toBeChecked();
+    });
+  }
+
+  test('a keyboard user can still toggle inspection with Space', async ({ page }) => {
+    const inspection = page.getByLabel('15 s inspection');
+    await inspection.focus();
+    await page.keyboard.press('Space');
+    await expect(inspection).toBeChecked();
+    await expect(page.getByText('Hold Space or tap to start')).toBeVisible();
+    await expect(inspection).toBeFocused();
+  });
 });
 
 test.describe('Coin flip', () => {

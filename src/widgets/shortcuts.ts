@@ -1,10 +1,11 @@
 // Page-wide widget shortcuts must never steal keys meant for something the visitor is using:
-// text fields keep typing, and focused controls (links, buttons, the header Search) keep their
-// native Space/Enter activation. Other keys, like a letter shortcut, still reach the page after a
-// button was clicked. Elements marked [data-shortcut-surface] opt back in, e.g. the Rubik clock,
-// which is a button whose whole purpose is the Space shortcut.
-const TEXT_ENTRY = 'input, select, textarea, [contenteditable]:not([contenteditable="false"])';
-const CONTROL = 'a[href], button, summary, [role="button"], [role="link"], [role="option"], [tabindex]:not([tabindex="-1"])';
+// text fields keep typing, and focused controls (links, buttons, checkboxes, the header Search)
+// keep their native Space/Enter activation. Other keys, like a letter shortcut, still reach the page
+// after a button was clicked. Elements marked [data-shortcut-surface] opt back in, e.g. the Rubik
+// clock, which is a button whose whole purpose is the Space shortcut.
+const TOGGLE = 'input[type="checkbox"], input[type="radio"]';
+const TEXT_ENTRY = `input:not(${TOGGLE}), select, textarea, [contenteditable]:not([contenteditable="false"])`;
+const CONTROL = `a[href], button, summary, ${TOGGLE}, [role="button"], [role="link"], [role="option"], [tabindex]:not([tabindex="-1"])`;
 
 export function hasModifier(event: KeyboardEvent): boolean {
   return event.metaKey || event.ctrlKey || event.altKey;
