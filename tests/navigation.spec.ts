@@ -311,4 +311,17 @@ test.describe('command palette', () => {
     await openPalette(page);
     await expect(status).toContainText('↵ select');
   });
+
+  test('Enter on an option reached with Tab opens that option', async ({ page }) => {
+    await page.goto('/widgets');
+    await openPalette(page);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    const focused = page.getByRole('option', { name: 'Experience' });
+    await expect(focused).toBeFocused();
+    await expect(focused).toHaveAttribute('aria-selected', 'true');
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/\/$/);
+    await expect.poll(() => page.evaluate(() => Math.round(document.getElementById('experience')!.getBoundingClientRect().top))).toBeLessThan(110);
+  });
 });

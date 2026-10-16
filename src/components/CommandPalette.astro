@@ -83,6 +83,8 @@ const entries = [
         if (item.group !== group) return;
         const option = document.createElement('button'); option.type = 'button'; option.className = 'option'; option.id = `palette-option-${index}`; option.setAttribute('role', 'option'); option.setAttribute('aria-selected', String(index === active)); option.textContent = item.label;
         option.addEventListener('mouseenter', () => { active = index; updateActive(); });
+        // Tab can focus an option directly; keep it the one Enter picks.
+        option.addEventListener('focus', () => { active = index; updateActive(); });
         option.addEventListener('click', () => select(index)); list.append(option);
       });
     }
