@@ -8,7 +8,7 @@ Instructions for coding agents working on devmatsu.com. `AGENTS.md` is a link to
 2. Read this file and the relevant records in `docs/adr/` before planning. Propose a plan; the owner picks the direction.
 3. Implement on a branch, scoped to the plan. Don't add features, refactors or dependencies the plan didn't ask for.
 4. If the change makes a decision someone would later ask "why?" about (new dependency, new route scheme, a trade-off between two reasonable options), add an ADR (see `docs/adr/README.md`).
-5. Run the checks below, then open a PR using the template. The owner reviews and merges; agents never merge.
+5. Run the checks below, then open a PR using the template. Amplify builds a preview of the PR (`pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`); check the change there. The owner reviews and merges; agents never merge.
 
 ## Checks
 
