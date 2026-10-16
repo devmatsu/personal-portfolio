@@ -21,7 +21,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     title: 'Senior Software Engineer',
     start: '2025-08-11',
     end: null,
-    description: 'Modernizing a legacy IoT platform for millions of connected devices, rebuilding its high-volume telecom services as NestJS microservices. Owning service design end to end and applying Agentic Engineering across the development process.',
+    description: 'Modernizing the portal and backend infrastructure of an IoT platform serving millions of connected devices, evolving legacy systems and rebuilding core services to improve performance and reliability. Applying Agentic Engineering across software design, implementation, and delivery.',
     tags: ['NestJS', 'Kafka', 'Kubernetes', 'PostgreSQL', 'Herdr', 'OMP'],
   },
   {
@@ -31,7 +31,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     progression: ['Junior', 'Mid-level', 'Senior'],
     start: '2019-03-01',
     end: '2025-08-08',
-    description: 'Re-architected a C# messaging monolith into Node.js microservices delivering over a million SMS a day, and built fault-tolerant serverless backends on AWS. Mentored junior engineers on clean code and SOLID design.',
+    description: 'Re-architected legacy messaging systems into scalable microservices supporting over one million SMS messages daily, alongside WhatsApp and email integrations. Designed resilient AWS architectures for reliable, high-volume communication.',
     tags: ['Node.js', 'TypeScript', 'Serverless', 'AWS', 'DynamoDB', 'SQS'],
   },
   {
@@ -41,7 +41,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     progression: ['Intern', 'Junior'],
     start: '2017-02-01',
     end: '2019-02-28',
-    description: 'Improved a VB.NET CRM and automated the mainframe scripts behind daily operations, while helping build JavaScript chatbots on Microsoft LUIS.',
+    description: 'Contributed to CRM features and internal tooling, investigated customer-reported issues through application logs, automated internal workflows, and worked on WhatsApp chatbot integrations.',
     tags: ['SQL', 'VB.NET', 'C#', 'JavaScript', 'Microsoft LUIS'],
   },
 ];
