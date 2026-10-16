@@ -285,3 +285,10 @@ test('a link to a section from another page lands on it and tidies the URL', asy
   await expect(page).toHaveURL(/\/$/);
   await expect.poll(() => page.evaluate(() => Math.round(document.getElementById('workflow')!.getBoundingClientRect().top))).toBeLessThan(110);
 });
+
+for (const old of ['/widgets/tictactoe', '/widgets/gitHubGraph']) {
+  test(`the old ${old} route lands on the widgets page`, async ({ page }) => {
+    await page.goto(old);
+    await expect(page).toHaveURL(/\/widgets\/?$/);
+  });
+}
