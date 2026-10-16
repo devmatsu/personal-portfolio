@@ -9,7 +9,7 @@ Posts are written and published on dev.to. v2 fetched them in the browser on eve
 
 ## Decision
 
-`src/lib/devto.ts` fetches the article list and each article's HTML during `astro build`, paginating and retrying on 429. `/writing` and `/writing/[id]` are generated from it, keyed by the dev.to article id so old `/blog/post/<id>` links can redirect. If the API fails, the build fails rather than shipping an empty or partial writing section.
+`src/lib/devto.ts` fetches the article list and each article's HTML during `astro build`, paginating and retrying on 429, 5xx and network errors. `/writing` and `/writing/[id]` are generated from it, keyed by the dev.to article id so old `/blog/post/<id>` links can redirect. If the API fails, the build fails rather than shipping an empty or partial writing section.
 
 ## Consequences
 
