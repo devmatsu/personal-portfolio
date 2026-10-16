@@ -1,0 +1,25 @@
+# Response headers for Amplify Hosting (https://docs.aws.amazon.com/amplify/latest/userguide/custom-headers.html).
+# This file overrides anything set under Hosting → Custom headers in the Amplify console. Changes apply on the next deploy.
+customHeaders:
+  - pattern: '**'
+    headers:
+      # HTTPS only for a year. No includeSubDomains: other devmatsu.com subdomains aren't managed from this repo.
+      - key: 'Strict-Transport-Security'
+        value: 'max-age=31536000'
+      - key: 'X-Content-Type-Options'
+        value: 'nosniff'
+      - key: 'Referrer-Policy'
+        value: 'strict-origin-when-cross-origin'
+      # The page's own CSP is a <meta> (astro.config.mjs), which can't forbid framing; both of these do.
+      - key: 'X-Frame-Options'
+        value: 'DENY'
+      - key: 'Content-Security-Policy'
+        value: "frame-ancestors 'none'"
+      - key: 'Permissions-Policy'
+        value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+  # Everything under /_astro/ has a content hash in its name, so a changed file is a new URL: browsers may keep these
+  # for a year without revalidating. HTML keeps Amplify's default (revalidate every visit, cleared at the edge on deploy).
+  - pattern: '/_astro/*'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
