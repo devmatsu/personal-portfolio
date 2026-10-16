@@ -28,10 +28,16 @@ The build fetches every dev.to article; if the API is down the build fails inste
 
 CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
 
+## Working on it
+
+Changes start as an issue and land through a reviewed PR. Coding agents follow [`CLAUDE.md`](CLAUDE.md) (`AGENTS.md` links to it); decisions worth remembering are recorded in [`docs/adr/`](docs/adr/README.md).
+
 ## Structure
 
 ```
+.github/                 CI workflow, issue and PR templates
 design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
+docs/adr/                Architecture decision records
 src/data/                Site constants, experience timeline, widget registry
 src/layouts/Base.astro   <head>, nav, footer, ⌘K command palette
 src/components/home/     Home sections (hero, agent terminal, overview, experience, workflow, contact)
@@ -41,4 +47,4 @@ src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pom
 tests/                   Playwright end-to-end tests and the poker engine tests (run in Node)
 ```
 
-Widgets keep their state in `localStorage` (`v3.*` keys). `/blog` links redirect to `/writing`.
+Widgets keep their state in `localStorage` (`v3.*` keys). `/blog` links redirect to `/writing`. The site is intentionally hidden from search engines (`noindex`, no sitemap; see ADR 0003).
