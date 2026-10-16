@@ -1,8 +1,8 @@
 export const SITE = {
   name: 'Rodrigo Matagawa',
   handle: 'devmatsu',
-  title: 'Matsu | Software Engineer',
-  description: "Backend engineer for systems that can't go down. Node.js, TypeScript and AWS — and now building with AI agents.",
+  title: 'Matsu | Senior Software Engineer',
+  description: 'Senior Software Engineer building with Agentic Engineering. Backend systems on Node.js, TypeScript and AWS, from IoT platforms to high-volume messaging.',
   url: 'https://devmatsu.com',
   resume: '/files/RESUME_RODRIGO_MATAGAWA.pdf',
   version: '3.0.0',
