@@ -56,10 +56,12 @@ const entries = [
   let filtered = entries;
   let active = 0;
   let previousFocus: HTMLElement | null = null;
+  const hint = status?.innerHTML ?? '';
 
   function open() {
     if (!dialog || dialog.open) return;
     previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (status) status.innerHTML = hint;
     dialog.showModal();
     if (input) { input.value = ''; render(); input.focus(); }
   }

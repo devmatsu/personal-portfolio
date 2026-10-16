@@ -292,3 +292,23 @@ for (const old of ['/widgets/tictactoe', '/widgets/gitHubGraph']) {
     await expect(page).toHaveURL(/\/widgets\/?$/);
   });
 }
+
+test.describe('command palette', () => {
+  const openPalette = async (page: Page) => {
+    await page.getByRole('button', { name: 'Search', exact: true }).click();
+    await expect(page.locator('dialog[data-palette]')).toHaveAttribute('open', '');
+  };
+
+  test('the hint comes back after copying the email and reopening', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/widgets');
+    await openPalette(page);
+    await page.keyboard.type('copy email');
+    await page.keyboard.press('Enter');
+    const status = page.locator('[data-palette-status]');
+    await expect(status).toHaveText('Copied email to clipboard');
+    await page.keyboard.press('Escape');
+    await openPalette(page);
+    await expect(status).toContainText('↵ select');
+  });
+});
