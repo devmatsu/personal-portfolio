@@ -5,6 +5,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import CommandPalette from '../components/CommandPalette.astro';
+import Toast from '../components/Toast.astro';
 import { SITE } from '../data/site';
 interface Props { title?: string; description?: string; image?: string }
 const { title, description = SITE.description, image = `${SITE.url}/images/page_preview.png` } = Astro.props;
@@ -36,5 +37,6 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <main><slot /></main>
     <Footer />
     <CommandPalette />
+    <Toast />
   </body>
 </html>
