@@ -58,10 +58,13 @@ const entries = [
   let previousFocus: HTMLElement | null = null;
   const hint = status?.innerHTML ?? '';
 
+  // The status is a live region: only rewrite it when a copy message replaced the hint, so typing
+  // doesn't re-announce the hint on every key.
+  function showHint() { if (status && status.innerHTML !== hint) status.innerHTML = hint; }
   function open() {
     if (!dialog || dialog.open) return;
     previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    if (status) status.innerHTML = hint;
+    showHint();
     dialog.showModal();
     if (input) { input.value = ''; render(); input.focus(); }
   }
@@ -111,7 +114,7 @@ const entries = [
     else if (new URL(item.href, location.href).pathname === location.pathname) location.replace(item.href);
     else window.location.href = item.href;
   }
-  input?.addEventListener('input', () => { active = 0; render(); });
+  input?.addEventListener('input', () => { active = 0; showHint(); render(); });
   dialog?.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowDown') { event.preventDefault(); if (filtered.length) active = (active + 1) % filtered.length; updateActive(); }
     else if (event.key === 'ArrowUp') { event.preventDefault(); if (filtered.length) active = (active - 1 + filtered.length) % filtered.length; updateActive(); }
