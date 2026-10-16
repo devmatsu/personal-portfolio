@@ -1,0 +1,11 @@
+---
+// A classic inline <script> that must run before first paint, allowed by the CSP through its hash.
+// Pass the source with a `?raw` import from src/scripts/, which keeps it linted as a normal file.
+// Only components rendered inside <head> can register the hash themselves; for one rendered in <body>, Base.astro
+// registers it (see the note there), because the CSP <meta> has already been written by then.
+import { inlineScriptHash } from '../lib/csp';
+interface Props { code: string }
+const { code } = Astro.props;
+Astro.csp?.insertScriptHash(inlineScriptHash(code));
+---
+<script is:inline set:html={code} />

@@ -1,4 +1,6 @@
 ---
+import InlineScript from './InlineScript.astro';
+import searchShortcutLabel from '../scripts/search-shortcut-label.js?raw';
 const PRIMARY_NAV = [
   { label: 'Overview', href: '/#overview' },
   { label: 'Experience', href: '/#experience' },
@@ -26,15 +28,7 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
       </ul>
     </nav>
     <button class="search mono" type="button" aria-haspopup="dialog" data-palette-open><span>Search</span><kbd aria-hidden="true" data-shortcut>⌘K</kbd></button>
-    <script is:inline>
-      (function () {
-        const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
-        const mac = /mac|iphone|ipad|ipod/i.test(platform);
-        const button = document.currentScript.previousElementSibling;
-        button.querySelector('[data-shortcut]').textContent = mac ? '⌘K' : 'Ctrl K';
-        button.setAttribute('aria-keyshortcuts', mac ? 'Meta+K' : 'Control+K');
-      })();
-    </script>
+    <InlineScript code={searchShortcutLabel} />
   </div>
 </header>
 <style>
