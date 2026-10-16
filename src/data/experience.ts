@@ -31,7 +31,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     start: '2019-03-01',
     end: '2025-08-08',
     description: 'Re-architected a C# messaging monolith into Node.js microservices delivering over a million SMS a day, and built fault-tolerant serverless backends on AWS. Mentored junior engineers on clean code and SOLID design.',
-    tags: ['Node.js', 'Lambda', 'DynamoDB', 'SQS'],
+    tags: ['Node.js', 'TypeScript', 'Serverless', 'AWS', 'DynamoDB', 'SQS'],
   },
   {
     company: 'TQS',
@@ -41,7 +41,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     start: '2017-02-01',
     end: '2019-02-28',
     description: 'Improved a VB.NET CRM and automated the mainframe scripts behind daily operations, while helping build JavaScript chatbots on Microsoft LUIS.',
-    tags: ['VB.NET', 'C#', 'JavaScript'],
+    tags: ['SQL', 'VB.NET', 'C#', 'JavaScript', 'Microsoft LUIS'],
   },
 ];
 
