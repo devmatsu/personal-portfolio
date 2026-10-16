@@ -12,6 +12,11 @@ import transitionDirection from '../scripts/transition-direction.js?raw';
 import searchShortcutLabel from '../scripts/search-shortcut-label.js?raw';
 import { inlineScriptHash } from '../lib/csp';
 import { SITE } from '../data/site';
+// Same files the Fontsource CSS points at (Vite emits each once). Preloading them from the HTML starts the download
+// while the page is still parsing, instead of after the stylesheet arrives, so the swap from the fallback font
+// usually happens before first paint rather than reflowing the page after it.
+import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import geistMonoLatin from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 // Nav renders this inline script in <body>, after the CSP <meta> is written, so its hash is registered here.
 Astro.csp?.insertScriptHash(inlineScriptHash(searchShortcutLabel));
 interface Props { title?: string; description?: string; image?: string }
@@ -24,6 +29,8 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={geistMonoLatin} as="font" type="font/woff2" crossorigin />
     <meta name="robots" content="noindex, nofollow" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
