@@ -47,6 +47,7 @@ export function useEquity(scenario: Scenario | null): EquityState {
       worker?.terminate();
     };
     // The scenario is compared by value (its JSON key), not by object identity.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
   return state;

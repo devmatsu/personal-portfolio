@@ -37,9 +37,9 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
       // Must run before first render, hence inline in <head>. Needs the Navigation API; without it, everything fades through.
       addEventListener('pagereveal', function (event) {
         if (!event.viewTransition || !window.navigation || !navigation.activation || !navigation.activation.from) return;
-        var depth = function (url) { return new URL(url).pathname.split('/').filter(Boolean).length > 1 ? 2 : 1; };
-        var from = depth(navigation.activation.from.url);
-        var to = depth(navigation.activation.entry.url);
+        const depth = function (url) { return new URL(url).pathname.split('/').filter(Boolean).length > 1 ? 2 : 1; };
+        const from = depth(navigation.activation.from.url);
+        const to = depth(navigation.activation.entry.url);
         if (to > from) event.viewTransition.types.add('forward');
         else if (to < from) event.viewTransition.types.add('backward');
       });

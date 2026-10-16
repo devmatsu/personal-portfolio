@@ -99,7 +99,7 @@ export default function Pomodoro() {
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
       if (!isShortcutTarget(event)) return;
-      if (event.code === 'Space') { event.preventDefault(); timer.endAt === null ? start() : pause(); }
+      if (event.code === 'Space') { event.preventDefault(); if (timer.endAt === null) start(); else pause(); }
       else if (event.key.toLowerCase() === 'r') reset();
       else if (event.key.toLowerCase() === 's') skip();
     };

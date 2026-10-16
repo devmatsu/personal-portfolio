@@ -28,9 +28,9 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
     <button class="search mono" type="button" aria-haspopup="dialog" data-palette-open><span>Search</span><kbd aria-hidden="true" data-shortcut>⌘K</kbd></button>
     <script is:inline>
       (function () {
-        var platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
-        var mac = /mac|iphone|ipad|ipod/i.test(platform);
-        var button = document.currentScript.previousElementSibling;
+        const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+        const mac = /mac|iphone|ipad|ipod/i.test(platform);
+        const button = document.currentScript.previousElementSibling;
         button.querySelector('[data-shortcut]').textContent = mac ? '⌘K' : 'Ctrl K';
         button.setAttribute('aria-keyshortcuts', mac ? 'Meta+K' : 'Control+K');
       })();

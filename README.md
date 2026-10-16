@@ -13,7 +13,7 @@ Personal site of Rodrigo "Matsu" Matagawa, backend engineer. Live at [devmatsu.c
 
 ## Scripts
 
-Node ≥ 22.12.
+Node 22.22.3+ or 24.16+.
 
 | Command           | What it does                                      |
 | ----------------- | ------------------------------------------------- |
@@ -21,9 +21,10 @@ Node ≥ 22.12.
 | `npm run build`   | `astro check` (types) + static build into `dist/` |
 | `npm run preview` | Serve the built `dist/`                           |
 | `npm run check`   | Type-check only                                   |
+| `npm run lint`    | ESLint (TypeScript, Astro, React hooks)           |
 | `npm test`        | Build, serve and run the Playwright tests         |
 
-The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy.
+The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy. Before the first `npm test`, install the browser with `npx playwright install chromium`.
 
 ## Structure
 
