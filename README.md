@@ -35,7 +35,7 @@ Changes start as an issue and land through a reviewed PR. Coding agents follow [
 ## Structure
 
 ```
-.github/                 CI workflow, issue and PR templates
+.github/                 CI workflow, Dependabot config, issue and PR templates
 design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
 docs/adr/                Architecture decision records
 src/data/                Site constants, experience timeline, widget registry
