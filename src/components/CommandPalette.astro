@@ -2,21 +2,20 @@
 import { SITE } from '../data/site';
 import { WIDGETS } from '../data/widgets';
 const entries = [
-  { group: 'Sections', label: 'Now', keywords: 'current', href: '/#now' },
+  { group: 'Sections', label: 'Overview', keywords: 'now current focus summary', href: '/#overview' },
   { group: 'Sections', label: 'Experience', keywords: 'work career', href: '/#experience' },
-  { group: 'Sections', label: "How it's built", keywords: 'agents process', href: '/#agents' },
+  { group: 'Sections', label: 'Workflow', keywords: 'how I work agents process', href: '/#workflow' },
   { group: 'Sections', label: 'Contact', keywords: 'email', href: '/#contact' },
   { group: 'Pages', label: 'Home', keywords: 'homepage', href: '/' },
-  { group: 'Pages', label: 'Blog', keywords: 'writing articles', href: '/blog' },
+  { group: 'Pages', label: 'Writing', keywords: 'blog articles posts', href: '/writing' },
   { group: 'Pages', label: 'Widgets', keywords: 'tools', href: '/widgets' },
   ...WIDGETS.map((widget) => ({ group: 'Widgets', label: widget.name, keywords: `${widget.description} ${widget.slug}`, href: `/widgets/${widget.slug}` })),
   { group: 'Links', label: 'LinkedIn', keywords: 'social', href: SITE.links.linkedin, external: true },
   { group: 'Links', label: 'GitHub', keywords: 'code social', href: SITE.links.github, external: true },
   { group: 'Links', label: 'dev.to', keywords: 'writing social', href: SITE.links.devto, external: true },
-  { group: 'Links', label: 'LeetCode', keywords: 'coding', href: SITE.links.leetcode, external: true },
-  { group: 'Links', label: 'Email', keywords: SITE.email, href: `mailto:${SITE.email}` },
+  { group: 'Links', label: 'Email', keywords: 'mail contact' },
   { group: 'Links', label: 'Résumé PDF', keywords: 'resume cv download', href: SITE.resume, download: true },
-  { group: 'Links', label: 'Copy email', keywords: SITE.email, action: 'copy' },
+  { group: 'Links', label: 'Copy email', keywords: 'mail contact', action: 'copy' },
 ];
 ---
 <dialog class="palette" aria-label="Command palette" data-palette data-entries={JSON.stringify(entries)}>
@@ -46,11 +45,14 @@ const entries = [
   @media (max-width:600px) { .palette { margin-top:8vh; } }
 </style>
 <script>
+  import { email } from '../data/contact';
   const dialog = document.querySelector<HTMLDialogElement>('[data-palette]');
   const input = dialog?.querySelector<HTMLInputElement>('[data-palette-input]');
   const list = dialog?.querySelector<HTMLElement>('[data-palette-options]');
   const status = dialog?.querySelector<HTMLElement>('[data-palette-status]');
   const entries = JSON.parse(dialog?.dataset.entries ?? '[]') as Array<{group:string;label:string;keywords:string;href?:string;external?:boolean;download?:boolean;action?:string}>;
+  const mailEntry = entries.find((item) => item.label === 'Email' && !item.action);
+  if (mailEntry) mailEntry.href = `mailto:${email()}`;
   let filtered = entries;
   let active = 0;
   let previousFocus: HTMLElement | null = null;
@@ -93,7 +95,7 @@ const entries = [
   async function select(index: number) {
     const item = filtered[index]; if (!item) return;
     if (item.action === 'copy') {
-      try { await navigator.clipboard.writeText(item.keywords); if (status) status.textContent = 'Copied email to clipboard'; }
+      try { await navigator.clipboard.writeText(email()); if (status) status.textContent = 'Copied email to clipboard'; }
       catch { if (status) status.textContent = 'Unable to copy email'; }
       return;
     }
@@ -101,6 +103,8 @@ const entries = [
     if (!item.href) return;
     if (item.external) window.open(item.href, '_blank', 'noopener,noreferrer');
     else if (item.download) { const link = document.createElement('a'); link.href = item.href; link.download = ''; link.click(); }
+    // Same-page sections replace the current entry instead of adding one per jump (the header does the same).
+    else if (new URL(item.href, location.href).pathname === location.pathname) location.replace(item.href);
     else window.location.href = item.href;
   }
   input?.addEventListener('input', () => { active = 0; render(); });

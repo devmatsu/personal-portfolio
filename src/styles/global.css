@@ -18,6 +18,8 @@
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
   --maxw: 1240px;
+  /* Fixed so the last homepage screen (Contact) can include the footer exactly. */
+  --footer-height: 68px;
   color-scheme: dark;
   font-family: var(--font-sans);
   background: var(--bg);
