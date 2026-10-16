@@ -1,40 +1,40 @@
 {
   "name": "personal-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0",
   "type": "module",
+  "engines": {
+    "node": "^22.22.3 || >=24.16.0"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint . --max-warnings 0",
+    "test": "playwright test"
   },
   "dependencies": {
-    "axios": "^1.6.5",
-    "framer-motion": "^12.6.3",
-    "lucide-react": "^0.486.0",
-    "phosphor-react": "^1.4.1",
-    "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-code-blocks": "^0.1.6",
-    "react-dom": "^18.2.0",
-    "react-icons": "^4.12.0",
-    "react-markdown": "^9.0.1",
-    "react-router-dom": "^6.21.3",
-    "react-scroll": "^1.9.3",
-    "react-simple-typewriter": "^5.0.1",
-    "react-syntax-highlighter": "^15.5.0",
-    "remark-gfm": "^4.0.1"
+    "@astrojs/react": "^7.0.1",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "astro": "^7.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.37",
-    "@types/react-dom": "^18.0.11",
-    "@vitejs/plugin-react": "^4.0.0",
-    "eslint": "^8.38.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.3.3",
-    "vite": "^4.3.9"
+    "@astrojs/check": "^0.9.10",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^10.12.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "pokersolver": "^2.1.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2"
   }
 }

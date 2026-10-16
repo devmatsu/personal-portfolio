@@ -1,0 +1,153 @@
+---
+const PRIMARY_NAV = [
+  { label: 'Overview', href: '/#overview' },
+  { label: 'Experience', href: '/#experience' },
+  { label: 'Workflow', href: '/#workflow' },
+  { label: 'Contact', href: '/#contact' },
+];
+const SECONDARY_NAV = [
+  { label: 'Writing', href: '/writing' },
+  { label: 'Widgets', href: '/widgets' },
+];
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+// aria-current: "page" on the destination itself, "true" on pages nested under it (a post, a single widget).
+const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`${base}/`) ? 'true' : undefined);
+---
+<header class="site-header" data-site-header>
+  <div class="nav-shell">
+    <a href="/" class="logo mono" aria-label="Matsu home" aria-current={path === '/' ? 'page' : undefined}>~/matsu<span>_</span></a>
+    <button class="menu mono" type="button" aria-expanded="false" aria-controls="site-nav" hidden data-menu-toggle>Menu</button>
+    <nav id="site-nav" aria-label="Primary">
+      <ul class="primary">
+        {PRIMARY_NAV.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+      <ul class="secondary">
+        {SECONDARY_NAV.map((item) => <li><a href={item.href} aria-current={currentFor(item.href)}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+    <button class="search mono" type="button" aria-haspopup="dialog" data-palette-open><span>Search</span><kbd aria-hidden="true" data-shortcut>⌘K</kbd></button>
+    <script is:inline>
+      (function () {
+        const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+        const mac = /mac|iphone|ipad|ipod/i.test(platform);
+        const button = document.currentScript.previousElementSibling;
+        button.querySelector('[data-shortcut]').textContent = mac ? '⌘K' : 'Ctrl K';
+        button.setAttribute('aria-keyshortcuts', mac ? 'Meta+K' : 'Control+K');
+      })();
+    </script>
+  </div>
+</header>
+<style>
+  /* Sticky so the site navigation stays reachable on long pages; scroll-margin on main content in global.css keeps anchor targets clear of it. */
+  .site-header { position:sticky; top:0; z-index:50; width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 14px 24px; box-sizing: border-box; }
+  .nav-shell { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px; padding:10px 10px 10px 20px; border:1px solid rgba(var(--text-rgb),.08); border-radius:16px; background:rgba(var(--bg-rgb),.78); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); }
+  .logo { font-size:15px; font-weight:500; }
+  .logo span { color:var(--accent); }
+  nav { display:flex; align-items:center; gap:12px; font-size:14px; }
+  ul { display:flex; gap:2px; margin:0; padding:0; list-style:none; }
+  .secondary { padding-left:12px; border-left:1px solid rgba(var(--text-rgb),.1); }
+  nav a { display:block; padding:8px 12px; border-radius:10px; color:var(--muted); transition:color .15s, background-color .15s; }
+  .secondary a { color:var(--dim); }
+  /* Hover and "you are here" share one look: the current page (Writing, Widgets) or, on the homepage, the section in view. */
+  nav a:hover, nav a[aria-current] { background:rgba(var(--text-rgb),.05); color:var(--text); opacity:1; }
+  .search, .menu { display:inline-flex; align-items:center; gap:10px; padding:8px 12px; border:0; border-radius:10px; background:rgba(var(--text-rgb),.06); color:var(--muted); font-size:12px; cursor:pointer; }
+  .search:hover, .menu:hover, .menu[aria-expanded="true"] { color:var(--text); }
+  kbd { padding:1px 6px; border:1px solid rgba(var(--text-rgb),.15); border-radius:5px; font:inherit; }
+  @media (hover: none) { kbd { display: none; } }
+  /* Narrow screens: links collapse behind an explicit Menu button once the script has enabled it; without JS they stay visible in the bar.
+     The open menu floats over the page as a dropdown, so opening it never pushes the content (or the current section) down. */
+  @media (max-width: 899px) {
+    .nav-shell { position:relative; }
+    [data-menu-ready] nav { display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; padding:8px; border:1px solid rgba(var(--text-rgb),.08); border-radius:16px; background:var(--bg); box-shadow:0 24px 48px -24px rgba(0,0,0,.8); }
+    [data-menu-ready][data-menu-open] nav { display:flex; }
+    kbd { display:none; }
+    .search { order:1; margin-left:auto; }
+    .menu { order:2; margin-left:-8px; }
+    nav { order:3; flex-basis:100%; flex-direction:column; align-items:stretch; gap:8px; padding:6px 10px 6px 0; }
+    ul { flex-direction:column; }
+    .secondary { padding:8px 0 0; border-left:0; border-top:1px solid rgba(var(--text-rgb),.08); }
+    nav a { padding:10px 12px; font-size:16px; }
+  }
+  @media (min-width: 900px) { .menu { display:none; } }
+</style>
+<script>
+  document.querySelector('[data-palette-open]')?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('palette:open')));
+
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  if (header && toggle) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      header.toggleAttribute('data-menu-open', open);
+    };
+    toggle.hidden = false;
+    header.setAttribute('data-menu-ready', '');
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    header.querySelector('nav')?.addEventListener('click', (event) => { if ((event.target as Element).closest('a')) setOpen(false); });
+    document.addEventListener('click', (event) => { if (!header.contains(event.target as Node)) setOpen(false); });
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || toggle.getAttribute('aria-expanded') !== 'true' || document.querySelector('dialog[open]')) return;
+      setOpen(false);
+      toggle.focus();
+    });
+  }
+
+  // On the homepage the logo scrolls back to the top instead of reloading the page (which jumps).
+  // Modified clicks (new tab/window) keep the browser default.
+  header?.querySelector<HTMLAnchorElement>('.logo')?.addEventListener('click', (event) => {
+    if (location.pathname !== '/' || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    toggle?.setAttribute('aria-expanded', 'false');
+    header.removeAttribute('data-menu-open');
+    if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  });
+
+  // Homepage sections scroll in place without writing #section into the address bar or the history.
+  // Links that arrive with a fragment (/#workflow from another page, or from search) still land on the section;
+  // the fragment is then tidied out of the URL.
+  if (location.pathname === '/') {
+    const tidyUrl = () => { if (location.hash) history.replaceState(history.state, '', location.pathname + location.search); };
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href*="#"]') : null;
+      if (!link || link.target || link.origin !== location.origin || link.pathname !== location.pathname) return;
+      const section = link.hash.length > 1 ? document.getElementById(decodeURIComponent(link.hash.slice(1))) : null;
+      if (!section) return;
+      event.preventDefault();
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      section.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+      // Move the keyboard starting point to the section, as a real fragment jump would.
+      if (!section.hasAttribute('tabindex')) section.setAttribute('tabindex', '-1');
+      section.focus({ preventScroll: true });
+      tidyUrl();
+    });
+    window.addEventListener('hashchange', tidyUrl);
+    if (document.readyState === 'complete') tidyUrl();
+    else window.addEventListener('load', tidyUrl, { once: true });
+  }
+
+  // On the homepage, mark the section under the middle of the viewport as the current location.
+  // The hero sits above Overview, so nothing is marked there; at the very bottom the last section wins
+  // (Contact is too short to reach the middle line on tall screens).
+  if (location.pathname === '/') {
+    const sections = [...document.querySelectorAll<HTMLAnchorElement>('#site-nav a[href^="/#"]')]
+      .map((link) => ({ link, section: document.getElementById(new URL(link.href).hash.slice(1)) }))
+      .filter((item): item is { link: HTMLAnchorElement; section: HTMLElement } => item.section !== null);
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      const current = atBottom ? sections.at(-1) : sections.findLast((item) => item.section.getBoundingClientRect().top <= window.innerHeight / 2);
+      for (const item of sections) {
+        if (item === current) item.link.setAttribute('aria-current', 'location');
+        else item.link.removeAttribute('aria-current');
+      }
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    update();
+  }
+</script>

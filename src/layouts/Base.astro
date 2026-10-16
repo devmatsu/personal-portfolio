@@ -1,0 +1,56 @@
+---
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import Toast from '../components/Toast.astro';
+import { SITE } from '../data/site';
+interface Props { title?: string; description?: string; image?: string }
+const { title, description = SITE.description, image = `${SITE.url}/images/page_preview.png` } = Astro.props;
+const pageTitle = title ? `${title} · Matsu` : SITE.title;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/icons/devmatsu.ico" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <script is:inline>
+      // Page transition direction (styled in global.css): going deeper (index → widget/post) is "forward",
+      // coming back up is "backward"; between top-level pages no type is set, which gives the fade-through.
+      // Must run before first render, hence inline in <head>. Needs the Navigation API; without it, everything fades through.
+      addEventListener('pagereveal', function (event) {
+        if (!event.viewTransition || !window.navigation || !navigation.activation || !navigation.activation.from) return;
+        const depth = function (url) { return new URL(url).pathname.split('/').filter(Boolean).length > 1 ? 2 : 1; };
+        const from = depth(navigation.activation.from.url);
+        const to = depth(navigation.activation.entry.url);
+        if (to > from) event.viewTransition.types.add('forward');
+        else if (to < from) event.viewTransition.types.add('backward');
+      });
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" data-astro-prefetch="false">Skip to content</a>
+    <Nav />
+    <main id="main" tabindex="-1"><slot /></main>
+    <Footer />
+    <CommandPalette />
+    <Toast />
+  </body>
+</html>

@@ -1,0 +1,22 @@
+---
+import BackLink from './BackLink.astro';
+interface Props { eyebrow?: string; title: string; description?: string; back?: { href: string; label: string } }
+const { eyebrow, title, description, back } = Astro.props;
+---
+<header class:list={['page-header', 'container', { 'has-back': back }]}>
+  {back && <div class="top">
+    <BackLink href={back.href} label={back.label} />
+    <slot name="aside" />
+  </div>}
+  {eyebrow && <p class="label">{eyebrow}</p>}
+  <h1>{title}<span>.</span></h1>
+  {description && <p class="description">{description}</p>}
+</header>
+<style>
+  .page-header { padding-block: 72px 48px; }
+  .page-header.has-back { padding-top: 40px; }
+  h1 { margin: 12px 0; font-size: clamp(40px, 5vw, 56px); line-height: 1.1; font-weight: 600; letter-spacing: -.035em; }
+  h1 span { color: var(--accent); }
+  .description { max-width: 60ch; margin: 0; color: var(--muted); }
+  .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+</style>

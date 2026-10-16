@@ -9,7 +9,10 @@ lerna-debug.log*
 
 node_modules
 dist
-dist-ssr
+.astro
+test-results
+playwright-report
+.lighthouseci
 *.local
 
 # Editor directories and files

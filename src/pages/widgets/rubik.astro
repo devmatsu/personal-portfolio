@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Timer from '../../widgets/rubik/Timer';
+import WidgetSwitcher from '../../components/WidgetSwitcher.astro';
+---
+
+<Base title="Rubik's Cube Timer" description="A Rubik's cube timer with WCA-style scrambles and session statistics.">
+  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Rubik's Cube Timer" description="A clean timer, random-move scrambles and session stats.">
+    <WidgetSwitcher slot="aside" current="rubik" />
+  </PageHeader>
+  <div class="container page">
+    <div class="timer-card card">
+      <div class="timer-island"><Timer client:only="react" /></div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page { padding-bottom: 100px; }
+  .timer-island { min-height: 650px; }
+</style>

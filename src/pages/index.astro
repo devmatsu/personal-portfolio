@@ -1,0 +1,184 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import AgentTerminal from '../components/home/AgentTerminal.astro';
+import Overview from '../components/home/Overview.astro';
+import Experience from '../components/home/Experience.astro';
+import Workflow from '../components/home/Workflow.astro';
+import Contact from '../components/home/Contact.astro';
+---
+<Base>
+  <div class="first-screen">
+    <Hero><AgentTerminal /></Hero>
+  </div>
+  <Overview />
+  <Experience />
+  <Workflow />
+  <Contact />
+</Base>
+<style>
+.first-screen{min-height:100svh;display:flex;flex-direction:column}
+</style>
+<script>
+  // Sections are at least one screen tall (so header jumps show one section at a time), which leaves blank space below
+  // short sections on tall screens. Don't let a scroll come to rest there: when at least 30% of the visible area is that
+  // gap, glide on to the next section in the direction you were scrolling. Only once you've actually headed that way,
+  // though: on tall screens a short section's gap can fill a third of the view from its start, so a nudge off the start
+  // already "lands in the gap". You must have travelled at least a quarter of the view from the section you left.
+  // Scrolling anywhere else is untouched. Skipped with reduced motion.
+  const HEADER_OFFSET = 96;
+  const BLANK_SHARE = 0.3;
+  const MIN_TRAVEL_SHARE = 0.25;
+  const sections = [...document.querySelectorAll<HTMLElement>('#overview, #experience, #workflow, #contact')];
+  // The homepage screens: the hero, then each section. stepTop is the scroll position that shows a screen from its start.
+  const steps = [document.querySelector<HTMLElement>('.first-screen'), ...sections].filter((step): step is HTMLElement => step !== null);
+  const stepTop = (step: HTMLElement) => (step === steps[0] ? 0 : Math.round(step.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET));
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let lastY = window.scrollY;
+  let direction = 1;
+  // Where a scroll we started (a glide, or keeping your place on resize) will come to rest, so its own scroll end isn't
+  // evaluated again. Only set when the page will actually move; a stale value would swallow the visitor's next real stop.
+  let ownScrollTarget: number | null = null;
+  // A PageUp/PageDown step in progress: which screen it is heading to, and its animation frame.
+  let step: { index: number; frame: number } | null = null;
+
+  const settle = () => {
+    if (ownScrollTarget !== null) {
+      const arrived = Math.abs(window.scrollY - ownScrollTarget) < 2;
+      ownScrollTarget = null;
+      if (arrived) return;
+    }
+    if (step || reducedMotion.matches) return;
+    // Reaching the very top or bottom of the page (hero, footer) is always deliberate: never move away from it.
+    if (window.scrollY <= 0 || window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) return;
+    // Stopping exactly at a section's start is a deliberate landing (header link, PageDown, search). The blank space below
+    // a short section is just that section's end, so leave it there.
+    if (steps.some((step) => Math.abs(stepTop(step) - window.scrollY) < 2)) return;
+    const viewTop = window.scrollY + HEADER_OFFSET;
+    const viewBottom = window.scrollY + window.innerHeight;
+    for (let index = 0; index < sections.length - 1; index++) {
+      // The gap runs from the end of this section's content to where the next section's content area begins
+      // (its top edge plus padding). Space a section adds inside itself, like Contact's vertical centring, isn't a gap.
+      const next = sections[index + 1];
+      const gapStart = sections[index].lastElementChild!.getBoundingClientRect().bottom + window.scrollY;
+      const gapEnd = next.getBoundingClientRect().top + parseFloat(getComputedStyle(next).paddingTop) + window.scrollY;
+      const blank = Math.min(viewBottom, gapEnd) - Math.max(viewTop, gapStart);
+      if (blank / (viewBottom - viewTop) < BLANK_SHARE) continue;
+      // How far you've come from the section you left: down from this one's start, or up from the next one's.
+      const travelled = direction < 0 ? stepTop(next) - window.scrollY : window.scrollY - stepTop(sections[index]);
+      if (travelled < MIN_TRAVEL_SHARE * (viewBottom - viewTop)) return;
+      const target = direction < 0 ? sections[index] : sections[index + 1];
+      const targetY = Math.round(target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET);
+      if (Math.abs(targetY - window.scrollY) < 2) return;
+      ownScrollTarget = targetY;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+  };
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY !== lastY) direction = Math.sign(window.scrollY - lastY);
+    lastY = window.scrollY;
+  }, { passive: true });
+
+  // Screens are sized from the window height, so resizing the window changes the height of every screen above the one
+  // you're reading and the content would slide by that much. Browsers keep your place for ordinary reflow (scroll
+  // anchoring) but not for this, so do the same here: remember what sits at the top of the view, just under the header,
+  // and after a resize scroll so it's back where it was. Where the browser already compensated there's nothing left to do.
+  // Only real layout shifts count: a phone's address bar showing or hiding resizes the window without changing the
+  // screens (they use svh), so it never moves the page. The very top of the page stays the top.
+  let anchor: { element: Element; viewTop: number; documentTop: number; scrollY: number } | null = null;
+  const captureAnchor = () => {
+    const hit = document.elementFromPoint(window.innerWidth / 2, HEADER_OFFSET + 8);
+    const index = Math.max(0, steps.map(stepTop).findLastIndex((top) => top <= window.scrollY + 2));
+    // Blank space between screens belongs to no screen; fall back to the screen you're on.
+    const element = hit && steps.some((screen) => screen.contains(hit)) ? hit : steps[index];
+    const viewTop = element.getBoundingClientRect().top;
+    anchor = { element, viewTop, documentTop: viewTop + window.scrollY, scrollY: window.scrollY };
+  };
+  let anchorFrame = 0;
+  window.addEventListener('scroll', () => {
+    cancelAnimationFrame(anchorFrame);
+    anchorFrame = requestAnimationFrame(captureAnchor);
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    if (anchor && anchor.scrollY > 0 && anchor.element.isConnected) {
+      const viewTop = anchor.element.getBoundingClientRect().top;
+      const shifted = Math.abs(viewTop + window.scrollY - anchor.documentTop) >= 1;
+      const correction = viewTop - anchor.viewTop;
+      if (shifted && Math.abs(correction) >= 1) {
+        cancelStep();
+        ownScrollTarget = window.scrollY + correction;
+        window.scrollTo({ top: ownScrollTarget, behavior: 'instant' });
+      }
+    }
+    captureAnchor();
+  });
+  captureAnchor();
+
+  // scrollend isn't in every browser yet (TypeScript's DOM types assume it is); fall back to a short scroll debounce.
+  const supportsScrollEnd = 'onscrollend' in (window as object);
+  if (supportsScrollEnd) window.addEventListener('scrollend', settle);
+  else {
+    let timer = 0;
+    window.addEventListener('scroll', () => { window.clearTimeout(timer); timer = window.setTimeout(settle, 150); }, { passive: true });
+  }
+
+  // PageDown / PageUp step through the homepage screens. A section taller than the screen is paged through normally first
+  // so nothing is skipped; PageUp from partway into a section returns to its start. Pressing again while a step is still
+  // animating continues from where that step is heading (so two quick presses move two sections) and finishes faster.
+  // The animation is our own rather than the browser's smooth scroll, whose speed can't be set. Any other input
+  // (wheel, touch, click, another key) cancels it. Typing in a field or using the search palette keeps the browser's own behaviour.
+  const STEP_MS = 480;
+  const CHAINED_STEP_MS = 280;
+  const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+  const cancelStep = () => {
+    if (!step) return;
+    cancelAnimationFrame(step.frame);
+    step = null;
+  };
+  const stepTo = (index: number, duration: number) => {
+    cancelStep();
+    const to = stepTop(steps[index]);
+    if (reducedMotion.matches) { window.scrollTo({ top: to, behavior: 'instant' }); return; }
+    const from = window.scrollY;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration);
+      window.scrollTo({ top: from + (to - from) * easeInOut(progress), behavior: 'instant' });
+      step = progress < 1 ? { index, frame: requestAnimationFrame(tick) } : null;
+    };
+    step = { index, frame: requestAnimationFrame(tick) };
+  };
+  for (const type of ['wheel', 'touchstart', 'mousedown'] as const) window.addEventListener(type, cancelStep, { passive: true });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'PageDown' && event.key !== 'PageUp') { cancelStep(); return; }
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    if (document.querySelector('dialog[open]')) return;
+    if (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+    const offset = event.key === 'PageDown' ? 1 : -1;
+    if (step) {
+      // Mid-step: continue from its destination. At either end, just let the current step finish.
+      event.preventDefault();
+      const next = step.index + offset;
+      if (next >= 0 && next < steps.length) stepTo(next, CHAINED_STEP_MS);
+      return;
+    }
+    const y = window.scrollY;
+    const tops = steps.map(stepTop);
+    const current = tops.findLastIndex((top) => top <= y + 2);
+    let next: number;
+    if (offset > 0) {
+      // The hero is one screen by design (it starts below the header, so its bottom sits just past the fold).
+      const contentBottom = (steps[current].lastElementChild ?? steps[current]).getBoundingClientRect().bottom;
+      if (current > 0 && contentBottom > window.innerHeight + 2) return;
+      next = current + 1;
+    } else {
+      next = tops[current] < y - 2 ? current : current - 1;
+    }
+    if (next < 0 || next >= steps.length) return;
+    event.preventDefault();
+    stepTo(next, STEP_MS);
+  });
+</script>

@@ -1,0 +1,38 @@
+.widget {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(280px, 1fr);
+  align-items: center;
+  gap: 40px;
+  padding: 28px;
+  border: 1px solid rgba(var(--text-rgb), .07);
+  border-radius: 22px;
+  background: var(--surface);
+}
+.wheelWrap { position: relative; width: min(100%, 420px); aspect-ratio: 1; margin-inline: auto; }
+.wheel { display: block; width: 100%; height: 100%; border: 1px solid rgba(var(--text-rgb), .12); border-radius: 50%; overflow: visible; }
+.label { fill: var(--text); font: 500 9px var(--font-mono); }
+.winner { fill: var(--accent); color: var(--accent); font-weight: 700; }
+
+.pointer { position: absolute; z-index: 1; top: -7px; left: calc(50% - 9px); width: 0; height: 0; border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 17px solid var(--text); filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+.controls { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; min-width: 0; }
+.removeToggle { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 14px; cursor: pointer; }
+.removeToggle input { accent-color: var(--accent); width: 16px; height: 16px; }
+.addForm { width: 100%; }
+.inputLabel { display: block; margin-bottom: 7px; color: var(--dim); font: 12px var(--font-mono); }
+.inputRow { display: flex; gap: 8px; align-items: stretch; }
+.inputRow textarea { flex: 1; min-width: 0; resize: vertical; padding: 10px 12px; border: 1px solid rgba(var(--text-rgb), .14); border-radius: 10px; background: var(--bg); color: var(--text); font: 14px/1.5 var(--font-sans); }
+.options { display: flex; flex-direction: column; width: 100%; max-height: 230px; overflow: auto; list-style: none; margin: 0; padding: 0; }
+.options li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 7px 4px; border-bottom: 1px solid rgba(var(--text-rgb), .07); color: var(--muted); overflow-wrap: anywhere; }
+.options li.winner { color: var(--accent); }
+.options li button { flex: 0 0 auto; border: 0; padding: 2px 8px; border-radius: 6px; background: transparent; color: var(--dim); font-size: 19px; cursor: pointer; }
+.options li button:hover { background: rgba(var(--text-rgb), .08); color: var(--text); }
+.clear { padding: 0; border: 0; background: transparent; color: var(--dim); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.clear:disabled { opacity: .45; cursor: default; }
+.result { min-height: 1.6em; margin: 0; color: var(--accent); font-weight: 500; }
+.widget :global(button:focus-visible), .widget textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 700px) {
+  .widget { grid-template-columns: 1fr; gap: 28px; padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wheel { scroll-behavior: auto; }
+}

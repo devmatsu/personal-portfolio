@@ -1,0 +1,128 @@
+---
+import { SITE } from '../data/site';
+import { WIDGETS } from '../data/widgets';
+const entries = [
+  { group: 'Sections', label: 'Overview', keywords: 'now current focus summary', href: '/#overview' },
+  { group: 'Sections', label: 'Experience', keywords: 'work career', href: '/#experience' },
+  { group: 'Sections', label: 'Workflow', keywords: 'how I work agents process', href: '/#workflow' },
+  { group: 'Sections', label: 'Contact', keywords: 'email', href: '/#contact' },
+  { group: 'Pages', label: 'Home', keywords: 'homepage', href: '/' },
+  { group: 'Pages', label: 'Writing', keywords: 'blog articles posts', href: '/writing' },
+  { group: 'Pages', label: 'Widgets', keywords: 'tools', href: '/widgets' },
+  ...WIDGETS.map((widget) => ({ group: 'Widgets', label: widget.name, keywords: `${widget.description} ${widget.slug}`, href: `/widgets/${widget.slug}` })),
+  { group: 'Links', label: 'LinkedIn', keywords: 'social', href: SITE.links.linkedin, external: true },
+  { group: 'Links', label: 'GitHub', keywords: 'code social', href: SITE.links.github, external: true },
+  { group: 'Links', label: 'dev.to', keywords: 'writing social', href: SITE.links.devto, external: true },
+  { group: 'Links', label: 'Email', keywords: 'mail contact' },
+  { group: 'Links', label: 'Résumé PDF', keywords: 'resume cv download', href: SITE.resume, download: true },
+  { group: 'Links', label: 'Copy email', keywords: 'mail contact', action: 'copy' },
+];
+---
+<dialog class="palette" aria-label="Command palette" data-palette data-entries={JSON.stringify(entries)}>
+  <div class="searchbox">
+    <span aria-hidden="true">⌕</span>
+    <input type="text" role="combobox" aria-label="Search commands" aria-expanded="true" aria-controls="palette-options" aria-autocomplete="list" placeholder="Search pages, sections, links…" data-palette-input />
+    <kbd>ESC</kbd>
+  </div>
+  <div class="results" id="palette-options" role="listbox" aria-label="Commands" data-palette-options></div>
+  <p class="hint" data-palette-status aria-live="polite">↑↓ navigate <span>↵ select</span></p>
+</dialog>
+<style>
+  .palette { position:fixed; inset:0; width:min(560px,calc(100% - 32px)); max-width:none; max-height:min(580px,calc(100% - 48px)); margin:12vh auto auto; padding:0; overflow:hidden; border:1px solid rgba(var(--text-rgb),.12); border-radius:16px; background:var(--surface); color:var(--text); box-shadow:0 24px 90px rgba(0,0,0,.65); }
+  .palette::backdrop { background:rgba(0,0,0,.68); backdrop-filter:blur(3px); }
+  .searchbox { display:flex; align-items:center; gap:12px; padding:16px 18px; border-bottom:1px solid rgba(var(--text-rgb),.08); color:var(--dim); }
+  input { width:100%; min-width:0; border:0; outline:0; background:transparent; color:var(--text); font-size:16px; }
+  input::placeholder { color:var(--dim); }
+  kbd { flex:none; padding:2px 6px; border:1px solid rgba(var(--text-rgb),.14); border-radius:5px; color:var(--dim); font:11px var(--font-mono); }
+  .results { max-height:430px; overflow:auto; padding:10px; }
+  /* Rows are created by the script at runtime, so they carry no scope attribute: target them via :global. */
+  .results :global(.group-label) { padding:10px 10px 6px; color:var(--dim); font:11px var(--font-mono); letter-spacing:.08em; text-transform:uppercase; }
+  .results :global(.option) { display:flex; justify-content:space-between; width:100%; padding:9px 10px; border:0; border-radius:8px; background:transparent; color:var(--text); font:15px var(--font-sans); text-align:left; cursor:pointer; }
+  .results :global(.option[aria-selected="true"]), .results :global(.option:hover) { background:rgba(var(--accent-rgb),.13); color:var(--accent); }
+  .hint { display:flex; gap:16px; margin:0; padding:10px 18px; border-top:1px solid rgba(var(--text-rgb),.08); color:var(--dim); font:11px var(--font-mono); }
+  .hint span { margin-left:auto; }
+  .results :global(.empty) { padding:20px 10px; color:var(--dim); font-size:14px; }
+  @media (max-width:600px) { .palette { margin-top:8vh; } }
+</style>
+<script>
+  import { email } from '../data/contact';
+  const dialog = document.querySelector<HTMLDialogElement>('[data-palette]');
+  const input = dialog?.querySelector<HTMLInputElement>('[data-palette-input]');
+  const list = dialog?.querySelector<HTMLElement>('[data-palette-options]');
+  const status = dialog?.querySelector<HTMLElement>('[data-palette-status]');
+  const entries = JSON.parse(dialog?.dataset.entries ?? '[]') as Array<{group:string;label:string;keywords:string;href?:string;external?:boolean;download?:boolean;action?:string}>;
+  const mailEntry = entries.find((item) => item.label === 'Email' && !item.action);
+  if (mailEntry) mailEntry.href = `mailto:${email()}`;
+  let filtered = entries;
+  let active = 0;
+  let previousFocus: HTMLElement | null = null;
+  const hint = status?.innerHTML ?? '';
+
+  function open() {
+    if (!dialog || dialog.open) return;
+    previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (status) status.innerHTML = hint;
+    dialog.showModal();
+    if (input) { input.value = ''; render(); input.focus(); }
+  }
+  function close() { if (dialog?.open) dialog.close(); }
+  function render() {
+    if (!list || !input) return;
+    const query = input.value.trim().toLocaleLowerCase();
+    filtered = entries.filter((item) => `${item.label} ${item.keywords} ${item.group}`.toLocaleLowerCase().includes(query));
+    active = Math.min(active, Math.max(0, filtered.length - 1));
+    const groups = [...new Set(filtered.map((item) => item.group))];
+    list.replaceChildren();
+    if (!filtered.length) {
+      input.removeAttribute('aria-activedescendant');
+      const empty = document.createElement('div'); empty.className = 'empty'; empty.textContent = 'No results found.'; list.append(empty); return;
+    }
+    for (const group of groups) {
+      const heading = document.createElement('div'); heading.className = 'group-label'; heading.textContent = group; list.append(heading);
+      filtered.forEach((item, index) => {
+        if (item.group !== group) return;
+        const option = document.createElement('button'); option.type = 'button'; option.className = 'option'; option.id = `palette-option-${index}`; option.setAttribute('role', 'option'); option.setAttribute('aria-selected', String(index === active)); option.textContent = item.label;
+        option.addEventListener('mouseenter', () => { active = index; updateActive(); });
+        // Tab can focus an option directly; keep it the one Enter picks.
+        option.addEventListener('focus', () => { active = index; updateActive(); });
+        option.addEventListener('click', () => select(index)); list.append(option);
+      });
+    }
+    updateActive();
+  }
+  function updateActive() {
+    if (!list || !dialog) return;
+    list.querySelectorAll('[role="option"]').forEach((node) => node.setAttribute('aria-selected', String(node.id === `palette-option-${active}`)));
+    input?.setAttribute('aria-activedescendant', `palette-option-${active}`);
+    list.querySelector(`#palette-option-${active}`)?.scrollIntoView({ block: 'nearest' });
+  }
+  async function select(index: number) {
+    const item = filtered[index]; if (!item) return;
+    if (item.action === 'copy') {
+      try { await navigator.clipboard.writeText(email()); if (status) status.textContent = 'Copied email to clipboard'; }
+      catch { if (status) status.textContent = 'Unable to copy email'; }
+      return;
+    }
+    close();
+    if (!item.href) return;
+    if (item.external) window.open(item.href, '_blank', 'noopener,noreferrer');
+    else if (item.download) { const link = document.createElement('a'); link.href = item.href; link.download = ''; link.click(); }
+    // Same-page sections replace the current entry instead of adding one per jump (the header does the same).
+    else if (new URL(item.href, location.href).pathname === location.pathname) location.replace(item.href);
+    else window.location.href = item.href;
+  }
+  input?.addEventListener('input', () => { active = 0; render(); });
+  dialog?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); if (filtered.length) active = (active + 1) % filtered.length; updateActive(); }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); if (filtered.length) active = (active - 1 + filtered.length) % filtered.length; updateActive(); }
+    else if (event.key === 'Enter') { event.preventDefault(); void select(active); }
+  });
+  dialog?.addEventListener('click', (event) => { if (event.target === dialog) close(); });
+  dialog?.addEventListener('close', () => previousFocus?.focus());
+  document.addEventListener('keydown', (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); open(); }
+    else if (event.key === '/' && !event.metaKey && !event.ctrlKey && !(event.target instanceof HTMLInputElement) && !(event.target instanceof HTMLTextAreaElement) && !(event.target instanceof HTMLElement && event.target.isContentEditable)) { event.preventDefault(); open(); }
+    else if (event.key === 'Escape' && dialog?.open) close();
+  });
+  window.addEventListener('palette:open', open as EventListener);
+</script>
