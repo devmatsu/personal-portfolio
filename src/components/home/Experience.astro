@@ -1,20 +1,70 @@
 ---
-import { EXPERIENCE } from '../../data/experience';
-const month = (date: string) => new Date(`${date}T00:00:00`).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase();
-const dateLabel = (date: string) => `${month(date)} ${date.slice(0, 4)}`;
+import { EXPERIENCE, tenure } from '../../data/experience';
+const monthLabel = (date: string) => {
+  const [year, month] = date.split('-').map(Number);
+  return `${new Date(Date.UTC(year, month - 1, 1)).toLocaleString('en-US', { month: 'short', timeZone: 'UTC' })} ${year}`;
+};
 ---
-<section id="experience" class="container experience">
-  <h2>Experience<span>.</span></h2>
+<section id="experience" class="container home-section">
+  <h2 class="section-title">Experience<span>.</span></h2>
   <div class="timeline">
     {EXPERIENCE.map((entry, index) => <article class="entry">
       <span class:list={['dot', { current: index === 0 }]} aria-hidden="true"></span>
-      <div class="label">{dateLabel(entry.start)} — {entry.end ? dateLabel(entry.end) : 'PRESENT'}</div>
-      <div class="heading">{entry.company} <span>· {entry.title}</span></div>
-      <p>{entry.summary}</p>
-      {entry.tags.length > 0 && <div class="tags mono">{entry.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
+      <h3 class="heading">{entry.company} <span>· {entry.title}</span></h3>
+      <p class="meta mono"><span class="sequence">
+        <span><time datetime={entry.start.slice(0, 7)}>{monthLabel(entry.start)}</time> – {entry.end ? <time datetime={entry.end.slice(0, 7)}>{monthLabel(entry.end)}</time> : 'Present'}</span>
+        <span data-tenure-start={entry.end ? undefined : entry.start}>{tenure(entry.start, entry.end)}</span>
+      </span></p>
+      {entry.progression && <div class="progression">
+        <ol class="sequence" aria-label={`Roles at ${entry.company}, earliest first`}>{entry.progression.map((role) => <li><span>{role}</span></li>)}</ol>
+      </div>}
+      <p class="description">{entry.description}</p>
+      {entry.tags.length > 0 && <div class="tags">{entry.tags.map((tag) => <span class="tag">{tag}</span>)}</div>}
     </article>)}
   </div>
 </section>
+
+<script>
+  import { tenure } from '../../data/experience';
+  // The page is built ahead of time: refresh ongoing roles so their tenure is right on the day it's read.
+  for (const element of document.querySelectorAll<HTMLElement>('[data-tenure-start]')) {
+    element.textContent = tenure(element.dataset.tenureStart!, null);
+  }
+</script>
+
 <style>
-.experience{padding-top:128px}h2{margin:0;font-size:clamp(36px,4vw,48px);line-height:1.1;letter-spacing:-.03em;font-weight:600}h2 span{color:var(--accent)}.timeline{margin-top:48px;display:flex;flex-direction:column;border-left:1px solid rgba(var(--text-rgb),.1);padding-left:32px;margin-left:6px}.entry{position:relative;padding-bottom:48px}.entry:last-child{padding-bottom:0}.dot{position:absolute;left:-38px;top:9px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid rgba(var(--text-rgb),.35)}.dot.current{left:-39px;top:8px;width:13px;height:13px;border:0;background:var(--accent);box-shadow:0 0 0 5px rgba(var(--accent-rgb),.15)}.entry>.label{font-size:12px}.heading{margin-top:6px;font-size:26px;font-weight:600;letter-spacing:-.02em}.heading span{color:var(--dim);font-weight:400}.entry p{margin:8px 0 0;max-width:720px;color:var(--muted)}.tags{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--muted)}
+  .timeline { margin: 48px 0 0 6px; padding-left: 32px; border-left: 1px solid rgba(var(--text-rgb), .1); }
+  .entry { position: relative; padding-bottom: 52px; }
+  .entry:last-child { padding-bottom: 0; }
+  /* Centred on the first line of the heading. */
+  .dot { position: absolute; left: -38px; top: 11px; width: 11px; height: 11px; border: 2px solid rgba(var(--text-rgb), .35); border-radius: 50%; background: var(--bg); }
+  .dot.current { left: -39px; top: 10px; width: 13px; height: 13px; border: 0; background: var(--accent); box-shadow: 0 0 0 5px rgba(var(--accent-rgb), .15); }
+
+  .heading { margin: 0; font-size: 26px; line-height: 1.25; font-weight: 600; letter-spacing: -.02em; }
+  .heading span { color: var(--dim); font-weight: 400; }
+  /* Sequences (dates · tenure, and role progression): each item carries a leading separator and the row is shifted left
+     by the separator's width inside a clipped box, so whichever item starts a line (the first, or one that wraps on a
+     narrow screen) has its separator hidden. */
+  .meta, .progression { overflow: hidden; }
+  .sequence { display: flex; flex-wrap: wrap; align-items: center; margin: 0 0 0 calc(-1 * var(--separator)); padding: 0; list-style: none; }
+  .sequence > * { white-space: nowrap; }
+  .sequence > *::before { content: '·' / ''; display: inline-block; width: var(--separator); color: var(--faint); text-align: center; }
+  .meta { --separator: 1.4em; margin: 6px 0 0; color: var(--dim); font-size: 13px; line-height: 1.6; }
+  /* Progression: quiet outlined labels joined by a short rule; the latest role reads slightly stronger. */
+  .progression { --separator: 22px; margin-top: 10px; }
+  .progression .sequence { row-gap: 6px; }
+  .progression li::before { content: ''; width: 10px; height: 1px; margin: 0 6px; vertical-align: middle; background: rgba(var(--text-rgb), .2); }
+  .progression span { display: inline-block; padding: 1px 8px; border: 1px solid rgba(var(--text-rgb), .1); border-radius: 6px; color: var(--dim); font-size: 12.5px; line-height: 1.6; vertical-align: middle; }
+  .progression li:last-child span { border-color: rgba(var(--text-rgb), .16); color: var(--muted); }
+  .description { max-width: 720px; margin: 12px 0 0; color: var(--muted); font-size: 17px; line-height: 1.6; text-wrap: pretty; }
+  /* Secondary: the global tag, quieter. */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tags .tag { padding: 2px 8px; background: rgba(var(--text-rgb), .04); color: var(--dim); font-size: 12px; }
+
+  @media (max-width: 600px) {
+    .heading { font-size: 22px; }
+    .dot { top: 8px; }
+    .dot.current { top: 7px; }
+    .description { font-size: 16px; }
+  }
 </style>
