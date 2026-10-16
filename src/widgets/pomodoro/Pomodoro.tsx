@@ -134,7 +134,7 @@ export default function Pomodoro() {
     const permission = Notification.permission === 'default' ? await Notification.requestPermission() : Notification.permission;
     setNotification(permission === 'granted');
   };
-  const progress = Math.max(0, current.remainingMs / durationMs(timer.mode, settings));
+  const progress = Math.min(1, Math.max(0, current.remainingMs / durationMs(timer.mode, settings)));
   const radius = 96;
   const circumference = 2 * Math.PI * radius;
 

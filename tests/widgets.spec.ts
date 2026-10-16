@@ -68,6 +68,14 @@ test.describe('Pomodoro settings', () => {
     await expect(focus).toHaveValue('1');
     await expect(pomodoroReadout(page)).toHaveText('01:00');
   });
+
+  test('shortening the running session keeps the progress ring within one lap', async ({ page }) => {
+    await page.getByRole('button', { name: 'Start' }).click();
+    await page.getByLabel('Focus (min)').fill('1');
+    await page.getByLabel('Focus (min)').blur();
+    const ring = page.getByRole('region', { name: 'Pomodoro timer' }).locator('svg circle').nth(1);
+    await expect.poll(async () => Number(await ring.getAttribute('stroke-dashoffset'))).toBeGreaterThanOrEqual(0);
+  });
 });
 
 test('widgets keep working when storage is blocked', async ({ page }) => {
