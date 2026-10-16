@@ -188,12 +188,60 @@ test.describe('Rubik timer keyboard shortcuts', () => {
   });
 });
 
+test.describe('Coin flip', () => {
+  // The coin draws from crypto.getRandomValues: an even value lands Heads, an odd one Tails.
+  const rigCoin = (page: Page, values: number[]) => page.addInitScript((queue) => {
+    Crypto.prototype.getRandomValues = function <T extends ArrayBufferView | null>(array: T): T {
+      (array as unknown as Uint32Array)[0] = queue.shift() ?? 0;
+      return array;
+    };
+  }, values);
+  const result = (page: Page) => page.getByRole('region', { name: 'Coin flip' }).locator('[aria-live]');
+
+  test('one click flips: an even draw is Heads (1), an odd one Tails (2), and it cannot be flipped mid-air', async ({ page }) => {
+    await rigCoin(page, [4, 7]);
+    await page.goto('/widgets/coin');
+    const flip = page.getByRole('button', { name: 'Flip', exact: true });
+    await flip.click();
+    await expect(flip).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Flip the coin' })).toBeDisabled();
+    await expect(result(page)).toHaveText('Flipping…');
+    await expect(result(page)).toHaveText('Heads (1)');
+    await expect(flip).toBeEnabled();
+    await page.getByRole('button', { name: 'Flip the coin' }).click();
+    await expect(result(page)).toHaveText('Tails (2)');
+  });
+
+  test('Space flips the coin, and reduced motion lands it without the spin', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await rigCoin(page, [1]);
+    await page.goto('/widgets/coin');
+    await expect(page.getByRole('button', { name: 'Flip', exact: true })).toBeVisible();
+    await page.locator('main h1').click();
+    await page.keyboard.press('Space');
+    // The full spin takes over a second; with reduced motion the result is there well before that.
+    await expect(result(page)).toHaveText('Tails (2)', { timeout: 800 });
+  });
+});
+
 test('widget pages link back to the index and mark the current widget', async ({ page }) => {
-  for (const [slug, label] of [['rubik', 'Rubik'], ['roulette', 'Roulette'], ['pomodoro', 'Pomodoro'], ['poker', 'Poker']] as const) {
+  for (const [slug, label] of [['rubik', 'Rubik'], ['roulette', 'Roulette'], ['pomodoro', 'Pomodoro'], ['poker', 'Poker'], ['coin', 'Coin']] as const) {
     await page.goto(`/widgets/${slug}`);
     const switcher = page.getByRole('navigation', { name: 'Switch widget' });
     await expect(switcher.locator('a[aria-current="page"]')).toHaveText(label);
     await expect(switcher.locator('a[aria-current]')).toHaveCount(1);
     await expect(page.locator('main').getByRole('link', { name: 'All widgets' })).toHaveAttribute('href', '/widgets');
+  }
+});
+
+test('the widget switcher fits on narrow phones without scrolling the page sideways', async ({ page }) => {
+  for (const width of [320, 390, 460]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto('/widgets/coin');
+    const fits = await page.evaluate(() => {
+      const list = document.querySelector('nav[aria-label="Switch widget"] ul')!;
+      return document.documentElement.scrollWidth <= innerWidth && list.getBoundingClientRect().right <= innerWidth && list.scrollWidth <= list.clientWidth;
+    });
+    expect(fits, `switcher at ${width}px`).toBe(true);
   }
 });

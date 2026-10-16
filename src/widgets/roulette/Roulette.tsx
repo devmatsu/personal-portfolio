@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './roulette.module.css';
-import { randomIndex, rotationForWinner, winnerIndexFromRotation } from './math';
+import { rotationForWinner, winnerIndexFromRotation } from './math';
+import { randomIndex } from '../random';
 
 const STORAGE_KEY = 'v3.roulette.options';
 const DEFAULT_OPTIONS = ['Pizza', 'Sushi', 'Tacos', 'Pasta'];

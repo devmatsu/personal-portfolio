@@ -13,9 +13,9 @@ const { current } = Astro.props;
   a { display:flex; align-items:center; min-height:34px; padding:0 14px; border-radius:9px; color:var(--muted); font-size:14px; font-weight:500; transition:color .15s, background-color .15s; }
   a:hover { color:var(--text); background:rgba(var(--text-rgb), .05); opacity:1; }
   a[aria-current] { color:var(--text); background:rgba(var(--text-rgb), .08); }
-  /* Four widgets don't fit one row below ~360px: an even 2×2 grid instead of overflowing. */
-  @media (max-width: 359px) {
-    ul { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); }
-    a { justify-content:center; }
+  /* Five widgets need ~385px in one row (plus page padding): below that, a 3-column grid instead of overflowing. */
+  @media (max-width: 459px) {
+    ul { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); }
+    a { justify-content:center; padding:0 6px; }
   }
 </style>

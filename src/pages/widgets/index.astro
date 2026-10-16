@@ -14,6 +14,7 @@ import { WIDGETS } from '../../data/widgets';
           {widget.slug === 'roulette' && <span class="wheel" />}
           {widget.slug === 'pomodoro' && <span class="ring"><span>25:00</span></span>}
           {widget.slug === 'poker' && <span class="cards"><span>A<b>♠</b></span><span class="red">K<b>♥</b></span></span>}
+          {widget.slug === 'coin' && <span class="coin mono">1</span>}
         </div>
         <div class="copy"><h2>{widget.name}<span>.</span></h2><p>{widget.description}</p></div>
       </a>)}
@@ -23,7 +24,7 @@ import { WIDGETS } from '../../data/widgets';
 
 <style>
   .page { padding-bottom: 100px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
   .widget { display: flex; flex-direction: column; gap: 24px; transition: border-color .2s, transform .2s; }
   .widget:hover { border-color: rgba(var(--accent-rgb), .35); transform: translateY(-2px); }
   .visual { min-height: 160px; display: grid; place-items: center; border-radius: 14px; background: radial-gradient(ellipse at center, rgba(var(--accent-rgb), .1), transparent 70%), var(--term); }
@@ -36,6 +37,7 @@ import { WIDGETS } from '../../data/widgets';
   .cards span:last-child { transform: rotate(6deg) translateY(4px); }
   .cards b { font-weight: 600; font-size: 17px; }
   .cards .red { color: var(--error); }
+  .coin { width: 92px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 38px; font-weight: 600; box-shadow: inset 0 0 0 6px rgba(0, 0, 0, .14), inset 0 0 0 8px rgba(var(--text-rgb), .25); }
   .copy h2 { margin: 0 0 6px; font-size: 24px; letter-spacing: -.03em; }
   .copy h2 span { color: var(--accent); }
   .copy p { margin: 0; color: var(--muted); }
