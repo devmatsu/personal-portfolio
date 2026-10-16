@@ -96,6 +96,39 @@ test.describe('Rubik timer keyboard shortcuts', () => {
     await page.keyboard.up('Space');
     await expect(page.getByText('Tap or press any key to stop')).toBeVisible();
   });
+
+  test('holding Space after clicking a penalty starts the next solve without toggling it', async ({ page }) => {
+    await page.locator('main h1').click();
+    await page.keyboard.down('Space');
+    await page.waitForTimeout(400);
+    await page.keyboard.up('Space');
+    await page.keyboard.press('a');
+    const firstSolve = page.getByRole('listitem').filter({ has: page.getByRole('button', { name: 'Toggle +2 for solve 1', exact: true }) });
+    await page.getByRole('button', { name: 'Toggle +2 for solve 1', exact: true }).click();
+    await expect(firstSolve.locator('strong')).toHaveText(/^0:02\./);
+
+    await page.keyboard.down('Space');
+    await page.waitForTimeout(400);
+    await page.keyboard.up('Space');
+    await expect(page.getByText('Tap or press any key to stop')).toBeVisible();
+    await page.keyboard.press('a');
+    await expect(page.getByText('2 solves')).toBeVisible();
+    await expect(firstSolve.locator('strong')).toHaveText(/^0:02\./);
+  });
+
+  test('a keyboard user can still toggle a penalty with Space', async ({ page }) => {
+    await page.locator('main h1').click();
+    await page.keyboard.down('Space');
+    await page.waitForTimeout(400);
+    await page.keyboard.up('Space');
+    await page.keyboard.press('a');
+    const plusTwo = page.getByRole('button', { name: 'Toggle +2 for solve 1', exact: true });
+    await plusTwo.focus();
+    await page.keyboard.press('Space');
+    await expect(page.getByRole('listitem').filter({ has: plusTwo }).locator('strong')).toHaveText(/^0:02\./);
+    await expect(page.getByText('Hold Space or tap to start')).toBeVisible();
+    await expect(plusTwo).toBeFocused();
+  });
 });
 
 test('widget pages link back to the index and mark the current widget', async ({ page }) => {

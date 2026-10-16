@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import styles from './timer.module.css';
 import { average, createScramble, effectiveTime, formatTime, mean, type Solve } from './logic';
 import { hasModifier, isShortcutTarget, isTextEntry } from '../shortcuts';
@@ -123,7 +123,11 @@ export default function Timer() {
     return () => { window.removeEventListener('keydown', keyDown); window.removeEventListener('keyup', keyUp); };
   });
 
-  function markSolve(id: string, penalty: Solve['penalty']) {
+  // A pointer click leaves focus on the penalty button, so holding Space for the next solve would
+  // toggle it on keyup instead of starting the timer. Drop that focus; keyboard activation (detail 0)
+  // keeps it so Tab + Space/Enter still toggles deliberately.
+  function markSolve(event: MouseEvent<HTMLButtonElement>, id: string, penalty: Solve['penalty']) {
+    if (event.detail > 0) event.currentTarget.blur();
     setSolves((current) => current.map((solve) => solve.id === id ? { ...solve, penalty } : solve));
   }
 
@@ -151,8 +155,8 @@ export default function Timer() {
     <div className={styles.solveHeader}><h2>Session</h2><span>{solves.length} solves</span></div>
     <ol className={styles.solves}>{solves.map((solve, index) => <li key={solve.id}>
       <span className={styles.index}>{solves.length - index}</span><strong>{currentTime(solve)}</strong>
-      <button onClick={() => markSolve(solve.id, solve.penalty === 'plus2' ? 'none' : 'plus2')} aria-label={`Toggle +2 for solve ${solves.length - index}`}>+2</button>
-      <button onClick={() => markSolve(solve.id, solve.penalty === 'dnf' ? 'none' : 'dnf')} aria-label={`Toggle DNF for solve ${solves.length - index}`}>DNF</button>
+      <button onClick={(event) => markSolve(event, solve.id, solve.penalty === 'plus2' ? 'none' : 'plus2')} aria-label={`Toggle +2 for solve ${solves.length - index}`}>+2</button>
+      <button onClick={(event) => markSolve(event, solve.id, solve.penalty === 'dnf' ? 'none' : 'dnf')} aria-label={`Toggle DNF for solve ${solves.length - index}`}>DNF</button>
       <button onClick={() => setSolves((current) => current.filter((item) => item.id !== solve.id))} aria-label={`Delete solve ${solves.length - index}`}>×</button>
     </li>)}</ol>
   </section>;
