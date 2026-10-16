@@ -10,10 +10,10 @@ const lines = [
   { who: 'matsu', type: 'matsu', text: 'approved · merged to v3' },
 ];
 ---
-<aside class="terminal" aria-hidden="true">
+<aside class="terminal">
   <span class="sr-only">An example agent workflow: issue, planning, implementation, checks, pull request, and merge.</span>
-  <div class="bar"><div class="lights"><i></i><i></i><i></i></div><span class="session mono">agent session · example</span><span class="live mono"><i></i>live</span></div>
-  <div class="output mono" data-terminal>
+  <div class="bar" aria-hidden="true"><div class="lights"><i></i><i></i><i></i></div><span class="session mono">agent session · example</span><span class="live mono"><i></i>live</span></div>
+  <div class="output mono" aria-hidden="true" data-terminal>
     {lines.map((line) => <div class="line" data-line><span class={`who ${line.type}`}>{line.who}</span><span class="text">{line.text}</span></div>)}
     <div class="prompt"><span>›</span><span class="cursor"></span></div>
   </div>
