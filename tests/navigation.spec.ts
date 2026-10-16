@@ -286,6 +286,32 @@ test('a link to a section from another page lands on it and tidies the URL', asy
   await expect.poll(() => page.evaluate(() => Math.round(document.getElementById('workflow')!.getBoundingClientRect().top))).toBeLessThan(110);
 });
 
+for (const path of ['/widgets/pomodoro', '/']) {
+  test(`Skip to content on ${path} is the first Tab stop and lands on the content, clear of the header`, async ({ page }) => {
+    await page.goto(path);
+    await page.keyboard.press('Tab');
+    const skip = page.getByRole('link', { name: 'Skip to content' });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeInViewport();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('main')).toBeFocused();
+    // The start of the content (back link, eyebrow, heading) must not end up hidden under the sticky header.
+    // Smooth scrolling moves the page after the key press, so measure once it has come to rest.
+    const clear = await page.evaluate(() => new Promise<boolean>((resolve) => {
+      let last = -1;
+      const settle = () => {
+        if (scrollY !== last) { last = scrollY; setTimeout(settle, 150); return; }
+        const header = document.querySelector('[data-site-header]')!.getBoundingClientRect().bottom;
+        resolve(document.querySelector('main')!.getBoundingClientRect().top >= header - 1);
+      };
+      setTimeout(settle, 150);
+    }));
+    expect(clear).toBe(true);
+    await page.keyboard.press('Tab');
+    await expect.poll(() => page.evaluate(() => document.querySelector('main')!.contains(document.activeElement))).toBe(true);
+  });
+}
+
 for (const old of ['/widgets/tictactoe', '/widgets/gitHubGraph']) {
   test(`the old ${old} route lands on the widgets page`, async ({ page }) => {
     await page.goto(old);
