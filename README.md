@@ -26,6 +26,8 @@ Node 22.22.3+ or 24.16+.
 
 The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy. Before the first `npm test`, install the browser with `npx playwright install chromium`.
 
+CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
+
 ## Structure
 
 ```

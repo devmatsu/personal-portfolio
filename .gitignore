@@ -12,6 +12,7 @@ dist
 .astro
 test-results
 playwright-report
+.lighthouseci
 *.local
 
 # Editor directories and files
