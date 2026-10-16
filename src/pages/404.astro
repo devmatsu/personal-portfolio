@@ -6,7 +6,7 @@ import PageHeader from '../components/PageHeader.astro';
   <PageHeader eyebrow="404" title="Nothing here" description="The page you’re looking for couldn’t be found." />
   <div class="container actions">
     <a class="btn btn-primary" href="/">Back home</a>
-    <button class="btn btn-ghost" type="button" onclick="window.dispatchEvent(new CustomEvent('palette:open'))">Open search</button>
+    <button class="btn btn-ghost" type="button" aria-haspopup="dialog" data-palette-open>Open search</button>
   </div>
 </Base>
 <style>
