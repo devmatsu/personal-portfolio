@@ -123,11 +123,15 @@ export default function Timer() {
     return () => { window.removeEventListener('keydown', keyDown); window.removeEventListener('keyup', keyUp); };
   });
 
-  // A pointer click leaves focus on the penalty button, so holding Space for the next solve would
-  // toggle it on keyup instead of starting the timer. Drop that focus; keyboard activation (detail 0)
-  // keeps it so Tab + Space/Enter still toggles deliberately.
-  function markSolve(event: MouseEvent<HTMLButtonElement>, id: string, penalty: Solve['penalty']) {
+  // A pointer click leaves focus on the penalty button or inspection toggle, so holding Space for the
+  // next solve would toggle it on keyup instead of starting the timer. Drop that focus; keyboard
+  // activation (detail 0) keeps it so Tab + Space/Enter still toggles deliberately.
+  function dropPointerFocus(event: MouseEvent<HTMLElement>) {
     if (event.detail > 0) event.currentTarget.blur();
+  }
+
+  function markSolve(event: MouseEvent<HTMLButtonElement>, id: string, penalty: Solve['penalty']) {
+    dropPointerFocus(event);
     setSolves((current) => current.map((solve) => solve.id === id ? { ...solve, penalty } : solve));
   }
 
@@ -143,7 +147,7 @@ export default function Timer() {
       <span>{phase === 'holding' ? 'HOLD' : phase === 'ready' ? 'READY' : shown}</span>
     </button>
     <div className={styles.toolbar}>
-      <label><input type="checkbox" checked={settings.inspection} onChange={(event) => setSettings({ inspection: event.target.checked })} /> 15 s inspection</label>
+      <label><input type="checkbox" checked={settings.inspection} onClick={dropPointerFocus} onChange={(event) => setSettings({ inspection: event.target.checked })} /> 15 s inspection</label>
       <span>{phase === 'inspection' ? `Inspection · ${inspectionPenalty === 'dnf' ? 'DNF' : inspectionPenalty === 'plus2' ? '+2' : 'ready'}` : phase === 'running' ? 'Tap or press any key to stop' : 'Hold Space or tap to start'}</span>
     </div>
     <div className={styles.stats} aria-label="Session statistics">

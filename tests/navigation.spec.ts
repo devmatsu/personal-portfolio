@@ -369,6 +369,20 @@ test.describe('command palette', () => {
     await expect(status).toContainText('↵ select');
   });
 
+  test('typing a new search after copying the email brings the hint back', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+    await page.goto('/widgets');
+    await openPalette(page);
+    await page.keyboard.type('copy email');
+    await page.keyboard.press('Enter');
+    const status = page.locator('[data-palette-status]');
+    await expect(status).toHaveText('Copied email to clipboard');
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.keyboard.type('exp');
+    await expect(status).toContainText('↑↓ navigate');
+    await expect(status).toContainText('↵ select');
+  });
+
   test('Enter on an option reached with Tab opens that option', async ({ page }) => {
     await page.goto('/widgets');
     await openPalette(page);

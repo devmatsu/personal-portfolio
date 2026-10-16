@@ -76,10 +76,12 @@ export default function Roulette() {
       const finalRotation = rotation + (target - (rotation % 360) + 360) % 360 + turns * 360;
       const winner = winnerIndexFromRotation(finalRotation, options.length);
       const label = options[winner]!;
-      setHighlight(winner);
       setResult(`The wheel landed on ${label}.`);
       setSpinning(false);
+      // The highlight was cleared when the spin began. A removed winner has nothing left to mark:
+      // keeping its index would highlight the option that moved into its place.
       if (removeWinnerRef.current) setOptions((current) => current.filter((_, optionIndex) => optionIndex !== winner));
+      else setHighlight(winner);
     }, duration);
   }
 
