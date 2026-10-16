@@ -21,6 +21,7 @@ Node ≥ 22.12.
 | `npm run build`   | `astro check` (types) + static build into `dist/` |
 | `npm run preview` | Serve the built `dist/`                           |
 | `npm run check`   | Type-check only                                   |
+| `npm test`        | Build, serve and run the Playwright tests         |
 
 The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy.
 
@@ -30,10 +31,11 @@ The build fetches every dev.to article; if the API is down the build fails inste
 design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
 src/data/                Site constants, experience timeline, widget registry
 src/layouts/Base.astro   <head>, nav, footer, ⌘K command palette
-src/components/home/     Home sections (hero, agent terminal, now grid, experience, how it's built, contact)
+src/components/home/     Home sections (hero, agent terminal, overview, experience, workflow, contact)
 src/lib/devto.ts         dev.to client (paginated, retries on 429)
-src/pages/               /, /blog, /blog/post/[id], /widgets/{rubik,roulette,pomodoro}, 404
-src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pomodoro
+src/pages/               /, /writing, /writing/[id], /widgets/{rubik,roulette,pomodoro,poker}, 404
+src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pomodoro, poker odds calculator
+tests/                   Playwright end-to-end tests and the poker engine tests (run in Node)
 ```
 
-Widgets keep their state in `localStorage` (`v3.*` keys).
+Widgets keep their state in `localStorage` (`v3.*` keys). `/blog` links redirect to `/writing`.
