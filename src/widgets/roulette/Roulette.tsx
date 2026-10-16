@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './roulette.module.css';
 import { randomIndex, rotationForWinner, winnerIndexFromRotation } from './math';
 
@@ -24,6 +24,9 @@ export default function Roulette() {
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [removeWinner, setRemoveWinner] = useState(false);
+  // The spin settles in a timeout, so it reads the toggle through a ref to honour a change made mid-spin.
+  const removeWinnerRef = useRef(removeWinner);
+  removeWinnerRef.current = removeWinner;
   const [result, setResult] = useState('');
   const [highlight, setHighlight] = useState<number | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -75,7 +78,7 @@ export default function Roulette() {
       setHighlight(winner);
       setResult(`The wheel landed on ${label}.`);
       setSpinning(false);
-      if (removeWinner) setOptions((current) => current.filter((_, optionIndex) => optionIndex !== winner));
+      if (removeWinnerRef.current) setOptions((current) => current.filter((_, optionIndex) => optionIndex !== winner));
     }, duration);
   }
 

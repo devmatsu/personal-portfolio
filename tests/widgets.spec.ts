@@ -63,6 +63,16 @@ test('widgets keep working when storage is blocked', async ({ page }) => {
   await expect(page.getByText('1 solves')).toBeVisible();
 });
 
+test('Roulette honours "Remove winner" toggled while the wheel spins', async ({ page }) => {
+  await page.goto('/widgets/roulette');
+  const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
+  await expect(options).toHaveCount(4);
+  await page.getByRole('button', { name: 'Spin' }).click();
+  await page.getByLabel('Remove winner after spin').check();
+  await expect(page.getByText(/^The wheel landed on /)).toBeVisible({ timeout: 8000 });
+  await expect(options).toHaveCount(3);
+});
+
 test('a running Pomodoro survives a reload and switching widgets', async ({ page }) => {
   await page.goto('/widgets/pomodoro');
   await page.getByRole('button', { name: 'Start' }).click();
