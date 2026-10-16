@@ -1,0 +1,165 @@
+/* Layout: setup on the left, results on the right; hand odds and pot odds below, on the same columns. Stacked on
+   narrow screens. */
+.widget { display: grid; gap: 20px; padding: 20px; border: 1px solid rgba(var(--text-rgb), .07); border-radius: 22px; background: var(--surface); }
+.main, .analysis { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+.setup { display: grid; gap: 14px; min-width: 0; }
+.seats { display: flex; flex-wrap: wrap; gap: 14px; }
+.seats > .group { flex: 1 1 auto; }
+.seats > .heroGroup { flex: 0 0 auto; }
+.group { display: grid; gap: 12px; align-content: start; padding: 14px 16px 16px; border: 1px solid rgba(var(--text-rgb), .07); border-radius: 16px; background: rgba(var(--bg-rgb), .45); }
+.groupProblem { border-color: color-mix(in srgb, var(--error) 45%, transparent); }
+.groupHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; }
+.groupTitle { margin: 0; color: var(--dim); font: 500 12px/1.4 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.heroGroup .groupTitle { color: var(--accent); }
+.heroGroup { border-color: rgba(var(--accent-rgb), .22); }
+.count { margin-left: 4px; color: var(--faint); }
+.street { color: var(--muted); font: 12px var(--font-mono); }
+.hint { color: var(--dim); font-size: 13px; }
+.hint strong { color: var(--text); font-weight: 500; }
+
+/* Card slots and faces. Slots are 52px cards that can shrink to 34px, keeping their proportions, when space is tight.
+   Their 34px floor makes the board wrap below your cards before it shrinks. */
+.slots { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.slotWrap { position: relative; flex: 0 1 auto; width: 52px; min-width: 34px; }
+.slot { display: grid; place-items: center; width: 100%; aspect-ratio: 52 / 72; padding: 0; border: 1px solid rgba(var(--text-rgb), .16); border-radius: 9px; background: var(--term); cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.slot:hover { border-color: rgba(var(--text-rgb), .32); }
+.slotEmpty { border-style: dashed; background: transparent; }
+.heroSlot .slot { border-color: rgba(var(--accent-rgb), .45); }
+.slot.slotActive { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 0 5px rgba(var(--accent-rgb), .14); }
+.turnSlot { margin-left: 8px; }
+.smallSlot { width: 40px; min-width: 30px; }
+.smallSlot .slot { border-radius: 7px; }
+/* × on a filled slot: appears on hover or focus, and always on touch screens. The ::before widens the tap target. */
+.slotRemove { position: absolute; top: -7px; right: -7px; display: grid; place-items: center; width: 20px; height: 20px; padding: 0; border: 1px solid rgba(var(--text-rgb), .2); border-radius: 50%; background: var(--surface); color: var(--muted); font-size: 14px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .15s, color .15s, border-color .15s; }
+.slotRemove::before { content: ''; position: absolute; inset: -6px; }
+.slotWrap:hover .slotRemove, .slotWrap:focus-within .slotRemove { opacity: 1; }
+.slotRemove:hover { color: var(--text); border-color: rgba(var(--text-rgb), .45); }
+@media (hover: none) { .slotRemove { opacity: 1; } }
+.slotPlaceholder { color: var(--faint); font: 11px var(--font-mono); }
+.face { display: grid; justify-items: center; gap: 2px; color: var(--text); font-weight: 600; line-height: 1; }
+/* Four-colour deck so suits can't be confused at a glance: spades stay neutral on the dark table, hearts red, diamonds
+   the site's blue, clubs green. Two-class selectors so they beat the base text colour of faces and deck buttons. */
+:is(.face, .pick).spades { color: var(--text); }
+:is(.face, .pick).hearts { color: var(--error); }
+:is(.face, .pick).diamonds { color: var(--agent); }
+:is(.face, .pick).clubs { color: var(--ok); }
+.md .faceRank { font-size: 19px; letter-spacing: -.02em; }
+.md .faceSuit { font-size: 17px; }
+.smallSlot .md .faceRank { font-size: 15px; }
+.smallSlot .md .faceSuit { font-size: 13px; }
+.sm { align-content: center; width: 26px; height: 36px; border: 1px solid rgba(var(--text-rgb), .14); border-radius: 5px; background: var(--term); font-size: 11px; }
+
+/* Opponents. */
+.opponents { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.opponent { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 8px 8px 8px 12px; border: 1px solid transparent; border-radius: 12px; background: rgba(var(--text-rgb), .025); }
+.opponentLabel { flex: 1 1 96px; color: var(--muted); font-size: 14px; }
+.toggle { display: inline-flex; padding: 2px; border: 1px solid rgba(var(--text-rgb), .12); border-radius: 9px; }
+.toggle button { padding: 5px 10px; border: 0; border-radius: 7px; background: transparent; color: var(--dim); font-size: 13px; cursor: pointer; }
+.toggle button[aria-pressed="true"] { background: rgba(var(--text-rgb), .09); color: var(--text); }
+.randomHand { display: flex; gap: 8px; }
+.randomHand span { width: 40px; height: 56px; border: 1px dashed rgba(var(--text-rgb), .14); border-radius: 7px; background: repeating-linear-gradient(135deg, rgba(var(--text-rgb), .035) 0 6px, transparent 6px 12px); }
+.remove { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--dim); font-size: 20px; line-height: 1; cursor: pointer; }
+.remove:hover:not(:disabled) { background: rgba(var(--text-rgb), .08); color: var(--text); }
+.remove:disabled { opacity: .3; cursor: default; }
+.textButton { padding: 4px 0; border: 0; background: transparent; color: var(--accent); font-size: 13px; cursor: pointer; }
+.textButton:disabled { color: var(--faint); cursor: default; }
+
+/* Deck picker: rows by suit, ace to two. */
+.picker { display: grid; gap: 6px; }
+.pickerRow { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 4px; }
+.pick { display: flex; align-items: center; justify-content: center; gap: 1px; height: 38px; min-width: 0; padding: 0; border: 1px solid rgba(var(--text-rgb), .1); border-radius: 7px; background: var(--term); color: var(--text); font: 600 13px var(--font-mono); cursor: pointer; transition: border-color .12s, background-color .12s, opacity .12s; }
+.pick:hover:not([aria-disabled="true"]) { border-color: rgba(var(--text-rgb), .32); }
+.pick[aria-disabled="true"] { opacity: .22; cursor: not-allowed; }
+.pickSelected { border-color: var(--accent); background: rgba(var(--accent-rgb), .14); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions :global(.btn) { padding: 8px 14px; font-size: 14px; }
+.actions :global(.btn:disabled) { opacity: .4; cursor: default; }
+
+/* Results. Always the same structure, so nothing shifts when numbers arrive. Sticky beside the setup on wide screens,
+   capped to the screen so a long opponent list can scroll instead of being cut off. */
+.results { position: sticky; top: 96px; max-height: calc(100svh - 112px); overflow-y: auto; display: grid; gap: 14px; padding: 18px 18px 16px; border: 1px solid rgba(var(--text-rgb), .08); border-radius: 16px; background: rgba(var(--bg-rgb), .45); }
+.resultsHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.resultsTitle { margin: 0; color: var(--dim); font: 500 12px/1.4 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.method { padding: 3px 8px; border-radius: 6px; background: rgba(var(--text-rgb), .07); color: var(--muted); font: 500 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.exact { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+.equity { margin: -4px 0 0; color: var(--accent); font-size: clamp(40px, 4.4vw, 54px); font-weight: 600; line-height: 1.05; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.equityEmpty { color: var(--faint); }
+.resultsMeta { min-height: 1.5em; margin: -8px 0 0; color: var(--dim); font: 12px/1.5 var(--font-mono); }
+.stale { opacity: .45; transition: opacity .15s; }
+.bars { display: grid; gap: 8px; }
+.barRow { display: grid; grid-template-columns: 40px minmax(0, 1fr) 68px; align-items: center; gap: 10px; }
+.barLabel { color: var(--muted); font-size: 13px; }
+.barTrack { height: 4px; overflow: hidden; border-radius: 2px; background: rgba(var(--text-rgb), .08); }
+.barFill { display: block; height: 100%; transition: width .25s ease; }
+.win { background: var(--accent); }
+.tie { background: var(--muted); }
+.lose { background: rgba(var(--text-rgb), .28); }
+.barValue { color: var(--text); font: 13px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.handBox { display: grid; gap: 6px; padding-top: 14px; border-top: 1px solid rgba(var(--text-rgb), .08); }
+.boxLabel { color: var(--dim); font: 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
+.handName { color: var(--text); font-size: 15px; font-weight: 500; }
+.handCards, .opponentCards { display: flex; gap: 4px; }
+.opponentResults { display: grid; gap: 10px; margin: 0; padding: 14px 0 0; border-top: 1px solid rgba(var(--text-rgb), .08); list-style: none; }
+.opponentResults li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 10px; }
+.opponentName { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+.randomTag { color: var(--faint); font: 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; }
+.opponentEquity { color: var(--text); font: 14px var(--font-mono); font-variant-numeric: tabular-nums; }
+.opponentDetail { grid-column: 1 / -1; color: var(--dim); font: 12px var(--font-mono); }
+.explain { color: var(--muted); font-size: 13px; }
+.explain summary { cursor: pointer; }
+.explain summary:hover { color: var(--text); }
+.explain p { margin: 8px 0 0; line-height: 1.6; }
+.explain strong { color: var(--text); font-weight: 500; }
+
+/* Street-by-street timeline: one column per street, bar height = equity. */
+.timeline { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid rgba(var(--text-rgb), .08); }
+.streets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.streetItem { display: grid; gap: 3px; min-width: 0; }
+.streetTrack { display: flex; align-items: flex-end; height: 44px; margin-bottom: 3px; overflow: hidden; border-radius: 6px; background: rgba(var(--text-rgb), .05); }
+.streetFill { width: 100%; background: rgba(var(--text-rgb), .22); transition: height .3s ease; }
+.streetCurrent .streetFill { background: var(--accent); }
+.streetName { color: var(--dim); font: 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.streetCurrent .streetName { color: var(--accent); }
+.streetValue { color: var(--text); font: 13px var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.streetDelta { color: var(--faint); font: 11px var(--font-mono); white-space: nowrap; }
+.streetFuture { opacity: .4; }
+
+/* Hand odds: every hand from best to worst, read down each column, so the list never changes shape. Neutral bars:
+   amber stays reserved for your equity. */
+.handOdds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(5, auto); grid-auto-flow: column; gap: 9px 28px; margin: 0; padding: 0; list-style: none; }
+.handOdds .barFill { background: var(--muted); }
+.handOdds li { display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; align-items: center; gap: 10px; }
+.handOddsName { color: var(--muted); font-size: 13px; }
+.handOddsValue { color: var(--text); font: 13px var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+.handOddsZero { opacity: .4; }
+
+/* Pot odds. */
+.potFields, .potSummary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field { display: grid; gap: 6px; color: var(--muted); font-size: 13px; }
+.field input { width: 100%; min-width: 0; height: 38px; padding: 0 10px; border: 1px solid rgba(var(--text-rgb), .14); border-radius: 9px; background: var(--term); color: var(--text); font: 14px var(--font-mono); appearance: textfield; }
+.field input:hover { border-color: rgba(var(--text-rgb), .28); }
+.field input::-webkit-outer-spin-button, .field input::-webkit-inner-spin-button { margin: 0; appearance: none; }
+.potSummary { margin: 0; }
+.potSummary div { display: grid; gap: 2px; }
+.potSummary dt { color: var(--dim); font: 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.potSummary dd { margin: 0; color: var(--text); font: 18px var(--font-mono); font-variant-numeric: tabular-nums; }
+.potVerdict { min-height: 3em; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+/* Gains and losses: equity moving between streets, and whether a call pays. */
+.up { color: var(--ok); }
+.down { color: var(--error); }
+
+@media (max-width: 960px) {
+  .main, .analysis { grid-template-columns: 1fr; }
+  .results { position: static; max-height: none; }
+}
+@media (max-width: 560px) {
+  .widget { gap: 12px; padding: 12px; border-radius: 18px; }
+  .main { gap: 12px; }
+  .analysis { gap: 12px; }
+  .group { padding: 12px; }
+  .pickerRow { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .pick { height: 40px; }
+  .turnSlot { margin-left: 4px; }
+  .slots { gap: 6px; }
+  .handOdds { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; }
+}
