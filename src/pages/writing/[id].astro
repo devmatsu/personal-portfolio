@@ -1,6 +1,7 @@
 ---
-import Base from '../../../layouts/Base.astro';
-import { getArticle, getArticles } from '../../../lib/devto';
+import Base from '../../layouts/Base.astro';
+import BackLink from '../../components/BackLink.astro';
+import { getArticle, getArticles } from '../../lib/devto';
 
 export async function getStaticPaths() {
   // Sequential on purpose: parallel detail requests trip dev.to's rate limit (429).
@@ -19,7 +20,7 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
 
 <Base title={article.title} description={article.description} image={article.social_image}>
   <article class="container post">
-    <a class="back" href="/blog">← All posts</a>
+    <div class="back-row"><BackLink href="/writing" label="All posts" /></div>
     <div class="meta mono">{dateLabel} <span aria-hidden="true">·</span> {article.reading_time_minutes} min read</div>
     <h1>{article.title}</h1>
     <div class="tags">{article.tag_list.map((tag) => <span class="tag">{tag}</span>)}</div>
@@ -30,9 +31,9 @@ const dateLabel = new Intl.DateTimeFormat('en-US', {
 </Base>
 
 <style>
-  .post { max-width: 860px; padding-top: 48px; padding-bottom: 88px; }
-  .back { display: inline-block; color: var(--muted); margin-bottom: 34px; }
-  .back:hover, .devto:hover { color: var(--accent); }
+  .post { max-width: 860px; padding-top: 40px; padding-bottom: 88px; }
+  .back-row { margin-bottom: 34px; }
+  .devto:hover { color: var(--accent); }
   .meta { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
   h1 { margin: 16px 0; font-size: clamp(36px, 5vw, 56px); line-height: 1.1; letter-spacing: -.04em; }
   .tags { display: flex; flex-wrap: wrap; gap: 8px; }

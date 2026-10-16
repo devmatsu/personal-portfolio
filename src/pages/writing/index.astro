@@ -9,12 +9,12 @@ const dateLabel = (date: string) =>
     .format(new Date(date)).toUpperCase();
 ---
 
-<Base title="Blog" description="Notes on backend, databases and building with agents — also on dev.to.">
-  <div class="container blog-page">
-    <PageHeader eyebrow="Writing" title="Blog" description="Notes on backend, databases and building with agents — also on dev.to." />
+<Base title="Writing" description="Notes on backend, databases and building with agents — also on dev.to.">
+  <PageHeader title="Writing" description="Notes on backend, databases and building with agents — also on dev.to." />
+  <div class="container writing-page">
     <section class="articles" aria-label="Articles">
       {articles.map((article) => (
-        <a class="article card" href={`/blog/post/${article.id}`}>
+        <a class="article card" href={`/writing/${article.id}`}>
           <span class="label date">{dateLabel(article.published_at)}</span>
           <h2>{article.title}</h2>
           <p class="description">{article.description}</p>
@@ -27,8 +27,8 @@ const dateLabel = (date: string) =>
 </Base>
 
 <style>
-  .blog-page { padding-top: 48px; padding-bottom: 88px; }
-  .articles { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 40px; }
+  .writing-page { padding-bottom: 88px; }
+  .articles { display: grid; grid-template-columns: 1fr; gap: 16px; }
   .article { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; color: var(--text); text-decoration: none; }
   .date { font-size: 11px; }
   h2 { margin: 16px 0 8px; font-size: 21px; line-height: 1.3; letter-spacing: -.025em; }
