@@ -41,10 +41,10 @@ docs/adr/                Architecture decision records
 src/data/                Site constants, experience timeline, widget registry
 src/layouts/Base.astro   <head>, nav, footer, ⌘K command palette
 src/components/home/     Home sections (hero, agent terminal, overview, experience, workflow, contact)
-src/lib/devto.ts         dev.to client (paginated, retries on 429)
+src/lib/devto.ts         dev.to client (paginated, retries on 429, 5xx and network errors)
 src/pages/               /, /writing, /writing/[id], /widgets/{rubik,roulette,pomodoro,poker,coin}, 404
 src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pomodoro, poker odds calculator, coin flip
-tests/                   Playwright end-to-end tests and the poker engine tests (run in Node)
+tests/                   Playwright end-to-end tests, plus poker engine and dev.to client tests (run in Node)
 ```
 
 Widgets keep their state in `localStorage` (`v3.*` keys). `/blog` links redirect to `/writing`. The site is intentionally hidden from search engines (`noindex`, no sitemap; see ADR 0003).
