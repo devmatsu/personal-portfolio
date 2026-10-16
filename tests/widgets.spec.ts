@@ -47,6 +47,29 @@ test.describe('Pomodoro keyboard shortcuts', () => {
   });
 });
 
+test.describe('Pomodoro settings', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/widgets/pomodoro');
+    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+  });
+
+  test('a duration can be retyped without being clamped mid-edit', async ({ page }) => {
+    const focus = page.getByLabel('Focus (min)');
+    await focus.click();
+    await focus.press('End');
+    await focus.press('Backspace');
+    await focus.press('Backspace');
+    await expect(focus).toHaveValue('');
+    await focus.pressSequentially('5');
+    await expect(focus).toHaveValue('5');
+    await expect(pomodoroReadout(page)).toHaveText('05:00');
+    await focus.fill('0');
+    await focus.press('Enter');
+    await expect(focus).toHaveValue('1');
+    await expect(pomodoroReadout(page)).toHaveText('01:00');
+  });
+});
+
 test('widgets keep working when storage is blocked', async ({ page }) => {
   await page.addInitScript(() => { Storage.prototype.setItem = () => { throw new DOMException('Storage is blocked', 'QuotaExceededError'); }; });
 

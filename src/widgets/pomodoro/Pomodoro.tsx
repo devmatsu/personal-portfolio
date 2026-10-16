@@ -107,11 +107,27 @@ export default function Pomodoro() {
     return () => window.removeEventListener('keydown', handle);
   });
 
-  const updateSetting = (key: keyof Settings, raw: string) => {
-    const value = Math.max(1, Math.min(key === 'longEvery' ? 12 : 90, Number(raw) || 1));
+  // Inputs keep the typed text as a draft so clearing a field or typing a new value isn't clamped
+  // mid-edit; in-range values apply live, anything else is clamped on blur or Enter.
+  const [drafts, setDrafts] = useState<Partial<Record<keyof Settings, string>>>({});
+  const maxSetting = (key: keyof Settings) => key === 'longEvery' ? 12 : 90;
+  const applySetting = (key: keyof Settings, value: number) => {
+    if (value === settings[key]) return;
     const next = { ...settings, [key]: value };
     setStored((old) => ({ ...old, settings: next }));
     if (timer.endAt === null) setTimer((old) => ({ ...old, remainingMs: durationMs(old.mode, next) }));
+  };
+  const editSetting = (key: keyof Settings, raw: string) => {
+    setDrafts((old) => ({ ...old, [key]: raw }));
+    const value = Number(raw);
+    if (raw.trim() && Number.isInteger(value) && value >= 1 && value <= maxSetting(key)) applySetting(key, value);
+  };
+  const commitSetting = (key: keyof Settings) => {
+    const raw = drafts[key];
+    if (raw === undefined) return;
+    setDrafts((old) => { const next = { ...old }; delete next[key]; return next; });
+    const value = Number(raw);
+    if (raw.trim() && Number.isFinite(value)) applySetting(key, Math.max(1, Math.min(maxSetting(key), Math.round(value))));
   };
   const requestNotification = async () => {
     if (!('Notification' in window)) return;
@@ -142,8 +158,7 @@ export default function Pomodoro() {
     </div>
     <p className={styles.count}>Today: <strong>{stored.count}</strong> focus sessions completed</p>
     <div className={styles.settings}>
-      {(['focus', 'short', 'long'] as const).map((mode) => <label key={mode}>{mode === 'focus' ? 'Focus' : mode === 'short' ? 'Short break' : 'Long break'} (min)<input type="number" min="1" max="90" value={settings[mode]} onChange={(event) => updateSetting(mode, event.target.value)} /></label>)}
-      <label>Long break every<input type="number" min="1" max="12" value={settings.longEvery} onChange={(event) => updateSetting('longEvery', event.target.value)} /></label>
+      {(['focus', 'short', 'long', 'longEvery'] as const).map((key) => <label key={key}>{key === 'focus' ? 'Focus (min)' : key === 'short' ? 'Short break (min)' : key === 'long' ? 'Long break (min)' : 'Long break every'}<input type="number" min="1" max={maxSetting(key)} value={drafts[key] ?? settings[key]} onChange={(event) => editSetting(key, event.target.value)} onBlur={() => commitSetting(key)} onKeyDown={(event) => { if (event.key === 'Enter') commitSetting(key); }} /></label>)}
     </div>
     <button className={styles.notify} onClick={requestNotification}>{notification ? 'Notifications enabled' : 'Enable notifications'}</button>
     <p className={styles.hint}>Space start/pause · R reset · S skip</p>
