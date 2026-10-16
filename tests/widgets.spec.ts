@@ -104,6 +104,26 @@ test('Roulette honours "Remove winner" toggled while the wheel spins', async ({ 
   await expect(options).toHaveCount(3);
 });
 
+test('Roulette highlights no remaining option after removing the winner', async ({ page }) => {
+  // Both draws (winner, extra turns) come from crypto.getRandomValues: 0 picks the first option, Pizza.
+  await page.addInitScript(() => {
+    Crypto.prototype.getRandomValues = function <T extends ArrayBufferView | null>(array: T): T {
+      (array as unknown as Uint32Array)[0] = 0;
+      return array;
+    };
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/widgets/roulette');
+  const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
+  await expect(options).toHaveCount(4);
+  const plainColor = await options.nth(1).evaluate((item) => getComputedStyle(item).color);
+  await page.getByLabel('Remove winner after spin').check();
+  await page.getByRole('button', { name: 'Spin' }).click();
+  await expect(page.getByText('The wheel landed on Pizza.')).toBeVisible();
+  await expect(options).toHaveText(['Sushi×', 'Tacos×', 'Pasta×']);
+  expect(await options.evaluateAll((items) => items.map((item) => getComputedStyle(item).color))).toEqual([plainColor, plainColor, plainColor]);
+});
+
 test('a running Pomodoro survives a reload and switching widgets', async ({ page }) => {
   await page.goto('/widgets/pomodoro');
   await page.getByRole('button', { name: 'Start' }).click();
