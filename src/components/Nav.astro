@@ -73,7 +73,8 @@ const currentFor = (base: string) => (path === base ? 'page' : path.startsWith(`
   @media (min-width: 900px) { .menu { display:none; } }
 </style>
 <script>
-  document.querySelector('[data-palette-open]')?.addEventListener('click', () => window.dispatchEvent(new CustomEvent('palette:open')));
+  // Any [data-palette-open] control opens search (the header button, the 404 page's "Open search").
+  document.querySelectorAll('[data-palette-open]').forEach((opener) => opener.addEventListener('click', () => window.dispatchEvent(new CustomEvent('palette:open'))));
 
   const header = document.querySelector<HTMLElement>('[data-site-header]');
   const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
