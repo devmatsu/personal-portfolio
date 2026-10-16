@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://devmatsu.com',
@@ -12,5 +11,5 @@ export default defineConfig({
   },
   // Preload same-site pages on hover/focus so navigation (and its page transition) starts without waiting on the network.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
-  integrations: [react(), sitemap()],
+  integrations: [react()],
 });
