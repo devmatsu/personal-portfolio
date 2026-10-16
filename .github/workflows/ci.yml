@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -32,7 +32,7 @@ jobs:
       # Runs `npm run build` (astro check + build into dist/), serves it and runs every Playwright spec against it.
       - name: Tests
         run: npm test
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-traces
@@ -42,7 +42,7 @@ jobs:
       # Audits the dist/ the tests just built; thresholds live in lighthouserc.json.
       - name: Lighthouse
         run: npx --yes @lhci/cli@0.15.1 autorun
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: lighthouse
