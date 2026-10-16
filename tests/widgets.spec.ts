@@ -33,6 +33,18 @@ test.describe('Pomodoro keyboard shortcuts', () => {
     await page.keyboard.press('Space');
     await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
   });
+
+  test('R and S still work after clicking a button', async ({ page }) => {
+    await page.getByRole('button', { name: 'Start' }).click();
+    await page.waitForTimeout(1200);
+    await page.getByRole('button', { name: 'Pause' }).click();
+    await expect(pomodoroReadout(page)).not.toHaveText('25:00');
+    await page.keyboard.press('r');
+    await expect(pomodoroReadout(page)).toHaveText('25:00');
+    await page.keyboard.press('s');
+    await expect(page.getByText('SHORT BREAK', { exact: true })).toBeVisible();
+    await expect(pomodoroReadout(page)).toHaveText('05:00');
+  });
 });
 
 test('a running Pomodoro survives a reload and switching widgets', async ({ page }) => {
