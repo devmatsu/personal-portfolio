@@ -41,6 +41,7 @@ CI also runs Lighthouse against the built pages (`lighthouserc.json`). First run
 - New widget: add it to `src/data/widgets.ts`, create `src/pages/widgets/<slug>.astro` following the existing pages, and add Playwright coverage.
 - Changed or removed URL: add a redirect in `astro.config.mjs` so old links keep working.
 - The site is hidden from search on purpose: keep `noindex` and don't add a sitemap (ADR 0003).
+- Content-Security-Policy (ADR 0006): no inline event handlers or `style` attributes in markup, and no third-party resources unless the policy is extended. A script that must run before first paint goes in `src/scripts/` and renders through `InlineScript.astro`; everything else uses normal Astro `<script>` tags. Response headers live in `customHttp.yml`.
 - Respect `prefers-reduced-motion` for every animation.
 - Accessibility is part of done: keyboard reachable, visible focus, correct ARIA, labelled controls.
 
