@@ -28,6 +28,8 @@ The build fetches every dev.to article; if the API is down the build fails inste
 
 CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
 
+Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
+
 ## Working on it
 
 Changes start as an issue and land through a reviewed PR. Coding agents follow [`CLAUDE.md`](CLAUDE.md) (`AGENTS.md` links to it); decisions worth remembering are recorded in [`docs/adr/`](docs/adr/README.md).
