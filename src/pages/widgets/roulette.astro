@@ -2,23 +2,23 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Roulette from '../../widgets/roulette/Roulette';
+import WidgetSwitcher from '../../components/WidgetSwitcher.astro';
 
 const description = 'Add your options, spin the wheel and let chance make the call.';
 ---
 
 <Base title="Roulette" description={description}>
-  <PageHeader eyebrow="Widgets" title="Roulette" description={description} />
-  <section class="container roulette-page" aria-label="Roulette picker">
+  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Roulette" description={description}>
+    <WidgetSwitcher slot="aside" current="roulette" />
+  </PageHeader>
+  <section class="container page" aria-label="Roulette picker">
     <div class="roulette-island">
       <Roulette client:only="react" />
     </div>
-    <a class="back-link" href="/widgets">← All widgets</a>
   </section>
 </Base>
 
 <style>
+  .page { padding-bottom: 100px; }
   .roulette-island { min-height: 620px; }
-  .roulette-page { padding-block: 24px 80px; }
-  .back-link { display: inline-block; margin-top: 28px; color: var(--muted); }
-  .back-link:hover { color: var(--text); }
 </style>

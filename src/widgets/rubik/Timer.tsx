@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './timer.module.css';
 import { average, createScramble, effectiveTime, formatTime, mean, type Solve } from './logic';
+import { hasModifier, isShortcutTarget, isTextEntry } from '../shortcuts';
 
 type Settings = { inspection: boolean };
 const SOLVES_KEY = 'v3.rubik.solves';
@@ -100,18 +101,22 @@ export default function Timer() {
 
   useEffect(() => {
     function keyDown(event: KeyboardEvent) {
-      const target = event.target;
-      if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName))) return;
-      if (event.code === 'Space' && !event.repeat) {
+      const phase = phaseRef.current;
+      // While inspection or a solve runs, any key advances it (cubing convention), except typing and browser shortcuts.
+      if (phase === 'running' || phase === 'inspection') {
+        if (event.repeat || hasModifier(event) || isTextEntry(event.target)) return;
         event.preventDefault();
-        if (phaseRef.current === 'idle') beginHold();
-        else if (phaseRef.current === 'running' || phaseRef.current === 'inspection') stopOrStart();
-      } else if (phaseRef.current === 'running' || phaseRef.current === 'inspection') stopOrStart();
+        stopOrStart();
+      } else if (phase === 'idle' && event.code === 'Space' && !event.repeat && isShortcutTarget(event)) {
+        event.preventDefault();
+        beginHold();
+      }
     }
     function keyUp(event: KeyboardEvent) {
-      const target = event.target;
-      if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName))) return;
-      if (event.code === 'Space') { event.preventDefault(); cancelHold(); }
+      // Only finish a hold this widget started, so Space on a focused control still activates it on keyup.
+      if (event.code !== 'Space' || (phaseRef.current !== 'holding' && phaseRef.current !== 'ready')) return;
+      event.preventDefault();
+      cancelHold();
     }
     window.addEventListener('keydown', keyDown);
     window.addEventListener('keyup', keyUp);
@@ -130,7 +135,7 @@ export default function Timer() {
 
   return <section className={styles.timer} aria-label="Rubik's cube timer">
     <div className={styles.scramble} aria-label="Scramble">{scramble}</div>
-    <button className={`${styles.clock} ${phase === 'ready' ? styles.ready : ''}`} onPointerDown={(event) => { event.preventDefault(); areaStart(); }} onPointerUp={areaEnd} onPointerCancel={cancelHold} onContextMenu={(event) => event.preventDefault()} aria-label="Timer: hold to ready, release to start; tap to stop">
+    <button className={`${styles.clock} ${phase === 'ready' ? styles.ready : ''}`} data-shortcut-surface onPointerDown={(event) => { event.preventDefault(); areaStart(); }} onPointerUp={areaEnd} onPointerCancel={cancelHold} onContextMenu={(event) => event.preventDefault()} aria-label="Timer: hold to ready, release to start; tap to stop">
       <span>{phase === 'holding' ? 'HOLD' : phase === 'ready' ? 'READY' : shown}</span>
     </button>
     <div className={styles.toolbar}>

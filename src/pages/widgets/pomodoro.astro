@@ -2,20 +2,21 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Pomodoro from '../../widgets/pomodoro/Pomodoro';
+import WidgetSwitcher from '../../components/WidgetSwitcher.astro';
 
 const description = 'A focused timer with customizable sessions and breaks.';
 ---
 
 <Base title="Pomodoro" description={description}>
-  <PageHeader eyebrow="Widgets" title="Pomodoro" description={description} />
-  <div class="container">
+  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Pomodoro" description={description}>
+    <WidgetSwitcher slot="aside" current="pomodoro" />
+  </PageHeader>
+  <div class="container page">
     <div class="island"><Pomodoro client:only="react" /></div>
-    <p class="back"><a href="/widgets">← All widgets</a></p>
   </div>
 </Base>
 
 <style>
+  .page { padding-bottom: 100px; }
   .island { min-height: 760px; }
-  .back { margin: 24px 0 48px; color: var(--muted); }
-  .back a:hover { color: var(--text); }
 </style>

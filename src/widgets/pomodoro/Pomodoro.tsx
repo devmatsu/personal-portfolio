@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './pomodoro.module.css';
 import { advance, DEFAULT_SETTINGS, durationMs, reconcile, type Mode, type Settings, type TimerState } from './timer';
+import { isShortcutTarget } from '../shortcuts';
 
 const KEY = 'v3.pomodoro.state';
+// The live timer is stored separately so a running session survives a reload or leaving the page:
+// endAt is an absolute timestamp, so the remaining time is recomputed on return.
+const TIMER_KEY = 'v3.pomodoro.timer';
+const MODES: readonly Mode[] = ['focus', 'short', 'long'];
 interface Stored { settings: Settings; today: string; count: number }
 const todayKey = () => { const date = new Date(); return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; };
 
@@ -20,9 +25,23 @@ function loadStored(): Stored {
   return { settings: DEFAULT_SETTINGS, today: todayKey(), count: 0 };
 }
 
+function loadTimer(settings: Settings): TimerState {
+  try {
+    const value: unknown = JSON.parse(localStorage.getItem(TIMER_KEY) ?? 'null');
+    if (value && typeof value === 'object') {
+      const saved = value as Partial<TimerState>;
+      if (MODES.includes(saved.mode as Mode) && Number.isFinite(saved.remainingMs) && Number.isFinite(saved.completedFocus)
+        && (saved.endAt === null || Number.isFinite(saved.endAt))) {
+        return { mode: saved.mode as Mode, remainingMs: saved.remainingMs!, endAt: saved.endAt ?? null, completedFocus: saved.completedFocus! };
+      }
+    }
+  } catch { /* Ignore malformed local storage. */ }
+  return { mode: 'focus', remainingMs: durationMs('focus', settings), endAt: null, completedFocus: 0 };
+}
+
 export default function Pomodoro() {
   const [stored, setStored] = useState<Stored>(() => loadStored());
-  const [timer, setTimer] = useState<TimerState>(() => ({ mode: 'focus', remainingMs: durationMs('focus', loadStored().settings), endAt: null, completedFocus: 0 }));
+  const [timer, setTimer] = useState<TimerState>(() => loadTimer(loadStored().settings));
   const [now, setNow] = useState(Date.now());
   const [notification, setNotification] = useState(false);
   useEffect(() => {
@@ -39,6 +58,10 @@ export default function Pomodoro() {
   useEffect(() => {
     localStorage.setItem(KEY, JSON.stringify(stored));
   }, [stored]);
+
+  useEffect(() => {
+    localStorage.setItem(TIMER_KEY, JSON.stringify(timer));
+  }, [timer]);
 
   useEffect(() => {
     if (timer.endAt === null) return;
@@ -75,8 +98,7 @@ export default function Pomodoro() {
 
   useEffect(() => {
     const handle = (event: KeyboardEvent) => {
-      const target = event.target;
-      if (target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))) return;
+      if (!isShortcutTarget(event)) return;
       if (event.code === 'Space') { event.preventDefault(); timer.endAt === null ? start() : pause(); }
       else if (event.key.toLowerCase() === 'r') reset();
       else if (event.key.toLowerCase() === 's') skip();
