@@ -13,7 +13,8 @@ export interface ExperienceEntry {
 }
 
 // Source: résumé (public/files/RESUME_RODRIGO_MATAGAWA.pdf). Tags not listed there (Kafka, Kubernetes, PostgreSQL at 1Global;
-// C# at TQS) are kept from the previous version of this page; Herdr and OMP are the agentic engineering tools used at 1Global.
+// C# and SQL at TQS) come from the previous version of this page or were added by Matsu; Herdr and OMP are the agentic
+// engineering tools used at 1Global. Code7's "Mid-level" is the résumé's "Software Engineer" role.
 export const EXPERIENCE: ExperienceEntry[] = [
   {
     company: '1Global',
@@ -27,7 +28,7 @@ export const EXPERIENCE: ExperienceEntry[] = [
     company: 'Code7',
     title: 'Senior Software Engineer',
     // Junior Software Engineer 03/2019, Software Engineer 03/2020, Senior Software Engineer 07/2024.
-    progression: ['Junior', 'Software Engineer', 'Senior'],
+    progression: ['Junior', 'Mid-level', 'Senior'],
     start: '2019-03-01',
     end: '2025-08-08',
     description: 'Re-architected a C# messaging monolith into Node.js microservices delivering over a million SMS a day, and built fault-tolerant serverless backends on AWS. Mentored junior engineers on clean code and SOLID design.',
