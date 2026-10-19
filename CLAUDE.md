@@ -50,6 +50,7 @@ CI also runs Lighthouse against the built pages (`lighthouserc.json`). First run
 - Specs in `tests/` run against the production build in Chromium. Test behavior a visitor can see, not implementation details.
 - Pure logic (e.g. the poker engine) is tested directly in `tests/*-engine.spec.ts`, checked against an independent reference where one exists.
 - A bug fix comes with a test that fails before the fix.
+- Page transitions (cross-document view transitions in `global.css`) can't be judged locally: Chrome skips them on `astro preview`, and Playwright's Chromium runs with paint holding disabled. Check them on the PR's Amplify preview in a real browser. Keep the old and new page animations at the same duration and easing so they cross-fade; a fade-out followed by a delayed fade-in blinks.
 
 ## Commits and PRs
 
