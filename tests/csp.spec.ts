@@ -36,7 +36,7 @@ test('interactive paths run under the policy: search, page transitions and every
   await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/widgets\/coin\/?$/);
   await page.getByRole('button', { name: 'Flip', exact: true }).click();
-  await expect(page.getByRole('region', { name: 'Coin flip' }).locator('[aria-live]')).toHaveText(/^(Heads \(1\)|Tails \(2\))$/);
+  await expect(page.getByRole('region', { name: 'Coin flip' }).locator('[aria-live]')).toHaveText(/^(Heads 1|Tails 2)$/);
   expect(await violations(page), 'search + coin').toEqual([]);
 
   // The poker calculation runs in a module Worker, which the policy must allow from the same origin.

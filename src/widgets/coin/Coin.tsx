@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './coin.module.css';
+import CoinFace from './CoinFace';
 import { randomIndex } from '../random';
 import { hasModifier, isShortcutTarget } from '../shortcuts';
 
@@ -8,8 +9,10 @@ type Side = (typeof SIDES)[number];
 const FLIP_MS = 1100;
 const REDUCED_MS = 180;
 const TURNS = 5;
+// Thin discs stacked between the two faces give the coin its thickness (and reeded edge) while it turns.
+const EDGE_SLICES = Array.from({ length: 17 }, (_, index) => (index - 8) * 0.75);
 
-/** Rotation that adds full turns and finishes with the given side up: Heads at 0°, Tails at 180°. */
+/** Rotation that adds full turns end over end and finishes with the given side up: Heads at 0°, Tails at 180°. */
 function landingRotation(current: number, sideIndex: number): number {
   const target = sideIndex * 180;
   return current + TURNS * 360 + ((target - (current % 360)) + 360) % 360;
@@ -52,18 +55,26 @@ export default function Coin() {
     return () => window.removeEventListener('keydown', handle);
   });
 
-  const transition = reducedMotion ? `opacity ${REDUCED_MS}ms ease-out` : `transform ${FLIP_MS}ms cubic-bezier(.2,.75,.25,1)`;
+  const spin = reducedMotion
+    ? { transform: `rotateX(${rotation}deg)`, transition: `opacity ${REDUCED_MS}ms ease-out`, opacity: flipping ? 0.55 : 1 }
+    : { transform: `rotateX(${rotation}deg)`, transition: `transform ${FLIP_MS}ms cubic-bezier(.2,.7,.25,1)` };
 
   return <section className={styles.widget} aria-label="Coin flip">
-    <button type="button" className={styles.stage} onClick={flip} disabled={flipping} aria-label="Flip the coin">
-      <span className={styles.coin} style={{ transform: `rotateY(${rotation}deg)`, transition, opacity: flipping && reducedMotion ? 0.55 : 1 }} aria-hidden="true">
-        {SIDES.map((side, index) => <span key={side.name} className={`${styles.face} ${index === 1 ? styles.back : ''}`}>
-          <strong>{side.value}</strong><small>{side.name}</small>
-        </span>)}
-      </span>
-    </button>
+    <div className={`${styles.table} ${flipping && !reducedMotion ? styles.tossing : ''}`}>
+      <span className={styles.shadow} aria-hidden="true" />
+      <button type="button" className={styles.stage} onClick={flip} disabled={flipping} aria-label="Flip the coin">
+        <span className={styles.lift} aria-hidden="true">
+          <span className={styles.spin} style={spin}>
+            {EDGE_SLICES.map((z) => <span key={z} className={styles.slice} style={{ transform: `translateZ(${z}px)` }} />)}
+            {SIDES.map((side, index) => <span key={side.name} className={`${styles.face} ${index === 1 ? styles.tails : styles.heads}`}>
+              <CoinFace word={side.name.toUpperCase()} value={side.value} />
+            </span>)}
+          </span>
+        </span>
+      </button>
+    </div>
     <p className={styles.result} aria-live="polite" aria-atomic="true">
-      {result ? <><span>{result.name}</span> <span className={styles.value}>({result.value})</span></> : flipping ? 'Flipping…' : ''}
+      {result ? <><span className={styles.word}>{result.name}</span> <span className={styles.value}>{result.value}</span></> : flipping ? 'Flipping…' : ''}
     </p>
     <button className="btn btn-primary" type="button" onClick={flip} disabled={flipping}>Flip</button>
     <p className={styles.hint}>Space or tap the coin to flip</p>

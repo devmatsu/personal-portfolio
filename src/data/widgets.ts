@@ -11,5 +11,5 @@ export const WIDGETS: WidgetInfo[] = [
   { slug: 'roulette', name: 'Roulette', short: 'Roulette', description: 'A simple picker when you cannot decide.' },
   { slug: 'pomodoro', name: 'Pomodoro', short: 'Pomodoro', description: 'A timer for focused work and breaks.' },
   { slug: 'poker', name: 'Poker Odds', short: 'Poker', description: "Hold'em equity for your hand against up to nine opponents." },
-  { slug: 'coin', name: 'Coin Flip', short: 'Coin', description: 'Heads (1) or tails (2). Nothing to choose, just flip.' },
+  { slug: 'coin', name: 'Coin Flip', short: 'Coin', description: 'Heads or tails in one tap. Nothing to choose, just flip.' },
 ];
