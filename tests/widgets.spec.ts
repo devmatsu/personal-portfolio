@@ -94,8 +94,8 @@ test('widgets keep working when storage is blocked', async ({ page }) => {
   await expect(page.getByText('1 solves')).toBeVisible();
 });
 
-test('Roulette honours "Remove winner" toggled while the wheel spins', async ({ page }) => {
-  await page.goto('/widgets/roulette');
+test('Wheel honours "Remove winner" toggled while the wheel spins', async ({ page }) => {
+  await page.goto('/widgets/wheel');
   const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
   await expect(options).toHaveCount(4);
   await page.getByRole('button', { name: 'Spin' }).click();
@@ -104,7 +104,7 @@ test('Roulette honours "Remove winner" toggled while the wheel spins', async ({ 
   await expect(options).toHaveCount(3);
 });
 
-test('Roulette highlights no remaining option after removing the winner', async ({ page }) => {
+test('Wheel highlights no remaining option after removing the winner', async ({ page }) => {
   // Both draws (winner, extra turns) come from crypto.getRandomValues: 0 picks the first option, Pizza.
   await page.addInitScript(() => {
     Crypto.prototype.getRandomValues = function <T extends ArrayBufferView | null>(array: T): T {
@@ -113,7 +113,7 @@ test('Roulette highlights no remaining option after removing the winner', async 
     };
   });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/widgets/roulette');
+  await page.goto('/widgets/wheel');
   const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
   await expect(options).toHaveCount(4);
   const plainColor = await options.nth(1).evaluate((item) => getComputedStyle(item).color);
@@ -122,6 +122,21 @@ test('Roulette highlights no remaining option after removing the winner', async 
   await expect(page.getByText('The wheel landed on Pizza.')).toBeVisible();
   await expect(options).toHaveText(['Sushi×', 'Tacos×', 'Pasta×']);
   expect(await options.evaluateAll((items) => items.map((item) => getComputedStyle(item).color))).toEqual([plainColor, plainColor, plainColor]);
+});
+
+test('the old Roulette address and saved options carry over to the Wheel', async ({ page }) => {
+  // Options saved before the rename live under the Roulette key.
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem('seeded')) { localStorage.setItem('v3.roulette.options', JSON.stringify(['Tea', 'Coffee'])); sessionStorage.setItem('seeded', '1'); }
+  });
+  await page.goto('/widgets/roulette');
+  await expect(page).toHaveURL(/\/widgets\/wheel\/?$/);
+  const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
+  await expect(options).toHaveText(['Tea×', 'Coffee×']);
+  // Edits are saved under the new key and survive a reload.
+  await page.getByRole('button', { name: 'Remove Coffee' }).click();
+  await page.reload();
+  await expect(options).toHaveText(['Tea×']);
 });
 
 test('a running Pomodoro survives a reload and switching widgets', async ({ page }) => {
@@ -134,8 +149,8 @@ test('a running Pomodoro survives a reload and switching widgets', async ({ page
   await expect(pomodoroReadout(page)).not.toHaveText('25:00');
 
   const switcher = page.getByRole('navigation', { name: 'Switch widget' });
-  await switcher.getByRole('link', { name: 'Roulette' }).click();
-  await expect(page).toHaveURL(/\/widgets\/roulette/);
+  await switcher.getByRole('link', { name: 'Wheel' }).click();
+  await expect(page).toHaveURL(/\/widgets\/wheel/);
   await switcher.getByRole('link', { name: 'Pomodoro' }).click();
   await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
   await expect(pomodoroReadout(page)).not.toHaveText('25:00');
@@ -268,7 +283,7 @@ test.describe('Coin flip', () => {
 });
 
 test('widget pages link back to the index and mark the current widget', async ({ page }) => {
-  for (const [slug, label] of [['rubik', 'Rubik'], ['roulette', 'Roulette'], ['pomodoro', 'Pomodoro'], ['poker', 'Poker'], ['coin', 'Coin']] as const) {
+  for (const [slug, label] of [['rubik', 'Rubik'], ['wheel', 'Wheel'], ['pomodoro', 'Pomodoro'], ['poker', 'Poker'], ['coin', 'Coin']] as const) {
     await page.goto(`/widgets/${slug}`);
     const switcher = page.getByRole('navigation', { name: 'Switch widget' });
     await expect(switcher.locator('a[aria-current="page"]')).toHaveText(label);

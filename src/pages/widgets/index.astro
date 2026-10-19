@@ -11,7 +11,7 @@ import { WIDGETS } from '../../data/widgets';
       {WIDGETS.map((widget) => <a class="widget card" href={`/widgets/${widget.slug}`}>
         <div class="visual" aria-hidden="true">
           {widget.slug === 'rubik' && <span class="digits mono">0:42.18</span>}
-          {widget.slug === 'roulette' && <span class="wheel" />}
+          {widget.slug === 'wheel' && <span class="wheel" />}
           {widget.slug === 'pomodoro' && <span class="ring"><span>25:00</span></span>}
           {widget.slug === 'poker' && <span class="cards"><span>A<b>♠</b></span><span class="red">K<b>♥</b></span></span>}
           {widget.slug === 'coin' && <span class="coin">HEADS</span>}

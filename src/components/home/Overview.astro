@@ -12,7 +12,7 @@ const years = Math.floor((Date.now() - Date.parse(earliest)) / (365.25 * 24 * 60
     <article class="card years"><div class="label">Experience</div><div><div class="number">{years}<span>+</span></div><div class="muted">years</div></div></article>
     {latest && <a class="card writing" href={`/writing/${latest.id}`}><div class="label">Latest writing</div><div><div class="title">{latest.title}</div><div class="read mono">{latest.reading_time_minutes} min read →</div></div></a>}
     <a href="/widgets" class="card wide widgets">
-      <div class="widget-copy"><div class="label">Widgets</div><div class="widget-title">A Rubik’s cube timer, a roulette picker, a Pomodoro and a poker odds calculator — tools I actually use.</div></div>
+      <div class="widget-copy"><div class="label">Widgets</div><div class="widget-title">A Rubik’s cube timer, a decision wheel, a Pomodoro, a poker odds calculator and a coin flip — tools I actually use.</div></div>
       <div class="visuals"><div class="timer"><div class="digits mono">0:12.84</div><div class="scramble mono">R U R’ U’ F2 …</div></div><div class="wheel" aria-hidden="true"><i></i><b></b></div></div>
     </a>
   </div>
