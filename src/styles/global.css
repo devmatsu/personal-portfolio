@@ -71,27 +71,29 @@ main:focus { outline: none; }
 }
 
 /* Page transitions (browser-native, cross-document). Browsers without support navigate exactly as before.
-   - The sticky header has its own snapshot, so it stays put; only the content underneath animates.
-   - Between top-level destinations (Home, Writing, Widgets): fade-through. The old page leaves fast, the new one settles in.
-   - Into a child page and back (index ↔ widget/post): shared axis. A short horizontal slide that follows the direction.
-     The direction comes from the types set in Base.astro (forward / backward).
-   Exits are faster than entrances, ease-in on the way out, ease-out on the way in. */
+   - The sticky header has its own snapshot, so it stays put; only the content underneath changes.
+   - Every page change is a cross-fade: the old and new page overlap with the *same* duration and easing, and the
+     browser blends the pair (plus-lighter), so their opacities always add up to 100% and the content never disappears.
+     A fade-out followed by a delayed fade-in leaves a blank frame in between, which reads as a blink.
+   - Into a child page and back (index ↔ widget/post) the cross-fade also slides a little in the direction of travel.
+     The direction comes from the types set in src/scripts/transition-direction.js (forward / backward). */
 @view-transition { navigation: auto; }
 .site-header { view-transition-name: site-header; }
+:root { --vt-duration: 200ms; --vt-ease: cubic-bezier(.2, 0, 0, 1); }
 @keyframes vt-out { to { opacity: 0; } }
-@keyframes vt-in-up { from { opacity: 0; transform: translateY(8px); } }
-@keyframes vt-out-left { to { opacity: 0; transform: translateX(-24px); } }
-@keyframes vt-in-right { from { opacity: 0; transform: translateX(24px); } }
-@keyframes vt-out-right { to { opacity: 0; transform: translateX(24px); } }
-@keyframes vt-in-left { from { opacity: 0; transform: translateX(-24px); } }
 @keyframes vt-in { from { opacity: 0; } }
-::view-transition-old(root) { animation: 90ms cubic-bezier(.4, 0, 1, 1) both vt-out; }
-::view-transition-new(root) { animation: 210ms cubic-bezier(0, 0, .2, 1) 90ms both vt-in-up; }
-html:active-view-transition-type(forward)::view-transition-old(root) { animation: 90ms cubic-bezier(.4, 0, 1, 1) both vt-out-left; }
-html:active-view-transition-type(forward)::view-transition-new(root) { animation: 210ms cubic-bezier(0, 0, .2, 1) 90ms both vt-in-right; }
-html:active-view-transition-type(backward)::view-transition-old(root) { animation: 90ms cubic-bezier(.4, 0, 1, 1) both vt-out-right; }
-html:active-view-transition-type(backward)::view-transition-new(root) { animation: 210ms cubic-bezier(0, 0, .2, 1) 90ms both vt-in-left; }
-/* Reduced motion: no movement, just a short cross-fade. */
+@keyframes vt-out-left { to { opacity: 0; transform: translateX(-16px); } }
+@keyframes vt-in-right { from { opacity: 0; transform: translateX(16px); } }
+@keyframes vt-out-right { to { opacity: 0; transform: translateX(16px); } }
+@keyframes vt-in-left { from { opacity: 0; transform: translateX(-16px); } }
+::view-transition-group(*) { animation-duration: var(--vt-duration); animation-timing-function: var(--vt-ease); }
+::view-transition-old(root) { animation: var(--vt-duration) var(--vt-ease) both vt-out; }
+::view-transition-new(root) { animation: var(--vt-duration) var(--vt-ease) both vt-in; }
+html:active-view-transition-type(forward)::view-transition-old(root) { animation-name: vt-out-left; }
+html:active-view-transition-type(forward)::view-transition-new(root) { animation-name: vt-in-right; }
+html:active-view-transition-type(backward)::view-transition-old(root) { animation-name: vt-out-right; }
+html:active-view-transition-type(backward)::view-transition-new(root) { animation-name: vt-in-left; }
+/* Reduced motion: the same cross-fade, shorter and without the slide. */
 @media (prefers-reduced-motion: reduce) {
   html::view-transition-old(root) { animation: 120ms ease both vt-out !important; }
   html::view-transition-new(root) { animation: 120ms ease both vt-in !important; }
