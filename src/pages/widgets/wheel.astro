@@ -1,0 +1,22 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Wheel from '../../widgets/wheel/Wheel';
+import WidgetSwitcher from '../../components/WidgetSwitcher.astro';
+
+const description = 'Add your options, spin the wheel and let chance make the call.';
+---
+
+<Base title="Wheel" description={description}>
+  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Wheel" description={description}>
+    <WidgetSwitcher slot="aside" current="wheel" />
+  </PageHeader>
+  <div class="container page">
+    <div class="island"><Wheel client:only="react" /></div>
+  </div>
+</Base>
+
+<style>
+  .page { padding-bottom: 100px; }
+  .island { min-height: 620px; }
+</style>

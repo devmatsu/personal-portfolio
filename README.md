@@ -45,9 +45,9 @@ src/data/                Site constants, experience timeline, widget registry
 src/layouts/Base.astro   <head>, nav, footer, ⌘K command palette
 src/components/home/     Home sections (hero, agent terminal, overview, experience, workflow, contact)
 src/lib/devto.ts         dev.to client (paginated, retries on 429, 5xx and network errors)
-src/pages/               /, /writing, /writing/[id], /widgets/{rubik,roulette,pomodoro,poker,coin}, 404
+src/pages/               /, /writing, /writing/[id], /widgets/{rubik,wheel,pomodoro,poker,coin}, 404
 src/scripts/             Inline scripts that run before first paint, rendered with a CSP hash (InlineScript.astro)
-src/widgets/             React widgets: Rubik's cube timer, roulette picker, Pomodoro, poker odds calculator, coin flip
+src/widgets/             React widgets: Rubik's cube timer, decision wheel, Pomodoro, poker odds calculator, coin flip
 tests/                   Playwright end-to-end tests, plus poker engine and dev.to client tests (run in Node)
 ```
 

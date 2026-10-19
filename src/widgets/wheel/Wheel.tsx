@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import styles from './roulette.module.css';
+import styles from './wheel.module.css';
 import { rotationForWinner, winnerIndexFromRotation } from './math';
 import { randomIndex } from '../random';
 
-const STORAGE_KEY = 'v3.roulette.options';
+const STORAGE_KEY = 'v3.wheel.options';
+// The widget was called Roulette; options saved under its key carry over on the first visit after the rename.
+const LEGACY_KEY = 'v3.roulette.options';
 const DEFAULT_OPTIONS = ['Pizza', 'Sushi', 'Tacos', 'Pasta'];
 
 function readOptions(): string[] {
   try {
-    const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null');
+    const saved: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_KEY) ?? 'null');
+    localStorage.removeItem(LEGACY_KEY);
     if (Array.isArray(saved)) return saved.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
   } catch { /* Start with defaults when storage is unavailable or malformed. */ }
   return DEFAULT_OPTIONS;
@@ -19,7 +22,7 @@ function pointOnWheel(cx: number, cy: number, radius: number, angle: number): [n
   return [cx + radius * Math.cos(radians), cy + radius * Math.sin(radians)];
 }
 
-export default function Roulette() {
+export default function Wheel() {
   const [options, setOptions] = useState<string[]>(DEFAULT_OPTIONS);
   const [draft, setDraft] = useState('');
   const [rotation, setRotation] = useState(0);
@@ -85,7 +88,7 @@ export default function Roulette() {
     }, duration);
   }
 
-  return <section className={styles.widget} aria-label="Roulette picker">
+  return <section className={styles.widget} aria-label="Decision wheel">
     <div className={styles.wheelWrap}>
       <span className={styles.pointer} aria-hidden="true" />
       <svg className={styles.wheel} style={{ transform: `rotate(${rotation}deg)`, opacity: spinning && reducedMotion ? 0.55 : 1, transition: reducedMotion ? 'opacity 180ms ease-out' : spinning ? 'transform 4800ms cubic-bezier(.12,.72,.12,1)' : 'none' }} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
@@ -100,8 +103,8 @@ export default function Roulette() {
       <button className="btn btn-primary" type="button" onClick={spin} disabled={spinning || options.length < 2}>Spin</button>
       <label className={styles.removeToggle}><input type="checkbox" checked={removeWinner} onChange={(event) => setRemoveWinner(event.currentTarget.checked)} /> Remove winner after spin</label>
       <form className={styles.addForm} onSubmit={(event) => { event.preventDefault(); if (!spinning) addOptions(draft); }}>
-        <label htmlFor="roulette-option" className={styles.inputLabel}>Add an option (paste multiple lines to add several)</label>
-        <div className={styles.inputRow}><textarea id="roulette-option" value={draft} onChange={(event) => setDraft(event.currentTarget.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); if (!spinning) addOptions(draft); } }} rows={2} placeholder="Type or paste options" disabled={spinning} /><button className="btn btn-ghost" type="submit" disabled={spinning || !draft.trim()}>Add</button></div>
+        <label htmlFor="wheel-option" className={styles.inputLabel}>Add an option (paste multiple lines to add several)</label>
+        <div className={styles.inputRow}><textarea id="wheel-option" value={draft} onChange={(event) => setDraft(event.currentTarget.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); if (!spinning) addOptions(draft); } }} rows={2} placeholder="Type or paste options" disabled={spinning} /><button className="btn btn-ghost" type="submit" disabled={spinning || !draft.trim()}>Add</button></div>
       </form>
       <ul className={styles.options} aria-label="Wheel options">{options.map((option, index) => <li key={`${index}-${option}`} className={highlight === index ? styles.winner : ''}><span>{option}</span><button type="button" aria-label={`Remove ${option}`} disabled={spinning} onClick={() => { setOptions((current) => current.filter((_, itemIndex) => itemIndex !== index)); setHighlight(null); }}>×</button></li>)}</ul>
       <button className={styles.clear} type="button" onClick={() => { setOptions([]); setHighlight(null); setResult(''); }} disabled={spinning || options.length === 0}>Clear all options</button>

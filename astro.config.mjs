@@ -11,6 +11,8 @@ export default defineConfig({
     // Old SPA widget routes dropped in v3.
     '/widgets/tictactoe': '/widgets',
     '/widgets/gitHubGraph': '/widgets',
+    // Roulette was renamed Wheel.
+    '/widgets/roulette': '/widgets/wheel',
   },
   // Preload same-site pages on hover/focus so navigation (and its page transition) starts without waiting on the network.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },

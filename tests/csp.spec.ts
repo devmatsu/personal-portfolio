@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 test('every page renders without CSP violations and carries the policy', async ({ page }) => {
   await page.goto('/writing');
   const firstPost = await page.locator('main a[href^="/writing/"]').first().getAttribute('href');
-  const pages = ['/', '/writing', firstPost!, '/widgets', '/widgets/rubik', '/widgets/roulette', '/widgets/pomodoro', '/widgets/poker', '/widgets/coin', '/no-such-page'];
+  const pages = ['/', '/writing', firstPost!, '/widgets', '/widgets/rubik', '/widgets/wheel', '/widgets/pomodoro', '/widgets/poker', '/widgets/coin', '/no-such-page'];
   for (const path of pages) {
     await page.goto(path);
     await page.waitForLoadState('load');
@@ -48,7 +48,7 @@ test('interactive paths run under the policy: search, page transitions and every
   await page.goto('/widgets/pomodoro');
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
-  await page.goto('/widgets/roulette');
+  await page.goto('/widgets/wheel');
   await page.getByRole('button', { name: 'Spin' }).click();
   await expect(page.getByText(/^The wheel landed on /)).toBeVisible({ timeout: 8000 });
   await page.goto('/widgets/rubik');
@@ -58,7 +58,7 @@ test('interactive paths run under the policy: search, page transitions and every
   await page.keyboard.up('Space');
   await page.keyboard.press('a');
   await expect(page.getByText('1 solves')).toBeVisible();
-  expect(await violations(page), 'pomodoro + roulette + rubik').toEqual([]);
+  expect(await violations(page), 'pomodoro + wheel + rubik').toEqual([]);
 });
 
 test('the 404 page still opens search without an inline handler', async ({ page }) => {
