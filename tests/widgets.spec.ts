@@ -241,7 +241,7 @@ test.describe('Coin flip', () => {
   }, values);
   const result = (page: Page) => page.getByRole('region', { name: 'Coin flip' }).locator('[aria-live]');
 
-  test('one click flips: an even draw is Heads (1), an odd one Tails (2), and it cannot be flipped mid-air', async ({ page }) => {
+  test('one click flips: an even draw is Heads 1, an odd one Tails 2, and it cannot be flipped mid-air', async ({ page }) => {
     await rigCoin(page, [4, 7]);
     await page.goto('/widgets/coin');
     const flip = page.getByRole('button', { name: 'Flip', exact: true });
@@ -249,10 +249,10 @@ test.describe('Coin flip', () => {
     await expect(flip).toBeDisabled();
     await expect(page.getByRole('button', { name: 'Flip the coin' })).toBeDisabled();
     await expect(result(page)).toHaveText('Flipping…');
-    await expect(result(page)).toHaveText('Heads (1)');
+    await expect(result(page)).toHaveText('Heads 1');
     await expect(flip).toBeEnabled();
     await page.getByRole('button', { name: 'Flip the coin' }).click();
-    await expect(result(page)).toHaveText('Tails (2)');
+    await expect(result(page)).toHaveText('Tails 2');
   });
 
   test('Space flips the coin, and reduced motion lands it without the spin', async ({ page }) => {
@@ -263,7 +263,7 @@ test.describe('Coin flip', () => {
     await page.locator('main h1').click();
     await page.keyboard.press('Space');
     // The full spin takes over a second; with reduced motion the result is there well before that.
-    await expect(result(page)).toHaveText('Tails (2)', { timeout: 800 });
+    await expect(result(page)).toHaveText('Tails 2', { timeout: 800 });
   });
 });
 

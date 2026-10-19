@@ -1,12 +1,27 @@
 .widget { display: flex; flex-direction: column; align-items: center; gap: 22px; max-width: 680px; margin: 0 auto; padding: 40px 28px 32px; border: 1px solid rgba(var(--text-rgb), .07); border-radius: 22px; background: radial-gradient(ellipse at 50% 0%, rgba(var(--accent-rgb), .08), transparent 60%), var(--surface); text-align: center; }
-.stage { display: grid; place-items: center; width: min(100%, 260px); aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: transparent; perspective: 900px; cursor: pointer; }
+
+/* The table the coin rests on: room above it to rise into, and its shadow below. */
+.table { position: relative; display: grid; place-items: center; width: 100%; height: 300px; perspective: 900px; }
+.shadow { position: absolute; bottom: 22px; width: 150px; height: 18px; border-radius: 50%; background: rgba(0, 0, 0, .55); filter: blur(7px); }
+.stage { display: grid; place-items: center; width: min(100%, 230px); aspect-ratio: 1; padding: 0; border: 0; border-radius: 50%; background: transparent; cursor: pointer; transform-style: preserve-3d; }
 .stage:disabled { cursor: default; }
-.stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
-.coin { position: relative; display: block; width: 88%; aspect-ratio: 1; transform-style: preserve-3d; }
-.face { position: absolute; inset: 0; display: grid; place-content: center; gap: 4px; border-radius: 50%; backface-visibility: hidden; background: radial-gradient(circle at 35% 30%, rgba(var(--text-rgb), .35), transparent 55%), var(--accent); color: var(--on-accent); box-shadow: inset 0 0 0 8px rgba(0, 0, 0, .14), inset 0 0 0 10px rgba(var(--text-rgb), .25), 0 18px 40px -18px rgba(0, 0, 0, .8); }
-.back { transform: rotateY(180deg); background: radial-gradient(circle at 35% 30%, rgba(var(--text-rgb), .3), transparent 55%), rgba(var(--accent-rgb), .78); }
-.face strong { font: 600 clamp(64px, 16vw, 88px)/1 var(--font-mono); }
-.face small { font: 600 13px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; }
-.result { min-height: 40px; margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.02em; }
-.value { color: var(--accent); font-family: var(--font-mono); }
+.stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 8px; }
+.lift, .spin { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; }
+
+/* A toss: the coin rises toward you and comes back down while it spins; the shadow shrinks as it leaves the table. */
+.tossing .lift { animation: toss 1100ms cubic-bezier(.3, .6, .4, 1) both; }
+.tossing .shadow { animation: shadow 1100ms cubic-bezier(.3, .6, .4, 1) both; }
+@keyframes toss { 45% { transform: translateY(-56px) scale(1.12); } }
+@keyframes shadow { 45% { transform: scale(.55); opacity: .45; } }
+
+/* Edge: stacked discs with a reeded pattern, between the two faces (6px either side of the middle). */
+.slice { position: absolute; inset: 1px; border-radius: 50%; background: repeating-conic-gradient(#9AA0A8 0 2deg, #4E535B 2deg 3deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .45)); }
+.face svg { display: block; width: 100%; height: 100%; }
+.heads { transform: translateZ(6px); }
+.tails { transform: rotateX(180deg) translateZ(6px); }
+
+.result { display: flex; align-items: baseline; justify-content: center; gap: 10px; min-height: 40px; margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.02em; }
+.word { text-transform: uppercase; letter-spacing: .08em; }
+.value { color: var(--dim); font: 500 16px var(--font-mono); }
 .hint { margin: 0; color: var(--dim); font: 12px var(--font-mono); }
