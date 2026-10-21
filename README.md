@@ -30,6 +30,10 @@ CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse aud
 
 Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
 
+## Releases
+
+Versions follow [semver](https://semver.org) and come from the commit messages ([release-please](https://github.com/googleapis/release-please), ADR 0007): `fix:` bumps the patch, `feat:` the minor, a `!` (e.g. `feat!:`) the major. After each merge to `main`, release-please keeps a release PR open with the next version and the [`CHANGELOG.md`](CHANGELOG.md) entry. Merging it updates `package.json`, tags `vX.Y.Z` and publishes a [GitHub release](https://github.com/devmatsu/personal-portfolio/releases). The footer shows that version and links to its notes. Deploys don't wait for releases: every merge to `main` goes live, and the footer keeps showing the last released version until the next release PR is merged.
+
 ## Working on it
 
 Changes start as an issue and land through a reviewed PR. Coding agents follow [`CLAUDE.md`](CLAUDE.md) (`AGENTS.md` links to it); decisions worth remembering are recorded in [`docs/adr/`](docs/adr/README.md).
