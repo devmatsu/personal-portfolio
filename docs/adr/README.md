@@ -15,3 +15,4 @@ Copy `0000-template.md` to `NNNN-short-title.md` with the next number. Records a
 | [0005](0005-email-out-of-html.md)               | Email address kept out of the HTML             | Accepted |
 | [0006](0006-csp-and-response-headers.md)        | Hash-based CSP, response headers from the repo | Accepted |
 | [0007](0007-semver-with-release-please.md)      | Semver from commit messages via release-please | Accepted |
+| [0008](0008-approve-ci-on-release-prs.md)       | CI on release PRs after a maintainer approves  | Accepted |

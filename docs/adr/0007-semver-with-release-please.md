@@ -1,6 +1,6 @@
 # 0007. Version the site with semver, generated from commit messages
 
-- Status: Accepted
+- Status: Accepted; the CI-on-release-PR part is superseded by [0008](0008-approve-ci-on-release-prs.md)
 - Date: 2026-10-16
 - Issue: #47
 

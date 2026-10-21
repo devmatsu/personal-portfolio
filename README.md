@@ -34,6 +34,8 @@ Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main`
 
 Versions follow [semver](https://semver.org) and come from the commit messages ([release-please](https://github.com/googleapis/release-please), ADR 0007): `fix:` bumps the patch, `feat:` the minor, a `!` (e.g. `feat!:`) the major. After each merge to `main`, release-please keeps a release PR open with the next version and the [`CHANGELOG.md`](CHANGELOG.md) entry. Merging it updates `package.json`, tags `vX.Y.Z` and publishes a [GitHub release](https://github.com/devmatsu/personal-portfolio/releases). The footer shows that version and links to its notes. Deploys don't wait for releases: every merge to `main` goes live, and the footer keeps showing the last released version until the next release PR is merged.
 
+To cut a release: open the release PR, approve its pending workflow run (GitHub holds CI on PRs opened by `github-actions[bot]` until a maintainer approves it, ADR 0008), wait for CI, merge. If a feature was reworked before the release, correct its line in the PR's `CHANGELOG.md` and description before merging; the GitHub release is built from the description.
+
 ## Working on it
 
 Changes start as an issue and land through a reviewed PR. Coding agents follow [`CLAUDE.md`](CLAUDE.md) (`AGENTS.md` links to it); decisions worth remembering are recorded in [`docs/adr/`](docs/adr/README.md).

@@ -57,4 +57,4 @@ CI also runs Lighthouse against the built pages (`lighthouserc.json`). First run
 - Conventional commits with a scope where it helps: `feat(home): …`, `fix: …`, `test: …`, `docs: …`, `chore: …`. Present tense, describes the visible effect.
 - One logical change per commit. PR description: what changed, why, how it was verified, and the issue it closes.
 - Commit types decide the next version (ADR 0007): `feat` → minor, `fix`/`perf` → patch, `!` after the type → major; `docs`, `test`, `refactor`, `chore` and `ci` don't release and stay out of the changelog. Pick the type for what a visitor would notice.
-- Don't edit the version in `package.json` or `CHANGELOG.md` by hand; release-please owns both. The owner merges the release PR when they want to cut a release.
+- Don't edit the version in `package.json` or `CHANGELOG.md` by hand; release-please owns both. The owner cuts a release by approving the release PR's workflow run (ADR 0008) and merging it.
