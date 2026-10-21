@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './wheel.module.css';
-import { landingOffset, rotationForWinner, winnerIndexFromRotation } from './math';
+import { landingOffset, rotationForWinner } from './math';
 import { randomIndex } from '../random';
 
 const STORAGE_KEY = 'v3.wheel.options';
@@ -50,7 +50,6 @@ export default function Wheel() {
   // The wheel turns outside React (one style write per frame); the rotation lives in a ref.
   const rotation = useRef(0);
   const wheelRef = useRef<SVGSVGElement>(null);
-  const pointerRef = useRef<HTMLSpanElement>(null);
   const frame = useRef(0);
 
   useEffect(() => {
@@ -75,8 +74,7 @@ export default function Wheel() {
     const middle = start + (end - start) / 2;
     // Labels run along the radius, ending near the rim, so the winner (stopped at the 3 o'clock pointer) reads left to right.
     const [tx, ty] = pointOnWheel(150, 150, 128, middle);
-    const [px, py] = pointOnWheel(150, 150, 144, start);
-    return { label, path, tx, ty, middle, index, px, py, color: sliceColor(index, count) };
+    return { label, path, tx, ty, middle, index, color: sliceColor(index, count) };
   }), [options]);
 
   function addOptions(raw: string) {
@@ -118,17 +116,10 @@ export default function Wheel() {
       return;
     }
     const began = performance.now();
-    let under = winnerIndexFromRotation(start, count);
     const step = (now: number) => {
       const t = Math.min(1, (now - began) / SPIN_MS);
       const angle = start + (end - start) * easeOut(t);
       setWheelRotation(angle);
-      // The pointer flicks back each time a slice boundary passes it, like a flapper hitting the pegs.
-      const current = winnerIndexFromRotation(angle, count);
-      if (current !== under) {
-        under = current;
-        pointerRef.current?.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-24deg)' }, { transform: 'rotate(0)' }], { duration: 140, easing: 'ease-out' });
-      }
       if (t < 1) frame.current = requestAnimationFrame(step);
       else settle(winnerIndex);
     };
@@ -139,14 +130,13 @@ export default function Wheel() {
 
   return <section className={styles.widget} aria-label="Decision wheel">
     <div className={styles.wheelWrap}>
-      <span ref={pointerRef} className={styles.pointer} aria-hidden="true" />
+      <svg className={styles.pointer} viewBox="0 0 34 32" aria-hidden="true"><path d="M4.5 13.2 26.8 2.6c2.6-1.2 5.2.9 5.2 3.6v19.6c0 2.7-2.6 4.8-5.2 3.6L4.5 18.8c-2.3-1.1-2.3-4.5 0-5.6Z" /></svg>
       <svg ref={wheelRef} className={`${styles.wheel} ${spinning && reducedMotion ? styles.fading : ''}`} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
         <circle cx="150" cy="150" r="144" className={styles.rim} />
         {slices.map((slice) => <g key={`${slice.index}-${slice.label}`} className={settled && highlight !== slice.index ? styles.dim : ''}>
           <path d={slice.path} fill={slice.color} className={styles.slice} />
           <text x={slice.tx} y={slice.ty} transform={`rotate(${slice.middle - 90} ${slice.tx} ${slice.ty})`} textAnchor="end" dominantBaseline="middle" className={styles.label}>{slice.label.length > 14 ? `${slice.label.slice(0, 13)}…` : slice.label}</text>
         </g>)}
-        {options.length > 1 && slices.map((slice) => <circle key={`peg-${slice.index}`} cx={slice.px} cy={slice.py} r="2.6" className={styles.peg} />)}
         <circle cx="150" cy="150" r="16" className={styles.hub} />
       </svg>
       <div className={`${styles.resultCard} ${winner ? styles.shown : ''}`} role="status" aria-live="polite" aria-atomic="true">

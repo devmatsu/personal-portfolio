@@ -15,14 +15,13 @@
 /* Slices: palette fills from Wheel.tsx, dark dividers between them, dark text (5:1 or more on every colour). */
 .slice { stroke: var(--surface); stroke-width: 2.5; stroke-linejoin: round; }
 .label { fill: #14110F; font: 600 12px var(--font-sans); letter-spacing: .01em; pointer-events: none; }
-.rim { fill: none; stroke: #0A0908; stroke-width: 9; }
-.peg { fill: var(--text); stroke: #0A0908; stroke-width: 1; }
+.rim { fill: none; stroke: #0A0908; stroke-width: 6; }
 .hub { fill: var(--surface); stroke: rgba(var(--text-rgb), .35); stroke-width: 3; }
 /* Once it lands, everything but the winning slice steps back. */
 .dim { opacity: .3; transition: opacity .35s ease; }
 
-/* Flapper at 3 o'clock, pointing in. It flicks up as each slice passes (Web Animations from Wheel.tsx), pivoting near its base. */
-.pointer { position: absolute; z-index: 2; right: -14px; top: calc(50% - 13px); width: 36px; height: 26px; background: var(--text); clip-path: polygon(100% 0, 100% 100%, 40% 100%, 0 50%, 40% 0); transform-origin: 85% 50%; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .55)); }
+/* Fixed pointer at 3 o'clock: a small rounded triangle whose tip just touches the slices, inside the rim. */
+.pointer { position: absolute; z-index: 2; left: calc(95.7% - 3px); top: calc(50% - 16px); width: 34px; height: 32px; fill: var(--text); filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .55)); }
 
 /* The winner, on the lower part of the wheel (the dimmed side), clear of the winning slice at 3 o'clock and in view
    wherever the wheel is, on phones too. */
