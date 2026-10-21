@@ -1,7 +1,11 @@
 ---
 import { SITE } from '../data/site';
+// release-please bumps package.json when a release PR merges, so this is always the latest released version.
+import { version } from '../../package.json';
+const releaseNotes = `${SITE.links.github}/personal-portfolio/releases/tag/v${version}`;
 ---
-<footer class="site-footer mono"><span>© {new Date().getFullYear()} {SITE.handle}</span><span>v{SITE.version}</span></footer>
+<footer class="site-footer mono"><span>© {new Date().getFullYear()} {SITE.handle}</span><a href={releaseNotes} target="_blank" rel="noreferrer">v{version}<span class="sr-only"> release notes (opens in new tab)</span></a></footer>
 <style>
   .site-footer { box-sizing:border-box; height:var(--footer-height); max-width:var(--maxw); margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid rgba(var(--text-rgb),.07); color:var(--faint); font-size:12px; white-space:nowrap; }
+  .site-footer a:hover { color:var(--muted); opacity:1; }
 </style>

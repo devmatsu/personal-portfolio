@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Started by release-please.yml on the release PR (PRs opened by GITHUB_TOKEN don't trigger pull_request runs).
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}

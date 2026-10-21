@@ -28,6 +28,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* Text for screen readers only: kept in the accessibility tree, takes no space on screen. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 /* Always reserve the scrollbar's space, so pages that fit on one screen (no scrollbar) don't sit wider than pages that
    scroll and the layout doesn't jump sideways when moving between them. No effect with overlay scrollbars. */
 html { scroll-behavior: smooth; scrollbar-gutter: stable; }

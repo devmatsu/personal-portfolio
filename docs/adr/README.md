@@ -14,3 +14,4 @@ Copy `0000-template.md` to `NNNN-short-title.md` with the next number. Records a
 | [0004](0004-widget-state-in-localstorage.md)    | Widget state in localStorage, storage optional | Accepted |
 | [0005](0005-email-out-of-html.md)               | Email address kept out of the HTML             | Accepted |
 | [0006](0006-csp-and-response-headers.md)        | Hash-based CSP, response headers from the repo | Accepted |
+| [0007](0007-semver-with-release-please.md)      | Semver from commit messages via release-please | Accepted |
