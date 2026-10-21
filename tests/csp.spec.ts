@@ -50,7 +50,7 @@ test('interactive paths run under the policy: search, page transitions and every
   await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
   await page.goto('/widgets/wheel');
   await page.getByRole('button', { name: 'Spin' }).click();
-  await expect(page.getByText(/^The wheel landed on /)).toBeVisible({ timeout: 8000 });
+  await expect(page.getByRole('status').filter({ hasText: 'The wheel landed on' })).toBeVisible({ timeout: 8000 });
   await page.goto('/widgets/rubik');
   await page.locator('main h1').click();
   await page.keyboard.down('Space');

@@ -94,18 +94,21 @@ test('widgets keep working when storage is blocked', async ({ page }) => {
   await expect(page.getByText('1 solves')).toBeVisible();
 });
 
+// The winner card over the wheel (a polite live region).
+const wheelResult = (page: Page) => page.getByRole('status').filter({ hasText: 'The wheel landed on' });
+
 test('Wheel honours "Remove winner" toggled while the wheel spins', async ({ page }) => {
   await page.goto('/widgets/wheel');
   const options = page.getByRole('list', { name: 'Wheel options' }).getByRole('listitem');
   await expect(options).toHaveCount(4);
   await page.getByRole('button', { name: 'Spin' }).click();
   await page.getByLabel('Remove winner after spin').check();
-  await expect(page.getByText(/^The wheel landed on /)).toBeVisible({ timeout: 8000 });
+  await expect(wheelResult(page)).toBeVisible({ timeout: 8000 });
   await expect(options).toHaveCount(3);
 });
 
 test('Wheel highlights no remaining option after removing the winner', async ({ page }) => {
-  // Both draws (winner, extra turns) come from crypto.getRandomValues: 0 picks the first option, Pizza.
+  // All draws (winner, extra turns, spot in the slice) come from crypto.getRandomValues: 0 picks the first option, Pizza.
   await page.addInitScript(() => {
     Crypto.prototype.getRandomValues = function <T extends ArrayBufferView | null>(array: T): T {
       (array as unknown as Uint32Array)[0] = 0;
@@ -119,9 +122,22 @@ test('Wheel highlights no remaining option after removing the winner', async ({ 
   const plainColor = await options.nth(1).evaluate((item) => getComputedStyle(item).color);
   await page.getByLabel('Remove winner after spin').check();
   await page.getByRole('button', { name: 'Spin' }).click();
-  await expect(page.getByText('The wheel landed on Pizza.')).toBeVisible();
+  await expect(wheelResult(page)).toHaveText(/The wheel landed on\s*Pizza/);
   await expect(options).toHaveText(['Sushi×', 'Tacos×', 'Pasta×']);
   expect(await options.evaluateAll((items) => items.map((item) => getComputedStyle(item).color))).toEqual([plainColor, plainColor, plainColor]);
+});
+
+test('on a phone the winner shows over the wheel, in view right after the spin', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/widgets/wheel');
+  const spin = page.getByRole('button', { name: 'Spin' });
+  // A visitor scrolls just far enough to reach Spin with the wheel above it.
+  await spin.scrollIntoViewIfNeeded();
+  await spin.click();
+  await expect(wheelResult(page)).toBeVisible();
+  await expect(wheelResult(page)).toBeInViewport();
+  await expect(page.getByRole('img', { name: /^Wheel with/ })).toBeInViewport({ ratio: 0.5 });
 });
 
 test('the old Roulette address and saved options carry over to the Wheel', async ({ page }) => {

@@ -1,12 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './wheel.module.css';
-import { rotationForWinner, winnerIndexFromRotation } from './math';
+import { landingOffset, rotationForWinner } from './math';
 import { randomIndex } from '../random';
 
 const STORAGE_KEY = 'v3.wheel.options';
 // The widget was called Roulette; options saved under its key carry over on the first visit after the rename.
 const LEGACY_KEY = 'v3.roulette.options';
 const DEFAULT_OPTIONS = ['Pizza', 'Sushi', 'Tacos', 'Pasta'];
+
+// Okabe-Ito (Color Universal Design), the standard colourblind-safe categorical palette, ordered so warm and cool
+// alternate around the wheel. Blue and vermillion are lightened a touch so the dark slice text stays at 5:1 or more.
+const PALETTE = ['#E69F00', '#56B4E9', '#DA6000', '#009E73', '#F0E442', '#008CDB', '#CC79A7'];
+const SPIN_MS = 6000;
+const REDUCED_MS = 180;
+// Ease-out cubic: fast at first, then a long, visible crawl, so the last slices pass slowly under the pointer.
+const easeOut = (t: number) => 1 - (1 - t) ** 3;
 
 function readOptions(): string[] {
   try {
@@ -22,18 +30,27 @@ function pointOnWheel(cx: number, cy: number, radius: number, angle: number): [n
   return [cx + radius * Math.cos(radians), cy + radius * Math.sin(radians)];
 }
 
+/** Palette colour for a slice; the last slice never repeats the colour of the first one next to it. */
+function sliceColor(index: number, count: number): string {
+  if (count > 1 && index === count - 1 && index % PALETTE.length === 0) return PALETTE[3]!;
+  return PALETTE[index % PALETTE.length]!;
+}
+
 export default function Wheel() {
   const [options, setOptions] = useState<string[]>(DEFAULT_OPTIONS);
   const [draft, setDraft] = useState('');
-  const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [removeWinner, setRemoveWinner] = useState(false);
-  // The spin settles in a timeout, so it reads the toggle through a ref to honour a change made mid-spin.
+  // The spin settles asynchronously, so it reads the toggle through a ref to honour a change made mid-spin.
   const removeWinnerRef = useRef(removeWinner);
   removeWinnerRef.current = removeWinner;
-  const [result, setResult] = useState('');
+  const [winner, setWinner] = useState<string | null>(null);
   const [highlight, setHighlight] = useState<number | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  // The wheel turns outside React (one style write per frame); the rotation lives in a ref.
+  const rotation = useRef(0);
+  const wheelRef = useRef<SVGSVGElement>(null);
+  const frame = useRef(0);
 
   useEffect(() => {
     setOptions(readOptions());
@@ -41,7 +58,7 @@ export default function Wheel() {
     const update = () => setReducedMotion(media.matches);
     update();
     media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+    return () => { media.removeEventListener('change', update); cancelAnimationFrame(frame.current); };
   }, []);
   useEffect(() => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(options)); } catch { /* Storage is optional. */ }
@@ -55,8 +72,9 @@ export default function Wheel() {
     const [x2, y2] = pointOnWheel(150, 150, 140, end);
     const path = count === 1 ? 'M150 150 L150 10 A140 140 0 1 1 149.99 10 Z' : `M150 150 L${x1} ${y1} A140 140 0 ${end - start > 180 ? 1 : 0} 1 ${x2} ${y2} Z`;
     const middle = start + (end - start) / 2;
-    const [tx, ty] = pointOnWheel(150, 150, 88, middle);
-    return { label, path, tx, ty, middle, index };
+    // Labels run along the radius, ending near the rim, so the winner (stopped at the 3 o'clock pointer) reads left to right.
+    const [tx, ty] = pointOnWheel(150, 150, 128, middle);
+    return { label, path, tx, ty, middle, index, color: sliceColor(index, count) };
   }), [options]);
 
   function addOptions(raw: string) {
@@ -65,39 +83,69 @@ export default function Wheel() {
     setDraft('');
   }
 
+  function setWheelRotation(angle: number) {
+    rotation.current = angle;
+    if (wheelRef.current) wheelRef.current.style.transform = `rotate(${angle}deg)`;
+  }
+
+  function settle(winnerIndex: number) {
+    setWinner(options[winnerIndex]!);
+    setSpinning(false);
+    // A removed winner has nothing left to mark: keeping its index would highlight the option that moved into its place.
+    if (removeWinnerRef.current) setOptions((current) => current.filter((_, optionIndex) => optionIndex !== winnerIndex));
+    else setHighlight(winnerIndex);
+  }
+
   function spin() {
     if (spinning || options.length < 2) return;
-    const index = randomIndex(options.length);
+    const count = options.length;
+    // The winner is a uniform pick; turns and the spot inside the slice only change how the landing looks.
+    const winnerIndex = randomIndex(count);
     const turns = 5 + randomIndex(3);
-    const target = rotationForWinner(index, options.length, turns);
-    const duration = reducedMotion ? 180 : 4800;
+    const offset = landingOffset(randomIndex(10_000) / 10_000);
+    const start = rotation.current;
+    const target = rotationForWinner(winnerIndex, count, turns, offset);
+    const end = start + ((target - start) % 360 + 360) % 360 + turns * 360;
     setHighlight(null);
-    setResult('');
+    setWinner(null);
     setSpinning(true);
-    setRotation((current) => current + (target - (current % 360) + 360) % 360 + turns * 360);
-    window.setTimeout(() => {
-      const finalRotation = rotation + (target - (rotation % 360) + 360) % 360 + turns * 360;
-      const winner = winnerIndexFromRotation(finalRotation, options.length);
-      const label = options[winner]!;
-      setResult(`The wheel landed on ${label}.`);
-      setSpinning(false);
-      // The highlight was cleared when the spin began. A removed winner has nothing left to mark:
-      // keeping its index would highlight the option that moved into its place.
-      if (removeWinnerRef.current) setOptions((current) => current.filter((_, optionIndex) => optionIndex !== winner));
-      else setHighlight(winner);
-    }, duration);
+
+    if (reducedMotion) {
+      setWheelRotation(end);
+      window.setTimeout(() => settle(winnerIndex), REDUCED_MS);
+      return;
+    }
+    const began = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - began) / SPIN_MS);
+      const angle = start + (end - start) * easeOut(t);
+      setWheelRotation(angle);
+      if (t < 1) frame.current = requestAnimationFrame(step);
+      else settle(winnerIndex);
+    };
+    frame.current = requestAnimationFrame(step);
   }
+
+  const settled = highlight !== null && !spinning;
 
   return <section className={styles.widget} aria-label="Decision wheel">
     <div className={styles.wheelWrap}>
-      <span className={styles.pointer} aria-hidden="true" />
-      <svg className={styles.wheel} style={{ transform: `rotate(${rotation}deg)`, opacity: spinning && reducedMotion ? 0.55 : 1, transition: reducedMotion ? 'opacity 180ms ease-out' : spinning ? 'transform 4800ms cubic-bezier(.12,.72,.12,1)' : 'none' }} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
-        {slices.map((slice) => <g key={`${slice.index}-${slice.label}`}>
-          <path d={slice.path} fill={slice.index % 2 === 0 ? 'rgba(var(--accent-rgb),0.72)' : 'rgba(var(--text-rgb),0.12)'} stroke="rgba(var(--text-rgb),0.18)" strokeWidth="1" />
-          <text x={slice.tx} y={slice.ty} transform={`rotate(${slice.middle > 90 && slice.middle < 270 ? slice.middle + 180 : slice.middle} ${slice.tx} ${slice.ty})`} textAnchor="middle" dominantBaseline="middle" className={`${styles.label} ${highlight === slice.index ? styles.winner : ''}`}>{slice.label.length > 18 ? `${slice.label.slice(0, 17)}…` : slice.label}</text>
+      <svg className={styles.pointer} viewBox="0 0 34 32" aria-hidden="true"><path d="M4.5 13.2 26.8 2.6c2.6-1.2 5.2.9 5.2 3.6v19.6c0 2.7-2.6 4.8-5.2 3.6L4.5 18.8c-2.3-1.1-2.3-4.5 0-5.6Z" /></svg>
+      <svg ref={wheelRef} className={`${styles.wheel} ${spinning && reducedMotion ? styles.fading : ''}`} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
+        <circle cx="150" cy="150" r="144" className={styles.rim} />
+        {slices.map((slice) => <g key={`${slice.index}-${slice.label}`} className={settled && highlight !== slice.index ? styles.dim : ''}>
+          <path d={slice.path} fill={slice.color} className={styles.slice} />
+          <text x={slice.tx} y={slice.ty} transform={`rotate(${slice.middle - 90} ${slice.tx} ${slice.ty})`} textAnchor="end" dominantBaseline="middle" className={styles.label}>{slice.label.length > 14 ? `${slice.label.slice(0, 13)}…` : slice.label}</text>
         </g>)}
-        <circle cx="150" cy="150" r="13" fill="var(--surface)" stroke="rgba(var(--text-rgb),0.2)" />
+        <circle cx="150" cy="150" r="16" className={styles.hub} />
       </svg>
+      <div className={`${styles.resultCard} ${winner ? styles.shown : ''}`} role="status" aria-live="polite" aria-atomic="true">
+        {winner && <>
+          <span className={styles.resultLabel}>The wheel landed on</span>
+          <strong className={styles.resultName}>{winner}</strong>
+          <button type="button" className={styles.resultClose} onClick={() => { setWinner(null); setHighlight(null); }} aria-label="Hide result">×</button>
+        </>}
+      </div>
     </div>
     <div className={styles.controls}>
       <button className="btn btn-primary" type="button" onClick={spin} disabled={spinning || options.length < 2}>Spin</button>
@@ -106,9 +154,8 @@ export default function Wheel() {
         <label htmlFor="wheel-option" className={styles.inputLabel}>Add an option (paste multiple lines to add several)</label>
         <div className={styles.inputRow}><textarea id="wheel-option" value={draft} onChange={(event) => setDraft(event.currentTarget.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); if (!spinning) addOptions(draft); } }} rows={2} placeholder="Type or paste options" disabled={spinning} /><button className="btn btn-ghost" type="submit" disabled={spinning || !draft.trim()}>Add</button></div>
       </form>
-      <ul className={styles.options} aria-label="Wheel options">{options.map((option, index) => <li key={`${index}-${option}`} className={highlight === index ? styles.winner : ''}><span>{option}</span><button type="button" aria-label={`Remove ${option}`} disabled={spinning} onClick={() => { setOptions((current) => current.filter((_, itemIndex) => itemIndex !== index)); setHighlight(null); }}>×</button></li>)}</ul>
-      <button className={styles.clear} type="button" onClick={() => { setOptions([]); setHighlight(null); setResult(''); }} disabled={spinning || options.length === 0}>Clear all options</button>
-      <p className={styles.result} aria-live="polite" aria-atomic="true">{result}</p>
+      <ul className={styles.options} aria-label="Wheel options">{options.map((option, index) => <li key={`${index}-${option}`} className={highlight === index ? styles.winner : ''}><span className={styles.swatch} style={{ background: sliceColor(index, options.length) }} aria-hidden="true" /><span className={styles.optionText}>{option}</span><button type="button" aria-label={`Remove ${option}`} disabled={spinning} onClick={() => { setOptions((current) => current.filter((_, itemIndex) => itemIndex !== index)); setHighlight(null); setWinner(null); }}>×</button></li>)}</ul>
+      <button className={styles.clear} type="button" onClick={() => { setOptions([]); setHighlight(null); setWinner(null); }} disabled={spinning || options.length === 0}>Clear all options</button>
     </div>
   </section>;
 }
