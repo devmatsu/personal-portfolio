@@ -1,0 +1,37 @@
+name: Release
+
+# Keeps a release PR open with the next version (from the conventional commits since the last release) and
+# CHANGELOG.md. Merging that PR tags the release and creates the GitHub release; Amplify deploys it like any merge.
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # A PR opened or updated with GITHUB_TOKEN doesn't trigger other workflows, so CI wouldn't run on the release PR
+      # and the main ruleset couldn't be satisfied. workflow_dispatch is the one event GITHUB_TOKEN may trigger.
+      - name: Run CI on the release PR
+        if: steps.release.outputs.pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ fromJSON(steps.release.outputs.pr).headBranchName }}
+        run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$BRANCH"
