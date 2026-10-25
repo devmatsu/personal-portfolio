@@ -14,6 +14,6 @@ Posts are written and published on dev.to. v2 fetched them in the browser on eve
 ## Consequences
 
 - Pages are static and fast; dev.to is only contacted at build time.
-- A new post appears after the next deploy, not immediately.
+- A new post appears after the next deploy, not immediately. Nothing deployed for new posts at first, so posts could stay missing for days (#53). Since then a daily check (06:00 Brasília, `.github/workflows/writing-refresh.yml`) rebuilds the site when dev.to has a post the live `/writing/posts.json` doesn't, so a post goes live within a day (or sooner, by running that workflow by hand).
 - Builds (and therefore `npm test` and CI) need network access to dev.to; a dev.to outage blocks deploys until it recovers.
 - Article HTML is rendered with `set:html`; it's the owner's own content, sanitized by dev.to.

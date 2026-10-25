@@ -17,7 +17,7 @@ export default defineConfig(
     rules: { 'react-hooks/rules-of-hooks': 'error', 'react-hooks/exhaustive-deps': 'warn' },
   },
   {
-    files: ['*.{js,mjs,ts}', 'tests/**/*.ts'],
+    files: ['*.{js,mjs,ts}', 'scripts/**/*.mjs', 'tests/**/*.ts'],
     languageOptions: { globals: globals.node },
   },
 );

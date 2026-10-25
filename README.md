@@ -24,7 +24,7 @@ Node 22.22.3+ or 24.16+.
 | `npm run lint`    | ESLint (TypeScript, Astro, React hooks)           |
 | `npm test`        | Build, serve and run the Playwright tests         |
 
-The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy. Before the first `npm test`, install the browser with `npx playwright install chromium`.
+The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy: every day at 06:00 Brasília, `.github/workflows/writing-refresh.yml` compares dev.to with the posts the live site was built with (`/writing/posts.json`) and, if dev.to has a new one, starts an Amplify build through the `AMPLIFY_BUILD_WEBHOOK` secret. To publish a post sooner, run that workflow by hand (Actions → Writing refresh → Run workflow). Before the first `npm test`, install the browser with `npx playwright install chromium`.
 
 CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
 
@@ -54,6 +54,7 @@ src/lib/devto.ts         dev.to client (paginated, retries on 429, 5xx and netwo
 src/pages/               /, /writing, /writing/[id], /widgets/{rubik,wheel,pomodoro,poker,coin}, 404
 src/scripts/             Inline scripts that run before first paint, rendered with a CSP hash (InlineScript.astro)
 src/widgets/             React widgets: Rubik's cube timer, decision wheel, Pomodoro, poker odds calculator, coin flip
+scripts/                 writing-is-stale.mjs: does dev.to have a post the live site doesn't? (used by the daily refresh)
 tests/                   Playwright end-to-end tests, plus poker engine and dev.to client tests (run in Node)
 ```
 
