@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/devmatsu/personal-portfolio/compare/v3.1.0...v3.1.1) (2026-10-26)
+
+
+### Bug Fixes
+
+* **writing:** rebuild the site daily when dev.to has a new post ([4e81fe2](https://github.com/devmatsu/personal-portfolio/commit/4e81fe26befb575b7f87897014d50dec26cfa1c2))
+
 ## [3.1.0](https://github.com/devmatsu/personal-portfolio/compare/v3.0.0...v3.1.0) (2026-10-21)
 
 
