@@ -13,7 +13,7 @@ Personal site of Rodrigo "Matsu" Matagawa, backend engineer. Live at [devmatsu.c
 
 ## Scripts
 
-Node 22.22.3+ or 24.16+.
+Node 22.22.3+ or 24.16+. `.nvmrc` sets the Node line (`nvm use`); CI and Amplify install the newest release of it.
 
 | Command           | What it does                                      |
 | ----------------- | ------------------------------------------------- |
@@ -28,7 +28,7 @@ The build fetches every dev.to article; if the API is down the build fails inste
 
 CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
 
-Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
+Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. The build steps live in `amplify.yml` (they override the console's build settings) and install Node from `.nvmrc`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
 
 ## Releases
 
@@ -44,6 +44,8 @@ Changes start as an issue and land through a reviewed PR. Coding agents follow [
 
 ```
 .github/                 CI workflow, Dependabot config, issue and PR templates
+.nvmrc                   Node version for local work, CI and Amplify
+amplify.yml              Amplify build steps: install Node from .nvmrc, npm ci, npm run build
 customHttp.yml           Response headers on Amplify: security headers, long cache for /_astro/ (ADR 0006)
 design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
 docs/adr/                Architecture decision records
