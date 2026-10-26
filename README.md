@@ -13,7 +13,7 @@ Personal site of Rodrigo "Matsu" Matagawa, backend engineer. Live at [devmatsu.c
 
 ## Scripts
 
-Node 22.22.3+ or 24.16+.
+Node 22.22.3+ or 24.16+. `.nvmrc` sets the Node line (`nvm use`); CI and Amplify install the newest release of it.
 
 | Command           | What it does                                      |
 | ----------------- | ------------------------------------------------- |
@@ -24,11 +24,11 @@ Node 22.22.3+ or 24.16+.
 | `npm run lint`    | ESLint (TypeScript, Astro, React hooks)           |
 | `npm test`        | Build, serve and run the Playwright tests         |
 
-The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy. Before the first `npm test`, install the browser with `npx playwright install chromium`.
+The build fetches every dev.to article; if the API is down the build fails instead of shipping an empty blog. New posts appear after the next deploy: every day at 06:00 Brasília, `.github/workflows/writing-refresh.yml` compares dev.to with the posts the live site was built with (`/writing/posts.json`) and, if dev.to has a new one, starts an Amplify build through the `AMPLIFY_BUILD_WEBHOOK` secret. To publish a post sooner, run that workflow by hand (Actions → Writing refresh → Run workflow). Before the first `npm test`, install the browser with `npx playwright install chromium`.
 
 CI (`.github/workflows/ci.yml`) runs lint, types, the tests and a Lighthouse audit (`lighthouserc.json`) on every pull request.
 
-Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
+Hosting is AWS Amplify (app `d3v7d4x1opg1gm`, `sa-east-1`): every push to `main` deploys, and every pull request gets a preview build at `pr-<number>.d3v7d4x1opg1gm.amplifyapp.com`. The build steps live in `amplify.yml` (they override the console's build settings) and install Node from `.nvmrc`. Response headers come from `customHttp.yml`; unknown URLs are rewritten to `404.html` with a 404 status (Amplify rewrite rule `/<*>` → `/404.html`, `404-200`).
 
 ## Releases
 
@@ -44,6 +44,8 @@ Changes start as an issue and land through a reviewed PR. Coding agents follow [
 
 ```
 .github/                 CI workflow, Dependabot config, issue and PR templates
+.nvmrc                   Node version for local work, CI and Amplify
+amplify.yml              Amplify build steps: install Node from .nvmrc, npm ci, npm run build
 customHttp.yml           Response headers on Amplify: security headers, long cache for /_astro/ (ADR 0006)
 design/ember.dc.html     Design source (Claude artifact, "Ember" direction)
 docs/adr/                Architecture decision records
@@ -54,6 +56,7 @@ src/lib/devto.ts         dev.to client (paginated, retries on 429, 5xx and netwo
 src/pages/               /, /writing, /writing/[id], /widgets/{rubik,wheel,pomodoro,poker,coin}, 404
 src/scripts/             Inline scripts that run before first paint, rendered with a CSP hash (InlineScript.astro)
 src/widgets/             React widgets: Rubik's cube timer, decision wheel, Pomodoro, poker odds calculator, coin flip
+scripts/                 writing-is-stale.mjs: does dev.to have a post the live site doesn't? (used by the daily refresh)
 tests/                   Playwright end-to-end tests, plus poker engine and dev.to client tests (run in Node)
 ```
 

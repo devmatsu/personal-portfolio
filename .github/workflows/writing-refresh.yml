@@ -1,0 +1,32 @@
+name: Writing refresh
+
+# Posts come from dev.to at build time (ADR 0002), so a new post only shows up after a build. Once a day this checks
+# dev.to against the posts the live site was built with, and starts an Amplify build of main only if dev.to has one
+# the site doesn't.
+on:
+  schedule:
+    - cron: '0 9 * * *' # 06:00 in Brasília (UTC-3, no daylight saving)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Compare dev.to with the live site
+        id: check
+        run: node scripts/writing-is-stale.mjs https://devmatsu.com
+      - name: Rebuild the site
+        if: steps.check.outputs.stale == 'true'
+        env:
+          WEBHOOK: ${{ secrets.AMPLIFY_BUILD_WEBHOOK }}
+        run: |
+          test -n "$WEBHOOK" || { echo "::error::AMPLIFY_BUILD_WEBHOOK secret is not set"; exit 1; }
+          curl --fail-with-body -sS -X POST -H 'Content-Type: application/json' -d '{}' "$WEBHOOK"
