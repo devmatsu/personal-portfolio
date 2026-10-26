@@ -1,0 +1,22 @@
+# Amplify Hosting build (overrides the build settings saved in the console).
+# `nvm install` reads .nvmrc and installs the newest release of that Node line; the build image's preinstalled
+# Node 22 (22.18) is too old for Astro. CI reads the same .nvmrc, so both always build on the same Node.
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install
+        - node --version
+        - npm --version
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
