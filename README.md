@@ -13,7 +13,7 @@ Personal site of Rodrigo "Matsu" Matagawa, backend engineer. Live at [devmatsu.c
 
 ## Scripts
 
-Node 22.22.3+ or 24.16+. `.nvmrc` sets the Node line (`nvm use`); CI and Amplify install the newest release of it.
+Node 22.23.4+ or 24.16+. `.nvmrc` sets the Node line (`nvm use`); CI and Amplify install the newest release of it.
 
 | Command           | What it does                                      |
 | ----------------- | ------------------------------------------------- |
