@@ -47,9 +47,10 @@ export default function Wheel() {
   const [winner, setWinner] = useState<string | null>(null);
   const [highlight, setHighlight] = useState<number | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  // The wheel turns outside React (one style write per frame); the rotation lives in a ref.
+  // The wheel turns outside React (one transform write per frame); the rotation lives in a ref. Only the drawing inside
+  // the svg turns: a turning square box gets wider near 45° and would push a phone page sideways.
   const rotation = useRef(0);
-  const wheelRef = useRef<SVGSVGElement>(null);
+  const wheelRef = useRef<SVGGElement>(null);
   const frame = useRef(0);
 
   useEffect(() => {
@@ -85,7 +86,7 @@ export default function Wheel() {
 
   function setWheelRotation(angle: number) {
     rotation.current = angle;
-    if (wheelRef.current) wheelRef.current.style.transform = `rotate(${angle}deg)`;
+    if (wheelRef.current) wheelRef.current.setAttribute('transform', `rotate(${angle} 150 150)`);
   }
 
   function settle(winnerIndex: number) {
@@ -131,13 +132,15 @@ export default function Wheel() {
   return <section className={styles.widget} aria-label="Decision wheel">
     <div className={styles.wheelWrap}>
       <svg className={styles.pointer} viewBox="0 0 34 32" aria-hidden="true"><path d="M4.5 13.2 26.8 2.6c2.6-1.2 5.2.9 5.2 3.6v19.6c0 2.7-2.6 4.8-5.2 3.6L4.5 18.8c-2.3-1.1-2.3-4.5 0-5.6Z" /></svg>
-      <svg ref={wheelRef} className={`${styles.wheel} ${spinning && reducedMotion ? styles.fading : ''}`} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
-        <circle cx="150" cy="150" r="144" className={styles.rim} />
-        {slices.map((slice) => <g key={`${slice.index}-${slice.label}`} className={settled && highlight !== slice.index ? styles.dim : ''}>
-          <path d={slice.path} fill={slice.color} className={styles.slice} />
-          <text x={slice.tx} y={slice.ty} transform={`rotate(${slice.middle - 90} ${slice.tx} ${slice.ty})`} textAnchor="end" dominantBaseline="middle" className={styles.label}>{slice.label.length > 14 ? `${slice.label.slice(0, 13)}…` : slice.label}</text>
-        </g>)}
-        <circle cx="150" cy="150" r="16" className={styles.hub} />
+      <svg className={`${styles.wheel} ${spinning && reducedMotion ? styles.fading : ''}`} viewBox="0 0 300 300" role="img" aria-label={`Wheel with ${options.length} options`}>
+        <g ref={wheelRef}>
+          <circle cx="150" cy="150" r="144" className={styles.rim} />
+          {slices.map((slice) => <g key={`${slice.index}-${slice.label}`} className={settled && highlight !== slice.index ? styles.dim : ''}>
+            <path d={slice.path} fill={slice.color} className={styles.slice} />
+            <text x={slice.tx} y={slice.ty} transform={`rotate(${slice.middle - 90} ${slice.tx} ${slice.ty})`} textAnchor="end" dominantBaseline="middle" className={styles.label}>{slice.label.length > 14 ? `${slice.label.slice(0, 13)}…` : slice.label}</text>
+          </g>)}
+          <circle cx="150" cy="150" r="16" className={styles.hub} />
+        </g>
       </svg>
       <div className={`${styles.resultCard} ${winner ? styles.shown : ''}`} role="status" aria-live="polite" aria-atomic="true">
         {winner && <>
