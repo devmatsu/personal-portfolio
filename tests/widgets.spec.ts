@@ -140,6 +140,29 @@ test('on a phone the winner shows over the wheel, in view right after the spin',
   await expect(page.getByRole('img', { name: /^Wheel with/ })).toBeInViewport({ ratio: 0.5 });
 });
 
+test('on a phone the page never gets wider than the screen while the wheel spins', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/widgets/wheel');
+  const spin = page.getByRole('button', { name: 'Spin' });
+  await spin.scrollIntoViewIfNeeded();
+  // Note the widest the page gets on every frame; a spin is at least five full turns, so it passes every angle.
+  await page.evaluate(() => {
+    const widths = { frames: 0, widest: 0, screen: document.documentElement.clientWidth };
+    (window as Window & { pageWidths?: typeof widths }).pageWidths = widths;
+    const sample = () => {
+      widths.frames += 1;
+      widths.widest = Math.max(widths.widest, document.documentElement.scrollWidth);
+      requestAnimationFrame(sample);
+    };
+    requestAnimationFrame(sample);
+  });
+  await spin.click();
+  await expect(wheelResult(page)).toBeVisible({ timeout: 10_000 });
+  const { frames, widest, screen } = await page.evaluate(() => (window as Window & { pageWidths?: { frames: number; widest: number; screen: number } }).pageWidths!);
+  expect(frames).toBeGreaterThan(60);
+  expect(widest, `widest page during the spin on a ${screen}px screen`).toBeLessThanOrEqual(screen);
+});
+
 test('the old Roulette address and saved options carry over to the Wheel', async ({ page }) => {
   // Options saved before the rename live under the Roulette key.
   await page.addInitScript(() => {
