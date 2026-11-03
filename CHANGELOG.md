@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.1.2](https://github.com/devmatsu/personal-portfolio/compare/v3.1.1...v3.1.2) (2026-11-03)
+
+
+### Bug Fixes
+
+* **wheel:** spinning on a phone no longer pushes the page sideways ([a2a2556](https://github.com/devmatsu/personal-portfolio/commit/a2a2556ac024386d8a3a4cd1d64afa9789977c55))
+* **wheel:** spinning on a phone no longer pushes the page sideways ([0644a9e](https://github.com/devmatsu/personal-portfolio/commit/0644a9efd2ec4e9b4a7d80a2aacb9ef7531dc262)), closes [#59](https://github.com/devmatsu/personal-portfolio/issues/59)
+
 ## [3.1.1](https://github.com/devmatsu/personal-portfolio/compare/v3.1.0...v3.1.1) (2026-10-26)
 
 
