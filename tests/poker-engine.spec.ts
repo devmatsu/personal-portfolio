@@ -1,11 +1,12 @@
 // Poker engine correctness. These run in Node (no browser): hand rankings, kickers, splits, deal counting, exact and
-// simulated equity, checked against combinatorial ground truth, an independent evaluator (pokersolver) and published
-// exact matchup totals.
+// simulated equity and outs, checked against combinatorial ground truth, an independent evaluator (pokersolver) and
+// published exact matchup totals.
 import { expect, test } from '@playwright/test';
 import pokersolver from 'pokersolver';
 import { type Card, cardCode, DECK, parseCard, parseCards } from '../src/widgets/poker/engine/cards';
 import { bestFive, categoryOf, describeHand, evaluate, HAND_CATEGORIES } from '../src/widgets/poker/engine/evaluate';
 import { countDeals, exactEquity, simulateEquity, validateScenario, type EquityResult, type Scenario } from '../src/widgets/poker/engine/equity';
+import { findOuts } from '../src/widgets/poker/engine/outs';
 import { seededRandom } from '../src/widgets/poker/engine/random';
 
 const { Hand } = pokersolver;
@@ -247,39 +248,6 @@ test.describe('exact equity', () => {
   });
 });
 
-test.describe('hand odds', () => {
-  const category = (name: (typeof HAND_CATEGORIES)[number]) => HAND_CATEGORIES.indexOf(name);
-  const flushDraw: Scenario = { hero: parseCards('As Ks'), board: parseCards('Qs 7d 2s'), opponents: [null] };
-
-  test('a flush draw on the flop: exact chances of finishing with each hand', () => {
-    // 9 spades among 47 unseen cards: 1 − C(38,2)/C(47,2) = 378 of 1,081 run-outs make a flush, and exactly one of them
-    // (Js Ts) is a royal flush. A full house or quads can't be made with two cards to come.
-    const { heroHands } = exactEquity(flushDraw);
-    expect(heroHands[category('Flush')]).toBeCloseTo(377 / 1081, 12);
-    expect(heroHands[category('Straight flush')]).toBeCloseTo(1 / 1081, 12);
-    expect(heroHands[category('Full house')]).toBe(0);
-    expect(heroHands[category('Four of a kind')]).toBe(0);
-    expect(heroHands.reduce((sum, chance) => sum + chance, 0)).toBeCloseTo(1, 12);
-  });
-
-  test('a known opponent\'s cards are dead: their spades shrink your flush odds', () => {
-    // 8s 9s with the opponent leaves 7 spades among 45 cards: 1 − C(38,2)/C(45,2) = 287 of 990, one of them the royal.
-    const { heroHands } = exactEquity({ ...flushDraw, opponents: [parseCards('8s 9s')] });
-    expect(heroHands[category('Flush')]).toBeCloseTo(286 / 990, 12);
-    expect(heroHands[category('Straight flush')]).toBeCloseTo(1 / 990, 12);
-  });
-
-  test('simulated hand odds converge on the exact ones', () => {
-    const exact = exactEquity(flushDraw).heroHands;
-    const trials = 200_000;
-    const simulated = simulateEquity(flushDraw, trials, seededRandom(11)).heroHands;
-    exact.forEach((chance, index) => {
-      const standardError = Math.sqrt((chance * (1 - chance)) / trials);
-      expect(Math.abs(simulated[index] - chance), HAND_CATEGORIES[index]).toBeLessThanOrEqual(4 * standardError + 1e-9);
-    });
-  });
-});
-
 test.describe('simulated equity', () => {
   const scenario: Scenario = { hero: parseCards('As Ks'), board: parseCards('Qs 7d 2s'), opponents: [null] };
 
@@ -310,5 +278,73 @@ test.describe('simulated equity', () => {
     let batches = 0;
     const result = simulateEquity(scenario, 100_000, seededRandom(1), () => ++batches < 3, 10_000);
     expect(result.samples).toBe(30_000);
+  });
+});
+
+test.describe('outs', () => {
+  const hands = (codes: string[]) => codes.map(parseCards);
+
+  test('turn, three-way: counts only cards that win or tie, and names the hands they make', () => {
+    // You, opponent 1, opponent 2. Opponent 2 has flopped a straight; the 9♠ and 2♠ would make your flush but pair the
+    // board, giving opponent 1 a full house, so they are not your outs.
+    const [hero, opponent1, opponent2] = findOuts(hands(['As Ks', 'Jh Jd', 'Tc 8c']), parseCards('Js 7s 2d 9h'));
+    expect(opponent2).toEqual({ leading: true, outs: [], label: '' });
+    expect(hero.leading).toBe(false);
+    expect(hero.outs).toEqual(parseCards('Qs Ts 8s 6s 5s 4s 3s'));
+    expect(hero.label).toBe('flush');
+    expect(opponent1.leading).toBe(false);
+    expect(opponent1.outs).toEqual(parseCards('Jc 9s 9d 9c 7h 7d 7c 2s 2h 2c'));
+    expect(opponent1.label).toBe('full house or better');
+  });
+
+  test('an out that only ties the leader still counts', () => {
+    // The leader has a King-high straight. Any nine gives you the same straight (a split); any ace gives you both Broadway.
+    const [hero, opponent] = findOuts(hands(['Td 2h', 'Ts 9s']), parseCards('Kh Qd Jc 3s'));
+    expect(opponent.leading).toBe(true);
+    expect(hero.outs).toEqual(parseCards('As Ah Ad Ac 9h 9d 9c'));
+    expect(hero.label).toBe('straight');
+  });
+
+  test('drawing dead on the turn: no card saves the trailing hand', () => {
+    // Kings full against quad aces: even the last king only makes smaller quads.
+    const [hero, opponent] = findOuts(hands(['Kh Kd', 'As Ah']), parseCards('Ad Ac Ks 2h'));
+    expect(opponent.leading).toBe(true);
+    expect(hero).toEqual({ leading: false, outs: [], label: '' });
+  });
+
+  test('a tie for the lead counts as leading for both players', () => {
+    const results = findOuts(hands(['Ah 2c', 'Ad 3c', '5h 6h']), parseCards('As Kd Qc 9s'));
+    expect(results.map((result) => result.leading)).toEqual([true, true, false]);
+  });
+
+  test('rejects boards that are not a flop or a turn, and incomplete hands', () => {
+    expect(() => findOuts(hands(['As Ks', 'Jh Jd']), parseCards('Js 7s 2d 9h 3c'))).toThrow();
+    expect(() => findOuts(hands(['As Ks', 'Jh Jd']), [])).toThrow();
+    expect(() => findOuts([parseCards('As Ks'), parseCards('Jh')], parseCards('Js 7s 2d'))).toThrow();
+    expect(() => findOuts(hands(['As Ks', 'As Jd']), parseCards('Js 7s 2d'))).toThrow();
+  });
+
+  test('agrees with pokersolver on 300 random flops and turns with two to four players', () => {
+    // Independent reference: pokersolver decides who leads now and, for each unseen next card, who leads then.
+    const winners = (holes: Card[][], board: Card[]) => {
+      const solved = holes.map((hole) => Hand.solve([...hole, ...board].map(cardCode)));
+      const best = Hand.winners(solved);
+      return solved.map((hand) => best.includes(hand));
+    };
+    const random = seededRandom(4242);
+    for (let round = 0; round < 300; round++) {
+      const deck = [...DECK];
+      const deal = () => deck.splice(Math.floor(random() * deck.length), 1)[0];
+      const players = 2 + Math.floor(random() * 3);
+      const holes = Array.from({ length: players }, () => [deal(), deal()]);
+      const board = Array.from({ length: random() < 0.5 ? 3 : 4 }, deal);
+      const label = `${holes.map((hole) => hole.map(cardCode).join('')).join(' ')} | ${board.map(cardCode).join(' ')}`;
+
+      const leading = winners(holes, board);
+      const expectedOuts = holes.map((_, player) => (leading[player] ? [] : deck.filter((card) => winners(holes, [...board, card])[player]).sort((a, b) => a - b)));
+      const results = findOuts(holes, board);
+      expect(results.map((result) => result.leading), label).toEqual(leading);
+      expect(results.map((result) => [...result.outs].sort((a, b) => a - b)), label).toEqual(expectedOuts);
+    }
   });
 });

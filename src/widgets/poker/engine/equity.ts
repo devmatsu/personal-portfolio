@@ -1,5 +1,5 @@
 import { type Card, DECK } from './cards';
-import { CATEGORY_SHIFT, evaluate, HAND_CATEGORIES } from './evaluate';
+import { evaluate } from './evaluate';
 import type { Random } from './random';
 
 /** A Hold'em spot. Opponents are either a known two-card hand or `null` for a random (unknown) hand. */
@@ -24,8 +24,6 @@ export interface EquityResult {
   samples: number;
   hero: Stats;
   opponents: Stats[];
-  /** Chance you finish with each hand category by the river (indexed like HAND_CATEGORIES), as fractions of 1. */
-  heroHands: number[];
   /** Simulation only: standard error of hero's equity (fraction of 1). */
   heroStandardError?: number;
 }
@@ -54,7 +52,7 @@ export function validateScenario(scenario: Scenario): Problem[] {
   if (scenario.opponents.length > MAX_OPPONENTS) problems.push({ code: 'too-many-opponents', message: `At most ${MAX_OPPONENTS} opponents.` });
   scenario.opponents.forEach((hand, index) => {
     if (hand !== null && hand.length !== 2) {
-      problems.push({ code: 'opponent-incomplete', message: `Opponent ${index + 1} needs two cards, or switch them to a random hand.` });
+      problems.push({ code: 'opponent-incomplete', message: `Opponent ${index + 1} needs a second card, or remove the first for a random hand.` });
     }
   });
   const known = [...scenario.hero, ...scenario.board, ...scenario.opponents.flatMap((hand) => hand ?? [])];
@@ -94,7 +92,6 @@ class Tally {
   readonly shares: Float64Array;
   samples = 0;
   heroShareSquares = 0;
-  readonly heroHands = new Float64Array(HAND_CATEGORIES.length);
 
   constructor(players: number) {
     this.wins = new Float64Array(players);
@@ -118,7 +115,6 @@ class Tally {
       this.shares[i] += share;
     }
     if (scores[0] === best) this.heroShareSquares += share * share;
-    this.heroHands[scores[0] >> CATEGORY_SHIFT]++;
     this.samples++;
   }
 
@@ -132,7 +128,7 @@ class Tally {
   result(method: EquityResult['method']): EquityResult {
     const opponents = Array.from({ length: this.wins.length - 1 }, (_, index) => this.stats(index + 1));
     const hero = this.stats(0);
-    const result: EquityResult = { method, samples: this.samples, hero, opponents, heroHands: Array.from(this.heroHands, (count) => count / (this.samples || 1)) };
+    const result: EquityResult = { method, samples: this.samples, hero, opponents };
     if (method === 'simulation' && this.samples > 1) {
       const variance = Math.max(0, this.heroShareSquares / this.samples - hero.equity * hero.equity);
       result.heroStandardError = Math.sqrt(variance / this.samples);

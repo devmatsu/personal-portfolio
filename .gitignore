@@ -13,6 +13,7 @@ dist
 test-results
 playwright-report
 .lighthouseci
+.superpowers
 *.local
 
 # Editor directories and files

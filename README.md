@@ -55,7 +55,7 @@ src/components/home/     Home sections (hero, agent terminal, overview, experien
 src/lib/devto.ts         dev.to client (paginated, retries on 429, 5xx and network errors)
 src/pages/               /, /writing, /writing/[id], /widgets/{rubik,wheel,pomodoro,poker,coin}, 404
 src/scripts/             Inline scripts that run before first paint, rendered with a CSP hash (InlineScript.astro)
-src/widgets/             React widgets: Rubik's cube timer, decision wheel, Pomodoro, poker odds calculator, coin flip
+src/widgets/             React widgets: Rubik's cube timer, decision wheel, Pomodoro, poker table (equity by street, outs), coin flip
 scripts/                 writing-is-stale.mjs: does dev.to have a post the live site doesn't? (used by the daily refresh)
 tests/                   Playwright end-to-end tests, plus poker engine and dev.to client tests (run in Node)
 ```
