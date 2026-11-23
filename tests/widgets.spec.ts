@@ -331,14 +331,44 @@ test('widget pages link back to the index and mark the current widget', async ({
   }
 });
 
-test('the widget switcher fits on narrow phones without scrolling the page sideways', async ({ page }) => {
-  for (const width of [320, 390, 460]) {
+test('on phones the icon-only back link and a one-line switcher share a row without scrolling the page sideways', async ({ page }) => {
+  for (const width of [402, 375, 320]) {
     await page.setViewportSize({ width, height: 800 });
     await page.goto('/widgets/coin');
-    const fits = await page.evaluate(() => {
-      const list = document.querySelector('nav[aria-label="Switch widget"] ul')!;
-      return document.documentElement.scrollWidth <= innerWidth && list.getBoundingClientRect().right <= innerWidth && list.scrollWidth <= list.clientWidth;
+    const back = page.locator('main').getByRole('link', { name: 'All widgets', exact: true });
+    await expect(back).toHaveAttribute('href', '/widgets');
+    const layout = await page.evaluate(() => {
+      const box = (el: Element) => el.getBoundingClientRect();
+      const nav = document.querySelector('nav[aria-label="Switch widget"]')!;
+      const bar = box(nav.querySelector('ul')!);
+      const backLink = box(document.querySelector('main a[href="/widgets"]')!);
+      return {
+        linkTops: [...nav.querySelectorAll('a')].map((a) => Math.round(box(a).top)),
+        back: { width: backLink.width, height: backLink.height, centre: backLink.top + backLink.height / 2 },
+        bar: { height: bar.height, centre: bar.top + bar.height / 2, right: bar.right },
+        pageScrollWidth: document.documentElement.scrollWidth,
+      };
     });
-    expect(fits, `switcher at ${width}px`).toBe(true);
+    expect(layout.linkTops, `one line at ${width}px`).toHaveLength(5);
+    expect(new Set(layout.linkTops).size, `one line at ${width}px`).toBe(1);
+    expect(Math.abs(layout.back.centre - layout.bar.centre), `same row at ${width}px`).toBeLessThanOrEqual(1);
+    expect(Math.abs(layout.back.height - layout.bar.height), `same height at ${width}px`).toBeLessThanOrEqual(1);
+    expect(layout.back.width, `back tap target at ${width}px`).toBeGreaterThanOrEqual(44);
+    expect(layout.back.height, `back tap target at ${width}px`).toBeGreaterThanOrEqual(44);
+    expect(layout.bar.right, `switcher inside the viewport at ${width}px`).toBeLessThanOrEqual(width);
+    expect(layout.pageScrollWidth, `no sideways page scroll at ${width}px`).toBeLessThanOrEqual(width);
   }
+});
+
+test('the back link shows its label on desktop and on pages without the switcher', async ({ page }) => {
+  const labelWidth = (name: string) => page.locator('main').getByRole('link', { name, exact: true }).getByText(name, { exact: true })
+    .evaluate((el) => el.getBoundingClientRect().width);
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/widgets/coin');
+  expect(await labelWidth('All widgets')).toBeGreaterThan(40);
+
+  await page.setViewportSize({ width: 402, height: 800 });
+  await page.goto('/writing');
+  await page.locator('main a[href^="/writing/"]').first().click();
+  expect(await labelWidth('All posts')).toBeGreaterThan(40);
 });
