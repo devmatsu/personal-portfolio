@@ -4,11 +4,13 @@ import PageHeader from '../../components/PageHeader.astro';
 import Poker from '../../widgets/poker/Poker';
 import WidgetSwitcher from '../../components/WidgetSwitcher.astro';
 
-const description = "Texas Hold'em equity for your hand against up to nine opponents: exact when every deal can be counted, simulated when not.";
+const description = "Texas Hold'em laid out like a TV broadcast: every player's equity street by street, and the cards that would put each of them ahead. Exact when every deal can be counted, simulated when not.";
+// Phones get one sentence, so the table starts higher.
+const shortDescription = "Every player's Hold'em equity street by street, and their outs.";
 ---
 
 <Base title="Poker Odds" description={description}>
-  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Poker Odds" description={description}>
+  <PageHeader back={{ href: '/widgets', label: 'All widgets' }} title="Poker Odds" description={description} shortDescription={shortDescription}>
     <WidgetSwitcher slot="aside" current="poker" />
   </PageHeader>
   <div class="container page">
@@ -18,5 +20,5 @@ const description = "Texas Hold'em equity for your hand against up to nine oppon
 
 <style>
   .page { padding-bottom: 100px; }
-  .island { min-height: 720px; }
+  .island { min-height: 760px; }
 </style>

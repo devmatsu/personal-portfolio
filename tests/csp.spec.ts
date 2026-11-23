@@ -39,10 +39,12 @@ test('interactive paths run under the policy: search, page transitions and every
   await expect(page.getByRole('region', { name: 'Coin flip' }).locator('[aria-live]')).toHaveText(/^(Heads 1|Tails 2)$/);
   expect(await violations(page), 'search + coin').toEqual([]);
 
-  // The poker calculation runs in a module Worker, which the policy must allow from the same origin.
+  // The poker calculation runs in a module Worker, which the policy must allow from the same origin. The first visit
+  // shows an example hand; opening the deck positions it from script.
   await page.goto('/widgets/poker');
-  for (const card of ['Ace of spades', 'King of spades']) await page.getByRole('group', { name: /^Deck/ }).getByRole('button', { name: card, exact: true }).click();
-  await expect(page.getByTestId('hero-equity')).toHaveText(/^≈\d+\.\d%$/);
+  await expect(page.getByRole('list', { name: 'Players' }).getByRole('listitem').first()).toContainText('17%');
+  await page.getByRole('button', { name: 'River: empty' }).click();
+  await expect(page.getByRole('dialog', { name: 'Pick the river' })).toBeVisible();
   expect(await violations(page), 'poker').toEqual([]);
 
   await page.goto('/widgets/pomodoro');

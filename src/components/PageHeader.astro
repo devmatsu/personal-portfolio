@@ -1,7 +1,14 @@
 ---
 import BackLink from './BackLink.astro';
-interface Props { eyebrow?: string; title: string; description?: string; back?: { href: string; label: string } }
-const { eyebrow, title, description, back } = Astro.props;
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  /** Optional one-sentence version of `description`, shown instead of it on narrow screens. */
+  shortDescription?: string;
+  back?: { href: string; label: string };
+}
+const { eyebrow, title, description, shortDescription, back } = Astro.props;
 ---
 <header class:list={['page-header', 'container', { 'has-back': back }]}>
   {back && <div class="top">
@@ -10,7 +17,11 @@ const { eyebrow, title, description, back } = Astro.props;
   </div>}
   {eyebrow && <p class="label">{eyebrow}</p>}
   <h1>{title}<span>.</span></h1>
-  {description && <p class="description">{description}</p>}
+  {description && !shortDescription && <p class="description">{description}</p>}
+  {description && shortDescription && <>
+    <p class="description long">{description}</p>
+    <p class="description short">{shortDescription}</p>
+  </>}
 </header>
 <style>
   .page-header { padding-block: 72px 48px; }
@@ -18,5 +29,10 @@ const { eyebrow, title, description, back } = Astro.props;
   h1 { margin: 12px 0; font-size: clamp(40px, 5vw, 56px); line-height: 1.1; font-weight: 600; letter-spacing: -.035em; }
   h1 span { color: var(--accent); }
   .description { max-width: 60ch; margin: 0; color: var(--muted); }
+  .short { display: none; }
+  @media (max-width: 560px) {
+    .long { display: none; }
+    .short { display: block; }
+  }
   .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
 </style>

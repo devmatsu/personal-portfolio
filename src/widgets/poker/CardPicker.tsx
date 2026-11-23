@@ -17,10 +17,15 @@ const ORDER = ROWS.flat();
 
 /**
  * The 52-card deck as one keyboard stop: arrow keys move between cards (left/right within a suit, up/down between
- * suits), Home/End jump to the row ends, Enter or Space picks.
+ * suits), Home/End jump to the row ends, Enter or Space picks. Each card shows its rank on its suit's colour; the row
+ * starts with the suit's glyph, and every button's accessible name is the full card name.
  */
 export default function CardPicker({ activeCard, usedBy, onPick }: Props) {
-  const [focused, setFocused] = useState(0);
+  // The keyboard stop starts on the card in the slot being edited, else on the first card that can be picked.
+  const [focused, setFocused] = useState(() => {
+    const start = ORDER.findIndex((card) => (activeCard === null ? !usedBy.has(card) : card === activeCard));
+    return Math.max(0, start);
+  });
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
 
   const move = (index: number) => {
@@ -38,8 +43,10 @@ export default function CardPicker({ activeCard, usedBy, onPick }: Props) {
 
   return (
     <div className={styles.picker} role="group" aria-label="Deck: pick a card for the selected spot">
-      {ROWS.map((row, rowIndex) => (
-        <div className={styles.pickerRow} key={rowIndex} aria-label={SUIT_NAMES[rowIndex]} role="group">
+      {ROWS.map((row, suit) => (
+        <div className={styles.pickerRow} key={suit} aria-label={SUIT_NAMES[suit]} role="group">
+          {/* Text presentation, so the glyph never turns into an emoji. */}
+          <span className={styles.pickerSuit} aria-hidden="true">{`${SUIT_SYMBOLS[suit]}\uFE0E`}</span>
           {row.map((card) => {
             const index = ORDER.indexOf(card);
             const owner = card === activeCard ? null : usedBy.get(card) ?? null;
@@ -49,7 +56,7 @@ export default function CardPicker({ activeCard, usedBy, onPick }: Props) {
                 ref={(element) => { buttons.current[index] = element; }}
                 type="button"
                 tabIndex={index === focused ? 0 : -1}
-                className={`${styles.pick} ${SUIT_CLASSES[card & 3]} ${card === activeCard ? styles.pickSelected : ''}`}
+                className={`${styles.pick} ${SUIT_CLASSES[suit]} ${card === activeCard ? styles.pickSelected : ''}`}
                 aria-disabled={owner !== null}
                 aria-pressed={card === activeCard}
                 aria-label={owner ? `${cardName(card)}, ${owner}` : cardName(card)}
@@ -57,7 +64,7 @@ export default function CardPicker({ activeCard, usedBy, onPick }: Props) {
                 onKeyDown={(event) => onKeyDown(event, index)}
                 onClick={() => { if (owner === null) onPick(card); }}
               >
-                {RANK_LABELS[card >> 2]}<span aria-hidden="true">{SUIT_SYMBOLS[card & 3]}</span>
+                {RANK_LABELS[card >> 2]}
               </button>
             );
           })}

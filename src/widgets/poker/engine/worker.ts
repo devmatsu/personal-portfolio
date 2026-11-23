@@ -8,7 +8,7 @@ export type WorkerRequest = { scenario: Scenario };
 export type WorkerResponse =
   | { type: 'progress'; result: EquityResult }
   | { type: 'done'; result: EquityResult }
-  /** After `done`: equity on an earlier street (the board cut to `boardSize` cards), for the street-by-street timeline. */
+  /** After `done`: equity on an earlier street (the board cut to `boardSize` cards), for each player's earlier streets. */
   | { type: 'street'; boardSize: number; result: EquityResult }
   | { type: 'error'; message: string };
 
@@ -37,7 +37,7 @@ addEventListener('message', (event: MessageEvent<WorkerRequest>) => {
     const { scenario } = event.data;
     post({ type: 'done', result: calculate(scenario, (partial) => post({ type: 'progress', result: partial })) });
     // Earlier streets with the same hands, nearest first: the turn and flop are quick exact counts, preflop is often a
-    // simulation, so the timeline fills in from the right.
+    // simulation, so the earlier streets fill in from the most recent back.
     for (const boardSize of [4, 3, 0]) {
       if (boardSize >= scenario.board.length) continue;
       post({ type: 'street', boardSize, result: calculate({ ...scenario, board: scenario.board.slice(0, boardSize) }) });
