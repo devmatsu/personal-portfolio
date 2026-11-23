@@ -191,7 +191,8 @@ export default function Poker() {
     update(next);
     const after = nextEmptySlot(next, active);
     const target = after !== active ? after : slotOrder(next).find((slot) => !next.cards.has(slot));
-    if (target !== undefined) { setActive(target); return; }
+    // The deck moves on to the next slot; its keyboard stop starts afresh there (see the picker's key).
+    if (target !== undefined) { setActive(target); focusDeck(); return; }
     // Every slot is filled: the deck closes and focus returns to the card just picked.
     const filled = active;
     setOpen(false);
@@ -307,7 +308,8 @@ export default function Poker() {
             </div>
             {/* The sheet can cover the status line, so it repeats what's missing (narrow screens only). */}
             {blocked && <p className={styles.deckStatus}>{status}</p>}
-            <CardPicker activeCard={activeCard} usedBy={usedBy} onPick={pick} />
+            {/* Keyed on the slot, so the keyboard stop restarts on that slot's card (or the first free one) each time. */}
+            <CardPicker key={active} activeCard={activeCard} usedBy={usedBy} onPick={pick} />
           </section>
         </>
       )}

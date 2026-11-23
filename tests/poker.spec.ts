@@ -206,6 +206,24 @@ test('the deck works from the keyboard: Enter opens it, arrows move, Enter picks
   await expect(page.getByRole('button', { name: 'River: empty' })).toBeVisible();
 });
 
+test('the deck\'s keyboard stop follows the selected slot: its card, or the first one free', async ({ page }) => {
+  await page.getByRole('button', { name: 'River: empty' }).click();
+  await expect(deck(page).getByRole('button', { name: 'Queen of spades', exact: true })).toBeFocused();
+
+  // Moving the open deck to a filled slot starts on that slot's card.
+  await page.getByRole('button', { name: 'Turn: Nine of hearts' }).click();
+  await expect(deck(page)).toHaveAccessibleName('Pick the turn');
+  await expect(deck(page).getByRole('button', { name: 'Nine of hearts', exact: true })).toBeFocused();
+
+  // After a pick the deck moves on to the next empty slot and starts on a card that can still be picked.
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await pick(page, 'Ace of spades');
+  await expect(deck(page)).toHaveAccessibleName('Pick your second card');
+  const focused = deck(page).locator(':focus');
+  await expect(focused).toHaveAccessibleName('King of spades');
+  await expect(focused).not.toHaveAttribute('aria-disabled', 'true');
+});
+
 test('the deck closes with its × and with a second click on the selected slot', async ({ page }) => {
   const river = page.getByRole('button', { name: 'River: empty' });
   await river.click();
