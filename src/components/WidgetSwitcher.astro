@@ -11,11 +11,18 @@ const { current } = Astro.props;
 <style>
   ul { display:flex; gap:2px; margin:0; padding:3px; list-style:none; border:1px solid rgba(var(--text-rgb), .1); border-radius:12px; }
   a { display:flex; align-items:center; min-height:34px; padding:0 14px; border-radius:9px; color:var(--muted); font-size:14px; font-weight:500; transition:color .15s, background-color .15s; }
-  a:hover { color:var(--text); background:rgba(var(--text-rgb), .05); opacity:1; }
-  a[aria-current] { color:var(--text); background:rgba(var(--text-rgb), .08); }
-  /* Five widgets need ~385px in one row (plus page padding): below that, a 3-column grid instead of overflowing. */
+  a:hover { color:var(--text); background-color:rgba(var(--text-rgb), .05); opacity:1; }
+  a[aria-current] { color:var(--text); background-color:rgba(var(--text-rgb), .08); }
+  /* Below 460px the switcher shares a row with the icon-only back link (PageHeader). Five items stay on one line, sharing
+     the width; on the narrowest phones the bar scrolls sideways inside itself instead of wrapping or widening the page.
+     Links are 44px tap targets: a transparent border keeps their highlight inset, and the bar's outline is a box-shadow
+     so it adds no height, leaving the bar as tall as the 44px back link. Focus rings sit inside so the scroller can't clip them. */
   @media (max-width: 459px) {
-    ul { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); }
-    a { justify-content:center; padding:0 6px; }
+    .switcher { flex:1 1 auto; min-width:0; }
+    ul { gap:0; padding:0 2px; border:0; box-shadow:inset 0 0 0 1px rgba(var(--text-rgb), .1); overflow-x:auto; scrollbar-width:none; }
+    ul::-webkit-scrollbar { display:none; }
+    li { display:flex; flex:1 1 auto; }
+    a { flex:1 1 auto; justify-content:center; min-height:44px; padding:0 6px; border:solid transparent; border-width:3px 1px; border-radius:10px / 12px; background-clip:padding-box; font-size:13px; white-space:nowrap; }
+    a:focus-visible { outline-offset:-3px; }
   }
 </style>

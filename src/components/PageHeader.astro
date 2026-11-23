@@ -9,10 +9,11 @@ interface Props {
   back?: { href: string; label: string };
 }
 const { eyebrow, title, description, shortDescription, back } = Astro.props;
+const hasAside = Astro.slots.has('aside');
 ---
 <header class:list={['page-header', 'container', { 'has-back': back }]}>
-  {back && <div class="top">
-    <BackLink href={back.href} label={back.label} />
+  {back && <div class:list={['top', { 'has-aside': hasAside }]}>
+    <BackLink href={back.href} label={back.label} compact={hasAside} />
     <slot name="aside" />
   </div>}
   {eyebrow && <p class="label">{eyebrow}</p>}
@@ -35,4 +36,8 @@ const { eyebrow, title, description, shortDescription, back } = Astro.props;
     .short { display: block; }
   }
   .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+  /* Phones: the icon-only back link and the aside (the widget switcher) share one row. */
+  @media (max-width: 459px) {
+    .has-aside { flex-wrap: nowrap; gap: 8px; }
+  }
 </style>
