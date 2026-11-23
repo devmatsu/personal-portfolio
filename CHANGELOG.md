@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.2.0](https://github.com/devmatsu/personal-portfolio/compare/v3.1.2...v3.2.0) (2026-11-23)
+
+
+### Features
+
+* **poker:** show every player's equity by street and their outs ([5490360](https://github.com/devmatsu/personal-portfolio/commit/549036082c7dbf3dc116d234cfbfaca6e7f8ed4b))
+* **poker:** show every player's equity by street and their outs ([096086c](https://github.com/devmatsu/personal-portfolio/commit/096086cbab4570452a41f382e9e6167ad5513efe))
+
+
+### Bug Fixes
+
+* **poker:** keep keyboard focus on a pickable card when the deck changes slot ([c9e700e](https://github.com/devmatsu/personal-portfolio/commit/c9e700e1f5573449b406479638b46046284920a8))
+
 ## [3.1.2](https://github.com/devmatsu/personal-portfolio/compare/v3.1.1...v3.1.2) (2026-11-08)
 
 
